@@ -42,8 +42,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         CliAction::PrintSystemPrompt { cwd, date } => print_system_prompt(cwd, date),
         CliAction::ResumeSession {
             session_path,
-            command,
-        } => resume_session(&session_path, command),
+            commands,
+        } => resume_session(&session_path, &commands),
         CliAction::Prompt { prompt, model } => LiveCli::new(model, false)?.run_turn(&prompt)?,
         CliAction::Repl { model } => run_repl(model)?,
         CliAction::Help => print_help(),
@@ -61,7 +61,7 @@ enum CliAction {
     },
     ResumeSession {
         session_path: PathBuf,
-        command: Option<String>,
+        commands: Vec<String>,
     },
     Prompt {
         prompt: String,
@@ -156,13 +156,16 @@ fn parse_resume_args(args: &[String]) -> Result<CliAction, String> {
         .first()
         .ok_or_else(|| "missing session path for --resume".to_string())
         .map(PathBuf::from)?;
-    let command = args.get(1).cloned();
-    if args.len() > 2 {
-        return Err("--resume accepts at most one trailing slash command".to_string());
+    let commands = args[1..].to_vec();
+    if commands
+        .iter()
+        .any(|command| !command.trim_start().starts_with('/'))
+    {
+        return Err("--resume trailing arguments must be slash commands".to_string());
     }
     Ok(CliAction::ResumeSession {
         session_path,
-        command,
+        commands,
     })
 }
 
@@ -198,7 +201,7 @@ fn print_system_prompt(cwd: PathBuf, date: String) {
     }
 }
 
-fn resume_session(session_path: &Path, command: Option<String>) {
+fn resume_session(session_path: &Path, commands: &[String]) {
     let session = match Session::load_from_path(session_path) {
         Ok(session) => session,
         Err(error) => {
@@ -207,39 +210,55 @@ fn resume_session(session_path: &Path, command: Option<String>) {
         }
     };
 
-    match command.as_deref().and_then(SlashCommand::parse) {
-        Some(command) => match run_resume_command(session_path, &session, &command) {
-            Ok(Some(message)) => println!("{message}"),
-            Ok(None) => {}
+    if commands.is_empty() {
+        println!(
+            "Restored session from {} ({} messages).",
+            session_path.display(),
+            session.messages.len()
+        );
+        return;
+    }
+
+    let mut session = session;
+    for raw_command in commands {
+        let Some(command) = SlashCommand::parse(raw_command) else {
+            eprintln!("unsupported resumed command: {raw_command}");
+            std::process::exit(2);
+        };
+        match run_resume_command(session_path, &session, &command) {
+            Ok(ResumeCommandOutcome {
+                session: next_session,
+                message,
+            }) => {
+                session = next_session;
+                if let Some(message) = message {
+                    println!("{message}");
+                }
+            }
             Err(error) => {
                 eprintln!("{error}");
                 std::process::exit(2);
             }
-        },
-        None if command.is_some() => {
-            eprintln!(
-                "unsupported resumed command: {}",
-                command.unwrap_or_default()
-            );
-            std::process::exit(2);
-        }
-        None => {
-            println!(
-                "Restored session from {} ({} messages).",
-                session_path.display(),
-                session.messages.len()
-            );
         }
     }
+}
+
+#[derive(Debug, Clone)]
+struct ResumeCommandOutcome {
+    session: Session,
+    message: Option<String>,
 }
 
 fn run_resume_command(
     session_path: &Path,
     session: &Session,
     command: &SlashCommand,
-) -> Result<Option<String>, Box<dyn std::error::Error>> {
+) -> Result<ResumeCommandOutcome, Box<dyn std::error::Error>> {
     match command {
-        SlashCommand::Help => Ok(Some(render_repl_help())),
+        SlashCommand::Help => Ok(ResumeCommandOutcome {
+            session: session.clone(),
+            message: Some(render_repl_help()),
+        }),
         SlashCommand::Compact => {
             let Some(result) = handle_slash_command(
                 "/compact",
@@ -249,41 +268,73 @@ fn run_resume_command(
                     ..CompactionConfig::default()
                 },
             ) else {
-                return Ok(None);
+                return Ok(ResumeCommandOutcome {
+                    session: session.clone(),
+                    message: None,
+                });
             };
             result.session.save_to_path(session_path)?;
-            Ok(Some(result.message))
+            Ok(ResumeCommandOutcome {
+                session: result.session,
+                message: Some(result.message),
+            })
+        }
+        SlashCommand::Clear => {
+            let cleared = Session::new();
+            cleared.save_to_path(session_path)?;
+            Ok(ResumeCommandOutcome {
+                session: cleared,
+                message: Some(format!(
+                    "Cleared resumed session file {}.",
+                    session_path.display()
+                )),
+            })
         }
         SlashCommand::Status => {
-            let usage = UsageTracker::from_session(session).cumulative_usage();
-            Ok(Some(format_status_line(
-                "restored-session",
-                session.messages.len(),
-                UsageTracker::from_session(session).turns(),
-                UsageTracker::from_session(session).current_turn_usage(),
-                usage,
-                0,
-                permission_mode_label(),
-            )))
+            let tracker = UsageTracker::from_session(session);
+            let usage = tracker.cumulative_usage();
+            Ok(ResumeCommandOutcome {
+                session: session.clone(),
+                message: Some(format_status_line(
+                    "restored-session",
+                    session.messages.len(),
+                    tracker.turns(),
+                    tracker.current_turn_usage(),
+                    usage,
+                    0,
+                    permission_mode_label(),
+                )),
+            })
         }
         SlashCommand::Cost => {
             let usage = UsageTracker::from_session(session).cumulative_usage();
-            Ok(Some(format!(
-                "cost: input_tokens={} output_tokens={} cache_creation_tokens={} cache_read_tokens={} total_tokens={}",
-                usage.input_tokens,
-                usage.output_tokens,
-                usage.cache_creation_input_tokens,
-                usage.cache_read_input_tokens,
-                usage.total_tokens(),
-            )))
+            Ok(ResumeCommandOutcome {
+                session: session.clone(),
+                message: Some(format!(
+                    "cost: input_tokens={} output_tokens={} cache_creation_tokens={} cache_read_tokens={} total_tokens={}",
+                    usage.input_tokens,
+                    usage.output_tokens,
+                    usage.cache_creation_input_tokens,
+                    usage.cache_read_input_tokens,
+                    usage.total_tokens(),
+                )),
+            })
         }
-        SlashCommand::Config => Ok(Some(render_config_report()?)),
-        SlashCommand::Memory => Ok(Some(render_memory_report()?)),
+        SlashCommand::Config => Ok(ResumeCommandOutcome {
+            session: session.clone(),
+            message: Some(render_config_report()?),
+        }),
+        SlashCommand::Memory => Ok(ResumeCommandOutcome {
+            session: session.clone(),
+            message: Some(render_memory_report()?),
+        }),
+        SlashCommand::Init => Ok(ResumeCommandOutcome {
+            session: session.clone(),
+            message: Some(init_claude_md()?),
+        }),
         SlashCommand::Resume { .. }
         | SlashCommand::Model { .. }
         | SlashCommand::Permissions { .. }
-        | SlashCommand::Clear
-        | SlashCommand::Init
         | SlashCommand::Unknown(_) => Err("unsupported resumed slash command".into()),
     }
 }
@@ -1021,7 +1072,7 @@ fn print_help() {
     println!("  rusty-claude-cli dump-manifests");
     println!("  rusty-claude-cli bootstrap-plan");
     println!("  rusty-claude-cli system-prompt [--cwd PATH] [--date YYYY-MM-DD]");
-    println!("  rusty-claude-cli --resume SESSION.json [/compact]");
+    println!("  rusty-claude-cli --resume SESSION.json [/status] [/compact] [...]");
 }
 
 #[cfg(test)]
@@ -1088,7 +1139,29 @@ mod tests {
             parse_args(&args).expect("args should parse"),
             CliAction::ResumeSession {
                 session_path: PathBuf::from("session.json"),
-                command: Some("/compact".to_string()),
+                commands: vec!["/compact".to_string()],
+            }
+        );
+    }
+
+    #[test]
+    fn parses_resume_flag_with_multiple_slash_commands() {
+        let args = vec![
+            "--resume".to_string(),
+            "session.json".to_string(),
+            "/status".to_string(),
+            "/compact".to_string(),
+            "/cost".to_string(),
+        ];
+        assert_eq!(
+            parse_args(&args).expect("args should parse"),
+            CliAction::ResumeSession {
+                session_path: PathBuf::from("session.json"),
+                commands: vec![
+                    "/status".to_string(),
+                    "/compact".to_string(),
+                    "/cost".to_string(),
+                ],
             }
         );
     }
