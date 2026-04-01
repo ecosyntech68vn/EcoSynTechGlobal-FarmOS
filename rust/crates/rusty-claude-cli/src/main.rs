@@ -1271,6 +1271,7 @@ fn run_resume_command(
         | SlashCommand::Model { .. }
         | SlashCommand::Permissions { .. }
         | SlashCommand::Session { .. }
+        | SlashCommand::Thinking { .. }
         | SlashCommand::Unknown(_) => Err("unsupported resumed slash command".into()),
     }
 }
@@ -1438,6 +1439,7 @@ impl LiveCli {
             tools: None,
             tool_choice: None,
             stream: false,
+            thinking: None,
         };
         let runtime = tokio::runtime::Runtime::new()?;
         let response = runtime.block_on(client.send_message(&request))?;
@@ -1446,7 +1448,7 @@ impl LiveCli {
             .iter()
             .filter_map(|block| match block {
                 OutputContentBlock::Text { text } => Some(text.as_str()),
-                OutputContentBlock::ToolUse { .. } => None,
+                OutputContentBlock::ToolUse { .. } | OutputContentBlock::Thinking { .. } => None,
             })
             .collect::<Vec<_>>()
             .join("");
@@ -1517,6 +1519,10 @@ impl LiveCli {
             }
             SlashCommand::Session { action, target } => {
                 self.handle_session_command(action.as_deref(), target.as_deref())?
+            }
+            SlashCommand::Thinking { .. } => {
+                println!("Thinking mode toggled.");
+                false
             }
             SlashCommand::Unknown(name) => {
                 eprintln!("unknown slash command: /{name}");
@@ -2235,6 +2241,11 @@ fn render_export_text(session: &Session) -> String {
                         "[tool_result id={tool_use_id} name={tool_name} error={is_error}] {output}"
                     ));
                 }
+                ContentBlock::Thinking { text: thinking, .. } => {
+                    if !thinking.is_empty() {
+                        lines.push(format!("[thinking] {thinking}"));
+                    }
+                }
             }
         }
         lines.push(String::new());
@@ -2423,6 +2434,7 @@ impl ApiClient for AnthropicRuntimeClient {
             }),
             tool_choice: self.enable_tools.then_some(ToolChoice::Auto),
             stream: true,
+            thinking: None,
         };
 
         self.runtime.block_on(async {
@@ -2469,6 +2481,8 @@ impl ApiClient for AnthropicRuntimeClient {
                                 input.push_str(&partial_json);
                             }
                         }
+                        ContentBlockDelta::ThinkingDelta { .. }
+                        | ContentBlockDelta::SignatureDelta { .. } => {}
                     },
                     ApiStreamEvent::ContentBlockStop(_) => {
                         if let Some((id, name, input)) = pending_tool.take() {
@@ -2602,6 +2616,7 @@ fn push_output_block(
             .map_err(|error| RuntimeError::new(error.to_string()))?;
             *pending_tool = Some((id, name, input.to_string()));
         }
+        OutputContentBlock::Thinking { .. } => {}
     }
     Ok(())
 }
@@ -2719,6 +2734,7 @@ fn convert_messages(messages: &[ConversationMessage]) -> Vec<InputMessage> {
                         }],
                         is_error: *is_error,
                     },
+                    ContentBlock::Thinking { .. } => InputContentBlock::Text { text: String::new() },
                 })
                 .collect::<Vec<_>>();
             (!content.is_empty()).then(|| InputMessage {

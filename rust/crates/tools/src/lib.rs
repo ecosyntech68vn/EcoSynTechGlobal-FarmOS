@@ -1666,6 +1666,7 @@ impl ApiClient for AnthropicAgentApiClient {
             tools: Some(agent_tool_definitions()),
             tool_choice: Some(ToolChoice::Auto),
             stream: true,
+            thinking: None,
         };
 
         self.runtime.block_on(async {
@@ -1709,6 +1710,8 @@ impl ApiClient for AnthropicAgentApiClient {
                                 input.push_str(&partial_json);
                             }
                         }
+                        ContentBlockDelta::ThinkingDelta { .. }
+                        | ContentBlockDelta::SignatureDelta { .. } => {}
                     },
                     ApiStreamEvent::ContentBlockStop(_) => {
                         if let Some((id, name, input)) = pending_tool.take() {
@@ -1792,6 +1795,7 @@ fn convert_agent_messages(messages: &[ConversationMessage]) -> Vec<InputMessage>
                         }],
                         is_error: *is_error,
                     },
+                    ContentBlock::Thinking { .. } => InputContentBlock::Text { text: String::new() },
                 })
                 .collect::<Vec<_>>();
             (!content.is_empty()).then(|| InputMessage {
@@ -1829,6 +1833,7 @@ fn push_agent_output_block(
         OutputContentBlock::ToolUse { id, name, input } => {
             *pending_tool = Some((id, name, input.to_string()));
         }
+        OutputContentBlock::Thinking { .. } => {}
     }
 }
 
