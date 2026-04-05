@@ -43,8 +43,8 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all --check
 
-  test-rusty-claude-cli:
-    name: cargo test -p rusty-claude-cli
+  test-workspace:
+    name: cargo test --workspace
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -52,5 +52,19 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust -> target
-      - name: Run crate tests
-        run: cargo test -p rusty-claude-cli
+      - name: Run workspace tests
+        run: cargo test --workspace
+
+  clippy-workspace:
+    name: cargo clippy --workspace
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust -> target
+      - name: Run workspace clippy
+        run: cargo clippy --workspace
