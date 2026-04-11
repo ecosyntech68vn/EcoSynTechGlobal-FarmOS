@@ -1,4 +1,5 @@
 const initSqlJs = require('sql.js');
+const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 const config = require('./index');
@@ -219,6 +220,25 @@ function seedInitialData() {
       stmt.run(schedule);
     });
     stmt.free();
+  }
+
+  // Seed a test user when running in test environment to enable auth tests without manual registration
+  try {
+    if (process.env.NODE_ENV === 'test') {
+      const existingTestUser = getOne('SELECT id FROM users WHERE email = ?', ['test@example.com']);
+      if (!existingTestUser) {
+        const testId = 'user-test';
+        const testEmail = 'test@example.com';
+        const testPassword = 'password123';
+        const hashedPassword = bcrypt.hashSync(testPassword, 10);
+        runQuery(
+          'INSERT INTO users (id, email, password, name, role, created_at) VALUES (?, ?, ?, ?, ?, datetime("now"))',
+          [testId, testEmail, hashedPassword, 'Test User', 'user']
+        );
+      }
+    }
+  } catch (e) {
+    // Ignore seed errors in test mode to avoid blocking DB init
   }
 
   saveDatabase();

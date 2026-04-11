@@ -73,6 +73,20 @@ const schemas = {
   }
 };
 
+// Helper to support dotted schema paths like 'auth.login' or 'auth.register'
+function getSchemaFromPath(pathName) {
+  const parts = pathName.split('.');
+  let current = schemas;
+  for (const p of parts) {
+    if (current && typeof current === 'object' && Object.prototype.hasOwnProperty.call(current, p)) {
+      current = current[p];
+    } else {
+      return null;
+    }
+  }
+  return current;
+}
+
 function validate(schema, data) {
   const { error, value } = schema.validate(data, { abortEarly: false });
   if (error) {
@@ -87,7 +101,7 @@ function validate(schema, data) {
 
 function validateMiddleware(schemaName) {
   return (req, res, next) => {
-    const schema = schemas[schemaName];
+    const schema = getSchemaFromPath(schemaName);
     if (!schema) {
       return res.status(500).json({ error: 'Invalid validation schema' });
     }
