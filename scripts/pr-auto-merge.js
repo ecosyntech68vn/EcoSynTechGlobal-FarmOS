@@ -141,6 +141,14 @@ async function main() {
     process.exit(1);
   }
   console.log(`PR created: ${pr.html_url} (#${pr.number})`);
+  // Notify via preferred channels (Telegram/Slack/GAS/Email) using a cross-channel notifier
+  try {
+    const { execSync } = require('child_process');
+    const notifyCmd = `node ${path.resolve(__dirname, 'notify.js')} --event PR_CREATED --pr_url "${pr.html_url}" --pr_number ${pr.number} --head "${head}" --base "${base}"`;
+    execSync(notifyCmd, { stdio: 'inherit' });
+  } catch (e) {
+    console.error('Notifier invocation failed:', e?.message || e);
+  }
 
   // Enable auto-merge via GraphQL (if possible)
   const prNodeId = pr.node_id || pr.id;
