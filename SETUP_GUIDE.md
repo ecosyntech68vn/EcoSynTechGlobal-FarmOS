@@ -340,13 +340,138 @@ node scripts/telegram-iot-controller.js
 
 ## 6. ĐIỀU KHIỂN THIẾT BỊ QUA TELEGRAM
 
-### 6.1 Các lệnh có sẵn
+### 6.1 Menu Buttons
 
-| Lệnh | Mô tả | Ví dụ |
-|------|--------|-------|
-| `/start` | Xem hướng dẫn | /start |
-| `/status` | Trạng thái hệ thống | /status |
-| `/sensors` | Dữ liệu cảm biến | /sensors |
+Bot hỗ trợ **menu buttons** trực quan:
+
+```
+📊 Cảm biến  |  🖥️ Thiết bị
+🔌 Relay 1-4  |  ⚙️ Điều khiển
+📦 Traceability  |  ⚡ Rules
+📅 Lịch  |  🚨 Cảnh báo
+📜 Lịch sử  |  📈 Thống kê
+🔄 ESP32  |  ⚙️ Cấu hình
+```
+
+### 6.2 Điều khiển Relay 1-4
+
+| Lệnh | Mô tả |
+|------|--------|
+| `/r1_on`, `/r1_off` | Bật/Tắt Relay 1 |
+| `/r2_on`, `/r2_off` | Bật/Tắt Relay 2 |
+| `/r3_on`, `/r3_off` | Bật/Tắt Relay 3 |
+| `/r4_on`, `/r4_off` | Bật/Tắt Relay 4 |
+| `/r_all` | Bật tất cả relay |
+| `/r_off` | Tắt tất cả relay |
+
+### 6.3 Điều khiển thiết bị
+
+| Lệnh | Mô tả |
+|------|--------|
+| `/pump_on`, `/pump_off` | Bật/Tắt máy bơm |
+| `/valve1_on`, `/valve1_off` | Mở/Đóng Van 1 |
+| `/valve2_on`, `/valve2_off` | Mở/Đóng Van 2 |
+| `/fan_on`, `/fan_off` | Bật/Tắt quạt |
+| `/light_on`, `/light_off` | Bật/Tắt đèn |
+
+### 6.4 Thông tin hệ thống
+
+| Lệnh | Mô tả |
+|------|--------|
+| `/status` | Trạng thái tổng quan |
+| `/sensors` | Dữ liệu 8 cảm biến |
+| `/devices` | Danh sách thiết bị |
+| `/stats` | Thống kê hệ thống |
+| `/history` | Lịch sử hoạt động |
+| `/alerts` | Cảnh báo hiện tại |
+
+### 6.5 Automation & Schedule
+
+| Lệnh | Mô tả |
+|------|--------|
+| `/rules` | Danh sách automation rules |
+| `/schedules` | Danh sách lịch tưới |
+| `/rulestoggle` | Bật/Tắt rule đầu tiên |
+| `/scheduletoggle` | Bật/Tắt lịch đầu tiên |
+
+### 6.6 Traceability Batch
+
+| Lệnh | Mô tả |
+|------|--------|
+| `/batches` | Xem danh sách batches |
+| `/newbatch` | Tạo batch traceability mới |
+
+### 6.7 ESP32 Firmware Update
+
+| Lệnh | Mô tả |
+|------|--------|
+| `/esp32` | Xem trạng thái ESP32 |
+| `/updatefw` | Kiểm tra & cập nhật firmware |
+| `/restart` | Khởi động lại ESP32 |
+
+### 6.8 Lệnh tiếng Việt
+
+Bạn có thể gõ trực tiếp bằng tiếng Việt:
+
+```
+bật bơm / tắt bơm
+bật relay 1 / tắt relay 1
+mở van / đóng van
+bật quạt / tắt quạt
+bật đèn / tắt đèn
+trạng thái / cảm biến
+thiết bị / cảnh báo
+batch / lịch / thống kê
+restart / cập nhật firmware
+esp32 / help / menu
+```
+
+### 6.9 Ví dụ sử dụng
+
+```
+👤: /start
+🤖: [Menu buttons + Help text]
+
+👤: [Nhấn "🔌 Relay 1-4"]
+🤖: [Keyboard relay 1-4]
+
+👤: /r1_on
+🤖: ✅ Relay 1 đã bật!
+
+👤: /sensors
+🤖: 📊 Dữ Liệu Cảm Biến
+
+🌡️ Nhiệt độ: 28.5°C ✅
+💧 Độ ẩm KK: 65.2% ✅
+🌱 Độ ẩm đất: 38.5% ⚠️ Thấp
+☀️ Ánh sáng: 850 ✅
+
+👤: /updatefw
+🤖: 📦 Đang kiểm tra firmware...
+    ✅ Kiểm tra hoàn tất!
+    📱 ESP32 sẽ tự động tải firmware mới nếu có.
+
+👤: bật tất cả relay
+🤖: ✅ Relay 1 đã bật!
+    ✅ Relay 2 đã bật!
+    ✅ Relay 3 đã bật!
+    ✅ Relay 4 đã bật!
+```
+
+### 6.10 ESP32 Status Command
+
+Khi gửi `/esp32`, bot sẽ hiển thị:
+
+```
+🔄 *ESP32 Device Status*
+
+📋 Device ID: ESP32-001
+📶 Status: online
+💻 Firmware: V8.5.0
+🔋 Pin: 85%
+📶 Signal: -67 dBm
+🕐 Last Seen: 12/04/2026 14:30:00
+```
 | `/devices` | Danh sách thiết bị | /devices |
 | `/rules` | Automation rules | /rules |
 | `/alerts` | Cảnh báo hiện tại | /alerts |
