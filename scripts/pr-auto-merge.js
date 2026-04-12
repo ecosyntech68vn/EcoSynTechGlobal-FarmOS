@@ -5,77 +5,40 @@ const fs = require('fs');
 const path = require('path');
 
 async function main() {
-  // Determine owner/repo from git remote
-  let remote = '';
-  try {
-    remote = execSync('git config --get remote.origin.url', { encoding: 'utf8' }).trim();
-  } catch (e) {
-    console.error('Cannot read git remote.origin.url. Ensure you are inside a git repo.');
-    process.exit(1);
+  // Owner/repo will be sourced from environment (GITHUB_REPOSITORY) or fallback to git remote below
+  let owner, repo;
+  if (process.env.GITHUB_REPOSITORY) {
+    const parts = process.env.GITHUB_REPOSITORY.split('/');
+    if (parts.length === 2) [owner, repo] = parts;
   }
-
-  let owner = null, repo = null;
-  if (remote.startsWith('git@github.com:')) {
-    const ref = remote.split(':')[1].replace(/\.git$/, '');
-    [owner, repo] = ref.split('/');
-  } else if (remote.startsWith('https://github.com/')) {
-    const ref = remote.replace(/^https:\/\/github.com\//, '').replace(/\.git$/, '');
-    [owner, repo] = ref.split('/');
-  }
-
+  // If not found, try parsing remote URL (requires git repo)
   if (!owner || !repo) {
-    console.error('Unable to parse owner/repo from remote. Got: ', remote);
+    let remote = '';
+    try {
+      remote = execSync('git config --get remote.origin.url', { encoding: 'utf8' }).trim();
+    } catch (e) {
+      // Not a git repo in CI context; proceed to error later
+    }
+    if (remote) {
+      if (remote.startsWith('git@github.com:')) {
+        const ref = remote.split(':')[1].replace(/\.git$/, '');
+        [owner, repo] = ref.split('/');
+      } else if (remote.startsWith('https://github.com/')) {
+        const ref = remote.replace(/^https:\/\/github.com\//, '').replace(/\.git$/, '');
+        [owner, repo] = ref.split('/');
+      }
+    }
+  }
+  if (!owner || !repo) {
+    console.error('Unable to parse owner/repo from environment or remote. Got:', process.env.GITHUB_REPOSITORY);
     process.exit(1);
   }
 
-  // GitHub token: prefer GH_PAT_FOR_PR (PAT with repo scope), fallback to GITHUB_TOKEN
+  // GitHub token: prefer GH_PAT_FOR_PR (PAT with repo scope)
   let token = process.env.GH_PAT_FOR_PR || process.env.GITHUB_TOKEN;
-  // try to read from config file prconfig.json if exists
+  // If no token, fail fast (no interactive prompts in CI)
   if (!token) {
-    const configPath = path.resolve(process.cwd(), 'prconfig.json');
-    if (fs.existsSync(configPath)) {
-      try {
-        const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-        if (cfg.token) token = cfg.token;
-      } catch (e) {
-        // ignore parse errors
-      }
-    }
-  }
-  // Fallback: try reading token from local secrets files (for air-gapped or quick-start scenarios)
-  if (!token) {
-    const secretPaths = [
-      path.resolve(process.cwd(), 'secrets', 'github_token'),
-      path.resolve(process.cwd(), 'secrets', 'token.txt'),
-      path.resolve(process.cwd(), 'token.txt')
-    ];
-    for (const p of secretPaths) {
-      try {
-        if (fs.existsSync(p)) {
-          const content = fs.readFileSync(p, 'utf8').trim();
-          if (content) {
-            token = content;
-            console.log(`Using GitHub token from secret: ${p}`);
-            break;
-          }
-        }
-      } catch (e) {
-        // ignore read errors and continue looking
-      }
-    }
-  }
-  if (!token) {
-    // Fallback: prompt for token if in interactive mode
-    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
-    token = await new Promise(resolve => {
-      rl.question('GitHub token (PAT) with repo scope: ', ans => {
-        rl.close();
-        resolve(ans);
-      });
-    });
-  }
-  if (!token) {
-    console.error('GitHub token is required. Set GITHUB_TOKEN env, provide prconfig.json token, or input interactively.');
+    console.error('GitHub token is required. Set GH_PAT_FOR_PR or GITHUB_TOKEN environment variable.');
     process.exit(1);
   }
 

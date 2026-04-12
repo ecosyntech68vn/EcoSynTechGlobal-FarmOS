@@ -39,55 +39,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create PR
-        id: create-pr
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GH_PAT }}
-          result-encoding: string
-          script: |
-            const branch = 'final-all-in';
-            
-            // Check if PR already exists
-            const { data: existingPRs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head: `${context.repo.owner}:${branch}`
-            });
-            
-            let prNumber, prUrl;
-            
-            if (existingPRs.length > 0) {
-              prNumber = existingPRs[0].number;
-              prUrl = existingPRs[0].html_url;
-              console.log(`PR already exists: ${prUrl}`);
-            } else {
-              const { data: pr } = await github.rest.pulls.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: 'Release All-In 2.0.0',
-                head: branch,
-                base: 'main',
-                body: '## All-In Release\n\n- PR automation\n- Bootstrap system\n- Docker deployment\n- Customer runbook\n- Comprehensive tests'
-              });
-              prNumber = pr.number;
-              prUrl = pr.html_url;
-              console.log(`PR created: ${prUrl}`);
-            }
-            
-            // Set outputs
-            core.setOutput('pr_number', prNumber.toString());
-            core.setOutput('pr_url', prUrl);
-
-      - name: Send Telegram Notification
-        if: steps.create-pr.outputs.pr_url != ''
-        run: |
-          PR_URL="${{ steps.create-pr.outputs.pr_url }}"
-          PR_NUM="${{ steps.create-pr.outputs.pr_number }}"
-          if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
-            TEXT="✅ *PR Created!*%0A%23${PR_NUM}%0A${PR_URL}%0AHead: final-all-in → main"
-            curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${TEXT}&parse_mode=Markdown" || echo "Telegram notification failed"
-          fi
+      - name: PR All-In Release (auto)
+        run: node scripts/pr-auto-merge.js
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GH_PAT_FOR_PR: ${{ secrets.GH_PAT }}
+          NOTIFY_CHANNEL: telegram,email
+          PR_HEAD: final-all-in
+          PR_BASE: main
+          PR_TITLE: "Release All-In 2.0.0"
+          PR_BODY: "All-In release with PR automation, bootstrap, dockerization, runbook, and tests."
