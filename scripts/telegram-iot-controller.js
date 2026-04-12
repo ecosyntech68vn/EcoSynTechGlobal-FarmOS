@@ -10,8 +10,7 @@ const ALLOWED_CHAT_IDS = (process.env.TELEGRAM_ALLOWED_CHAT_IDS || '').split(','
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
 const MQTT_BROKER_URL = process.env.MQTT_BROKER_URL || 'mqtt://localhost:1883';
 const FIRMWARE_URL = process.env.FIRMWARE_URL || 'https://firmware.ecosyntech.com';
-const WEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || '';
-const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5';
+const WEATHER_API_URL = 'https://api.open-meteo.com/v1';
 
 let offset = 0;
 let userStates = new Map();
@@ -376,59 +375,114 @@ async function executeScene(chatId, sceneKey, token) {
   await sendMessage(chatId, `✅ *${scene.name} đã kích hoạt!*`);
 }
 
-// ==================== WEATHER FUNCTIONS ====================
+// ==================== WEATHER FUNCTIONS (Open-Meteo - Free, No API Key) ====================
 
-async function getWeather(location = 'Hanoi,vn') {
-  if (!WEATHER_API_KEY) return null;
+const LOCATION = {
+  latitude: process.env.WEATHER_LAT || 10.7769,
+  longitude: process.env.WEATHER_LON || 106.7009,
+  timezone: process.env.WEATHER_TZ || 'Asia/Ho_Chi_Minh',
+  name: process.env.WEATHER_NAME || 'TP.HCM'
+};
+
+async function getWeather() {
   try {
-    return await weatherRequest(`/weather?q=${location}&appid=${WEATHER_API_KEY}&units=metric`);
+    const params = new URLSearchParams({
+      latitude: LOCATION.latitude,
+      longitude: LOCATION.longitude,
+      current: 'temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m',
+      timezone: LOCATION.timezone
+    });
+    return await weatherRequest(`/forecast?${params.toString()}`);
   } catch (e) { return null; }
 }
 
-async function getWeatherForecast(location = 'Hanoi,vn', days = 5) {
-  if (!WEATHER_API_KEY) return null;
+async function getWeatherForecast(days = 5) {
   try {
-    return await weatherRequest(`/forecast?q=${location}&appid=${WEATHER_API_KEY}&units=metric&cnt=${days * 8}`);
+    const params = new URLSearchParams({
+      latitude: LOCATION.latitude,
+      longitude: LOCATION.longitude,
+      daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code',
+      timezone: LOCATION.timezone,
+      forecast_days: days.toString()
+    });
+    return await weatherRequest(`/forecast?${params.toString()}`);
   } catch (e) { return null; }
 }
 
 function formatWeather(weather) {
-  if (!weather) return '❌ Không lấy được dữ liệu thời tiết.\n\nCần cài đặt OPENWEATHER_API_KEY trong .env';
+  if (!weather || !weather.current) return '❌ Không lấy được dữ liệu thời tiết.\n\nKiểm tra kết nối Internet.';
   
-  const temp = weather.main?.temp?.toFixed(1);
-  const humidity = weather.main?.humidity;
-  const desc = weather.weather?.[0]?.description;
-  const icon = getWeatherIcon(weather.weather?.[0]?.main);
-  const city = weather.name;
+  const current = weather.current;
+  const temp = current.temperature_2m?.toFixed(1);
+  const humidity = current.relative_humidity_2m;
+  const precip = current.precipitation;
+  const wind = current.wind_speed_10m;
+  const code = current.weather_code;
+  const icon = getWeatherIcon(code);
+  const desc = getWeatherDesc(code);
   
-  return `${icon} *${city}*\n\n🌡️ Nhiệt độ: *${temp}°C*\n💧 Độ ẩm: *${humidity}%*\n☁️ ${desc}`;
+  return `${icon} *${LOCATION.name}*\n\n🌡️ Nhiệt độ: *${temp}°C*\n💧 Độ ẩm: *${humidity}%*\n🌧️ Mưa: *${precip}mm*\n💨 Gió: *${wind}km/h*\n☁️ ${desc}`;
 }
 
 function formatForecast(forecast) {
-  if (!forecast || !forecast.list) return '❌ Không lấy được dự báo';
+  if (!forecast || !forecast.daily) return '❌ Không lấy được dự báo';
   
-  const lines = ['📅 *Dự báo 5 ngày tới*\n'];
-  const days = {};
+  const lines = ['📅 *Dự báo thời tiết*\n'];
+  const daily = forecast.daily;
   
-  forecast.list.forEach(item => {
-    const date = new Date(item.dt * 1000).toLocaleDateString('vi-VN', { weekday: 'short', day: 'numeric', month: 'short' });
-    if (!days[date]) days[date] = { temps: [], humidity: [] };
-    days[date].temps.push(item.main.temp);
-    days[date].humidity.push(item.main.humidity);
-  });
-  
-  for (const [date, data] of Object.entries(days).slice(0, 5)) {
-    const avgTemp = (data.temps.reduce((a, b) => a + b, 0) / data.temps.length).toFixed(1);
-    const avgHum = Math.round(data.humidity.reduce((a, b) => a + b, 0) / data.humidity.length);
-    lines.push(`📆 ${date}: *${avgTemp}°C*, 💧 ${avgHum}%`);
+  for (let i = 0; i < daily.time.length && i < 5; i++) {
+    const date = new Date(daily.time[i]);
+    const dateStr = date.toLocaleDateString('vi-VN', { weekday: 'short', day: 'numeric', month: 'short' });
+    const icon = getWeatherIcon(daily.weather_code[i]);
+    const tempMax = daily.temperature_2m_max[i]?.toFixed(1);
+    const tempMin = daily.temperature_2m_min[i]?.toFixed(1);
+    const precip = daily.precipitation_sum[i]?.toFixed(1);
+    
+    lines.push(`${icon} *${dateStr}*\n   🌡️ ${tempMin}°C - ${tempMax}°C | 🌧️ ${precip}mm`);
+    lines.push('');
   }
   
   return lines.join('\n');
 }
 
-function getWeatherIcon(main) {
-  const icons = { Clear: '☀️', Clouds: '☁️', Rain: '🌧️', Drizzle: '🌦️', Thunderstorm: '⛈️', Snow: '❄️', Mist: '🌫️' };
-  return icons[main] || '🌤️';
+function getWeatherIcon(code) {
+  const icons = {
+    0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+    45: '🌫️', 48: '🌫️',
+    51: '🌦️', 53: '🌦️', 55: '🌧️',
+    61: '🌧️', 63: '🌧️', 65: '🌧️',
+    71: '🌨️', 73: '🌨️', 75: '❄️',
+    80: '🌦️', 81: '🌧️', 82: '🌧️',
+    95: '⛈️', 96: '⛈️', 99: '⛈️'
+  };
+  return icons[code] || '🌤️';
+}
+
+function getWeatherDesc(code) {
+  const desc = {
+    0: 'Trời quang',
+    1: 'Ít mây',
+    2: 'Nhiều mây',
+    3: 'Âm u',
+    45: 'Sương mù',
+    48: 'Sương mù đóng băng',
+    51: 'Mưa phùn nhẹ',
+    53: 'Mưa phùn',
+    55: 'Mưa phùn đặc',
+    61: 'Mưa nhẹ',
+    63: 'Mưa vừa',
+    65: 'Mưa to',
+    71: 'Tuyết nhẹ',
+    73: 'Tuyết vừa',
+    75: 'Tuyết to',
+    80: 'Mưa rào nhẹ',
+    81: 'Mưa rào vừa',
+    82: 'Mưa rào to',
+    95: 'Giông',
+    96: 'Giông kèm mưa đá',
+    99: 'Giông kèm mưa đá to'
+  };
+  return desc[code] || 'Không xác định';
 }
 
 // ==================== REPORT FUNCTIONS ====================

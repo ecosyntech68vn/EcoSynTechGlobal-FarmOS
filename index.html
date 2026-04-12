@@ -3,910 +3,561 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="EcoSynTech - web app bán hàng thiết bị IoT cho nông nghiệp thông minh, cấu hình theo mùa vụ và quy mô trang trại." />
-  <meta name="theme-color" content="#0f2b1f" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>EcoSynTech — Web app bán hàng thiết bị IoT nông nghiệp</title>
+  <meta name="description" content="EcoSynTech cung cap web app ban hang va tu van giai phap IoT cho nong nghiep thong minh, toi uu nuoc, nang suat va van hanh trang trai." />
+  <meta name="theme-color" content="#dff1e7" />
+  <title>EcoSynTech | He thong ban giai phap IoT nong nghiep thong minh</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="noise"></div>
+  <div class="page-shell"></div>
+
   <header class="topbar">
-    <div class="brand">EcoSynTech</div>
-    <nav class="nav">
-      <a href="#iot-dashboard">Dashboard</a>
-      <a href="#smart-control">Smart Control</a>
-      <a href="#devices">Thiết bị</a>
-      <a href="#store">Cửa hàng</a>
-      <a href="#solutions">Giải pháp</a>
-      <a href="#kits">Bộ kit</a>
-      <a href="#platform">Nền tảng</a>
-      <a href="#contact">Liên hệ</a>
+    <a class="brand" href="#hero">
+      <span class="brand-mark">E</span>
+      <span>
+        <strong>EcoSynTech</strong>
+        <small>Smart Agriculture IoT</small>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Dieu huong chinh">
+      <a href="#solutions">Giai phap</a>
+      <a href="#planner">Tu van cau hinh</a>
+      <a href="#catalog">Thiet bi</a>
+      <a href="#operations">Van hanh</a>
+      <a href="#pricing">Bang gia</a>
+      <a href="#contact">Lien he</a>
     </nav>
-    <button class="cta">Đặt lịch tư vấn</button>
-    <button class="cart-button" aria-label="Mở giỏ hàng">
-      <span>Giỏ hàng</span>
-      <strong class="cart-count">0</strong>
-    </button>
-    <button class="menu" aria-label="Mở menu">☰</button>
+
+    <div class="topbar-actions">
+      <a class="ghost compact-hide" href="#planner">Tinh ROI</a>
+      <button class="cart-button" type="button" data-open-cart>
+        Bao gia
+        <span class="cart-count">0</span>
+      </button>
+      <button class="menu-button" type="button" aria-label="Mo menu">Menu</button>
+    </div>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="hero-left">
-        <p class="eyebrow">Nông nghiệp thông minh · IoT thực chiến · Hệ sinh thái EcoSynTech</p>
-        <h1>Web app bán hàng thiết bị IoT giúp bạn xây dựng trang trại tự vận hành.</h1>
+    <section id="hero" class="hero">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">He thong ban hang IoT cho nong nghiep thong minh</p>
+        <h1>Mau xanh diu mat, quy trinh ro rang, chot giai phap IoT nhanh hon cho tung trang trai.</h1>
         <p class="lead">
-          Chọn cảm biến, bộ điều khiển, gateway và gói cloud theo quy mô. Đồng bộ triển khai,
-          cấu hình mẫu và dịch vụ hậu mãi chuyên sâu cho từng mùa vụ.
+          EcoSynTech ket hop landing page ban hang, bo cau hinh giai phap, cua hang thiet bi va bang dieu phoi van hanh trong mot web app thong nhat.
+          Khach hang co the tu danh gia nhu cau, nhan de xuat bo kit va gui yeu cau bao gia trong vai phut.
         </p>
+
         <div class="hero-actions">
-          <button class="cta">Đặt demo ngay</button>
-          <button class="ghost">Tải catalog thiết bị</button>
+          <a class="cta" href="#planner">Bat dau cau hinh</a>
+          <a class="ghost" href="#catalog">Xem catalog</a>
         </div>
-        <div class="hero-stats">
-          <div>
-            <strong>+28%</strong>
-            <span>Năng suất trung bình</span>
-          </div>
-          <div>
-            <strong>-35%</strong>
-            <span>Lượng nước tưới</span>
-          </div>
-          <div>
+
+        <div class="hero-metrics">
+          <article>
+            <strong>30-45%</strong>
+            <span>Giam luong nuoc tuoi theo zone</span>
+          </article>
+          <article>
+            <strong>14 ngay</strong>
+            <span>Trien khai nhanh cho farm vua</span>
+          </article>
+          <article>
             <strong>24/7</strong>
-            <span>Giám sát vi khí hậu</span>
-          </div>
+            <span>Canh bao va giamsat vi khi hau</span>
+          </article>
         </div>
       </div>
-      <div class="hero-right">
-        <div class="glass-card">
-          <div class="card-header">
-            <h3>Bảng điều khiển bán hàng</h3>
-            <span class="pill">Realtime</span>
-          </div>
-          <div class="grid">
-            <div class="metric">
-              <p>Đơn hàng hôm nay</p>
-              <h4>38</h4>
-              <span class="trend up">+12%</span>
+
+      <div class="hero-panels reveal">
+        <article class="insight-card live-card">
+          <div class="card-head">
+            <div>
+              <p class="mini-label">Pipeline demo</p>
+              <h2>Trung tam tu van EcoCloud</h2>
             </div>
-            <div class="metric">
-              <p>Tỉ lệ chuyển đổi</p>
-              <h4>6.4%</h4>
-              <span class="trend up">Ổn định</span>
+            <span class="status-pill">Live</span>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-block">
+              <span>Lead dang xu ly</span>
+              <strong>42</strong>
             </div>
-            <div class="metric">
-              <p>Giỏ hàng trung bình</p>
-              <h4>24.8M</h4>
-              <span class="trend down">-4%</span>
+            <div class="kpi-block">
+              <span>Ty le chot</span>
+              <strong>6.8%</strong>
             </div>
-            <div class="metric">
-              <p>Hợp đồng đang xử lý</p>
-              <h4>12</h4>
-              <span class="trend up">+3</span>
+            <div class="kpi-block">
+              <span>Gia tri trung binh</span>
+              <strong>128M</strong>
+            </div>
+            <div class="kpi-block">
+              <span>Bo kit de xuat</span>
+              <strong>19</strong>
             </div>
           </div>
-          <div class="chart">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <p class="caption">Tự động tạo báo giá dựa trên cấu hình thiết bị và nhu cầu mùa vụ.</p>
-        </div>
-      </div>
-    </section>
 
-    <section id="iot-dashboard" class="iot-dashboard">
-      <div class="section-title">
-        <p class="eyebrow">EcoCloud Dashboard</p>
-        <h2>Giám sát thời gian thực toàn bộ trang trại</h2>
-      </div>
-      
-      <div class="iot-header">
-        <div class="farm-selector">
-          <select id="farmSelect">
-            <option value="greenhouse-1">Nhà kính A - Rau ăn lá</option>
-            <option value="greenhouse-2">Nhà kính B - Cà chua</option>
-            <option value="open-field">Đồng ruộng - Lúa</option>
-            <option value="orchard">Vườn cây ăn trái</option>
-          </select>
-        </div>
-        <div class="iot-status">
-          <span class="status-indicator online"></span>
-          <span>22 thiết bị online</span>
-          <span class="divider">|</span>
-          <span class="last-update">Cập nhật: <span id="lastUpdate">vừa xong</span></span>
-        </div>
-      </div>
+          <div class="wave-chart" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
 
-      <div class="sensor-grid">
-        <div class="sensor-card" data-sensor="temperature">
-          <div class="sensor-header">
-            <span class="sensor-icon">🌡️</span>
-            <span class="sensor-name">Nhiệt độ</span>
-            <span class="sensor-zone">Zone 1</span>
+          <div class="signal-list">
+            <div>
+              <strong>Do am dat</strong>
+              <span>42%</span>
+            </div>
+            <div>
+              <strong>Nhiet do</strong>
+              <span>27.8 C</span>
+            </div>
+            <div>
+              <strong>Muc nuoc bon</strong>
+              <span>78%</span>
+            </div>
           </div>
-          <div class="sensor-value">28.5<span>°C</span></div>
-          <div class="sensor-chart" id="chart-temperature"></div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Tối thiểu: 18°C</span>
-            <span class="sensor-max">Tối đa: 32°C</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
+        </article>
 
-        <div class="sensor-card" data-sensor="humidity">
-          <div class="sensor-header">
-            <span class="sensor-icon">💧</span>
-            <span class="sensor-name">Độ ẩm không khí</span>
-            <span class="sensor-zone">Zone 1</span>
-          </div>
-          <div class="sensor-value">72<span>%</span></div>
-          <div class="sensor-chart" id="chart-humidity"></div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Tối thiểu: 60%</span>
-            <span class="sensor-max">Tối đa: 85%</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
-
-        <div class="sensor-card" data-sensor="soil">
-          <div class="sensor-header">
-            <span class="sensor-icon">🌱</span>
-            <span class="sensor-name">Độ ẩm đất</span>
-            <span class="sensor-zone">Zone 1</span>
-          </div>
-          <div class="sensor-value">45<span>%</span></div>
-          <div class="sensor-chart" id="chart-soil"></div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Tối thiểu: 30%</span>
-            <span class="sensor-max">Tối đa: 70%</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
-
-        <div class="sensor-card" data-sensor="light">
-          <div class="sensor-header">
-            <span class="sensor-icon">☀️</span>
-            <span class="sensor-name">Ánh sáng</span>
-            <span class="sensor-zone">Zone 1</span>
-          </div>
-          <div class="sensor-value">42.5<span>klux</span></div>
-          <div class="sensor-chart" id="chart-light"></div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Tối thiểu: 20klux</span>
-            <span class="sensor-max">Tối đa: 60klux</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
-
-        <div class="sensor-card" data-sensor="ph">
-          <div class="sensor-header">
-            <span class="sensor-icon">⚗️</span>
-            <span class="sensor-name">pH đất</span>
-            <span class="sensor-zone">Zone 1</span>
-          </div>
-          <div class="sensor-value">6.8<span>pH</span></div>
-          <div class="sensor-chart" id="chart-ph"></div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Tối thiểu: 6.0</span>
-            <span class="sensor-max">Tối đa: 7.5</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
-
-        <div class="sensor-card" data-sensor="co2">
-          <div class="sensor-header">
-            <span class="sensor-icon">🌬️</span>
-            <span class="sensor-name">CO₂</span>
-            <span class="sensor-zone">Zone 1</span>
-          </div>
-          <div class="sensor-value">418<span>ppm</span></div>
-          <div class="sensor-chart" id="chart-co2"></div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Tối thiểu: 350ppm</span>
-            <span class="sensor-max">Tối đa: 800ppm</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
-
-        <div class="sensor-card" data-sensor="ec">
-          <div class="sensor-header">
-            <span class="sensor-icon">⚡</span>
-            <span class="sensor-name">EC (độ dẫn điện)</span>
-            <span class="sensor-zone">Zone 1</span>
-          </div>
-          <div class="sensor-value">2.1<span>mS/cm</span></div>
-          <div class="sensor-chart" id="chart-ec"></div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Tối thiểu: 1.5</span>
-            <span class="sensor-max">Tối đa: 3.0</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
-
-        <div class="sensor-card water-level" data-sensor="water">
-          <div class="sensor-header">
-            <span class="sensor-icon">🚰</span>
-            <span class="sensor-name">Mực nước</span>
-            <span class="sensor-zone">Bồn chứa</span>
-          </div>
-          <div class="sensor-value">78<span>%</span></div>
-          <div class="water-bar">
-            <div class="water-fill"></div>
-          </div>
-          <div class="sensor-footer">
-            <span class="sensor-min">Báo động: dưới 20%</span>
-          </div>
-          <div class="sensor-alert"></div>
-        </div>
-      </div>
-
-      <div class="dashboard-actions">
-        <button class="cta" id="refreshDashboard">
-          <span>🔄</span> Làm mới dữ liệu
-        </button>
-        <button class="ghost" id="exportData">
-          <span>📊</span> Xuất báo cáo
-        </button>
-        <button class="ghost" id="fullscreenDashboard">
-          <span>⛶</span> Toàn màn hình
-        </button>
+        <article class="insight-card soft-card">
+          <p class="mini-label">Gia tri co the ban</p>
+          <h3>Phu hop cho nha kinh, vuon cay, trang trai mo va hop tac xa.</h3>
+          <ul class="feature-list">
+            <li>Cau hinh tu dong theo quy mo va cay trong</li>
+            <li>Bo cong cu ROI de doi chieu chi phi va loi ich</li>
+            <li>Goi bao gia gan voi san pham thuc te</li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <section id="smart-control" class="smart-control">
-      <div class="section-title">
-        <p class="eyebrow">Smart Control Rules</p>
-        <h2>Tự động hóa thông minh theo điều kiện</h2>
-      </div>
-
-      <div class="control-header">
-        <div class="control-tabs">
-          <button class="tab-btn active" data-tab="rules">Rules điều khiển</button>
-          <button class="tab-btn" data-tab="schedule">Lịch tưới - bón</button>
-          <button class="tab-btn" data-tab="history">Lịch sử hoạt động</button>
-        </div>
-        <div class="control-actions">
-          <button class="cta" id="addRuleBtn">
-            <span>+</span> Thêm Rule
-          </button>
-          <button class="ghost" id="addScheduleBtn">
-            <span>+</span> Thêm lịch
-          </button>
-        </div>
-      </div>
-
-      <div class="tab-content active" id="tab-rules">
-        <div class="rules-list" id="rulesList">
-        </div>
-      </div>
-
-      <div class="tab-content" id="tab-schedule">
-        <div class="schedule-grid">
-          <div class="schedule-card">
-            <h4>Lịch tưới sáng</h4>
-            <p>6:00 - 7:00</p>
-            <span class="schedule-status active">Đang hoạt động</span>
-            <div class="schedule-zones">
-              <span>Zone 1</span>
-              <span>Zone 2</span>
-              <span>Zone 3</span>
-            </div>
-          </div>
-          <div class="schedule-card">
-            <h4>Lịch tưới chiều</h4>
-            <p>17:00 - 18:00</p>
-            <span class="schedule-status active">Đang hoạt động</span>
-            <div class="schedule-zones">
-              <span>Zone 4</span>
-              <span>Zone 5</span>
-            </div>
-          </div>
-          <div class="schedule-card">
-            <h4>Bón phân định kỳ</h4>
-            <p>Thứ 3, Thứ 6</p>
-            <span class="schedule-status">Tạm dừng</span>
-            <div class="schedule-zones">
-              <span>Tất cả zones</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-content" id="tab-history">
-        <div class="history-list">
-          <div class="history-item">
-            <span class="history-time">Hôm nay, 06:15</span>
-            <span class="history-action">Tưới tự động Zone 1</span>
-            <span class="history-trigger">Độ ẩm đất &lt; 35%</span>
-            <span class="history-status success">Thành công</span>
-          </div>
-          <div class="history-item">
-            <span class="history-time">Hôm nay, 05:30</span>
-            <span class="history-action">Bật quạt thông gió</span>
-            <span class="history-trigger">Nhiệt độ &gt; 30°C</span>
-            <span class="history-status success">Thành công</span>
-          </div>
-          <div class="history-item">
-            <span class="history-time">Hôm nay, 03:45</span>
-            <span class="history-action">Cảnh báo mực nước</span>
-            <span class="history-trigger">Mực nước &lt; 25%</span>
-            <span class="history-status warning">Cảnh báo</span>
-          </div>
-          <div class="history-item">
-            <span class="history-time">Hôm qua, 22:30</span>
-            <span class="history-action">Tắt đèn grow</span>
-            <span class="history-trigger">Đến giờ tắt theo lịch</span>
-            <span class="history-status success">Thành công</span>
-          </div>
-        </div>
+    <section class="trust reveal">
+      <p>Duoc quan tam boi doi van hanh nha kinh, trang trai cay an trai va doanh nghiep che bien nong san.</p>
+      <div class="trust-row">
+        <span>GreenDelta</span>
+        <span>Mekong Fresh</span>
+        <span>Lam Dong Farm Hub</span>
+        <span>AgriVista</span>
+        <span>Song Tien Cooperative</span>
       </div>
     </section>
 
-    <section id="devices" class="devices-section">
-      <div class="section-title">
-        <p class="eyebrow">Quản lý thiết bị</p>
-        <h2>Theo dõi và điều khiển thiết bị IoT</h2>
+    <section id="solutions" class="section-block">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Kien truc giai phap</p>
+        <h2>Mot he thong ban hang co the giai thich ro san pham, du lieu va gia tri van hanh.</h2>
       </div>
 
-      <div class="devices-overview">
-        <div class="device-stat">
-          <span class="device-count online">18</span>
-          <span>Online</span>
-        </div>
-        <div class="device-stat">
-          <span class="device-count offline">2</span>
-          <span>Offline</span>
-        </div>
-        <div class="device-stat">
-          <span class="device-count warning">1</span>
-          <span>Cần bảo trì</span>
-        </div>
-        <div class="device-stat">
-          <span class="device-count">22</span>
-          <span>Tổng thiết bị</span>
-        </div>
-      </div>
+      <div class="solution-grid">
+        <article class="solution-card reveal">
+          <span class="card-index">01</span>
+          <h3>Lop hien truong</h3>
+          <p>Cac cam bien dat, vi khi hau, muc nuoc, EC, pH va gateway chiu duoc moi truong nong nghiep thuc te.</p>
+          <ul>
+            <li>LoRaWAN va 4G cho khu vuc xa</li>
+            <li>Canh bao su co tai cho</li>
+            <li>Tuong thich nhieu kieu cay trong</li>
+          </ul>
+        </article>
 
-      <div class="devices-list">
-        <div class="device-item">
-          <div class="device-info">
-            <span class="device-type">🌡️</span>
-            <div class="device-details">
-              <h4>SoilSense-001</h4>
-              <p>Cảm biến đất 4-trong-1 · Zone A1</p>
-            </div>
-          </div>
-          <div class="device-readings">
-            <span>28.5°C</span>
-            <span>45%</span>
-            <span>6.8pH</span>
-          </div>
-          <div class="device-status online">Online</div>
-          <div class="device-actions">
-            <button class="ghost" title="Cấu hình">⚙️</button>
-            <button class="ghost" title="Lịch sử">📊</button>
-          </div>
-        </div>
+        <article class="solution-card reveal">
+          <span class="card-index">02</span>
+          <h3>Lop tu dong hoa</h3>
+          <p>Dieu khien bom, van, quat, den va lich tuoi dua tren trang thai cam bien thay vi thao tac thu cong.</p>
+          <ul>
+            <li>Rule IF-THEN theo zone</li>
+            <li>Lich tuoi theo mua vu</li>
+            <li>Giam lang phi nuoc va dien</li>
+          </ul>
+        </article>
 
-        <div class="device-item">
-          <div class="device-info">
-            <span class="device-type">💨</span>
-            <div class="device-details">
-              <h4>Pump-Control-01</h4>
-              <p>Bơm trung tâm · Zone chính</p>
-            </div>
-          </div>
-          <div class="device-readings">
-            <span class="device-state running">ĐANG CHẠY</span>
-          </div>
-          <div class="device-status online">Online</div>
-          <div class="device-actions">
-            <button class="ghost" title="Bật/Tắt">⏻</button>
-            <button class="ghost" title="Cấu hình">⚙️</button>
-          </div>
-        </div>
-
-        <div class="device-item">
-          <div class="device-info">
-            <span class="device-type">🚿</span>
-            <div class="device-details">
-              <h4>Valve-Zone-03</h4>
-              <p>Van tưới · Zone 3</p>
-            </div>
-          </div>
-          <div class="device-readings">
-            <span class="device-state idle">ĐANG CHỜ</span>
-          </div>
-          <div class="device-status online">Online</div>
-          <div class="device-actions">
-            <button class="ghost" title="Bật/Tắt">⏻</button>
-            <button class="ghost" title="Cấu hình">⚙️</button>
-          </div>
-        </div>
-
-        <div class="device-item offline">
-          <div class="device-info">
-            <span class="device-type">🌡️</span>
-            <div class="device-details">
-              <h4>AirSense-002</h4>
-              <p>Cảm biến khí hậu · Zone B2</p>
-            </div>
-          </div>
-          <div class="device-readings">
-            <span>--</span>
-          </div>
-          <div class="device-status offline">Offline</div>
-          <div class="device-actions">
-            <button class="ghost" title="Kiểm tra">🔍</button>
-          </div>
-        </div>
-
-        <div class="device-item">
-          <div class="device-info">
-            <span class="device-type">💡</span>
-            <div class="device-details">
-              <h4>GrowLight-01</h4>
-              <p>Đèn LED grow · Zone 1</p>
-            </div>
-          </div>
-          <div class="device-readings">
-            <span class="device-state running">BẬT</span>
-          </div>
-          <div class="device-status online">Online</div>
-          <div class="device-actions">
-            <button class="ghost" title="Bật/Tắt">⏻</button>
-            <button class="ghost" title="Cấu hình">⚙️</button>
-          </div>
-        </div>
+        <article class="solution-card reveal">
+          <span class="card-index">03</span>
+          <h3>Lop doanh thu va bao cao</h3>
+          <p>Web app ban hang giup tu van nhanh, tao bao gia, uoc tinh ROI va trinh bay dashboard van hanh cho khach hang.</p>
+          <ul>
+            <li>Bo de xuat goi thong minh</li>
+            <li>Bang gia va cart de gui bao gia</li>
+            <li>Mo rong sang dashboard sau trien khai</li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <div class="alert-panel" id="alertPanel">
-      <div class="alert-header">
-        <h4>🔔 Cảnh báo <span class="alert-count">3</span></h4>
-        <button class="ghost" id="closeAlerts">×</button>
+    <section id="planner" class="planner-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Cong cu tu van</p>
+        <h2>Chon quy mo va muc tieu, he thong se de xuat cau hinh phu hop.</h2>
       </div>
-      <div class="alert-list">
-        <div class="alert-item warning">
-          <span class="alert-icon">⚠️</span>
-          <div class="alert-content">
-            <strong>Mực nước thấp</strong>
-            <p>Bồn chứa còn 22% - Cần bổ sung</p>
-            <span class="alert-time">5 phút trước</span>
-          </div>
-        </div>
-        <div class="alert-item info">
-          <span class="alert-icon">ℹ️</span>
-          <div class="alert-content">
-            <strong>Tưới tự động hoàn thành</strong>
-            <p>Zone 1 & Zone 2 đã tưới xong</p>
-            <span class="alert-time">15 phút trước</span>
-          </div>
-        </div>
-        <div class="alert-item error">
-          <span class="alert-icon">🚨</span>
-          <div class="alert-content">
-            <strong>Sensor mất kết nối</strong>
-            <p>AirSense-002 không phản hồi</p>
-            <span class="alert-time">1 giờ trước</span>
-          </div>
-        </div>
-      </div>
-      <button class="ghost alert-mark-all">Đánh dấu đã đọc</button>
-    </div>
 
-    <div class="rule-modal" id="ruleModal">
-      <div class="rule-modal-content">
-        <div class="rule-modal-header">
-          <h3>Tạo Rule điều khiển mới</h3>
-          <button class="ghost" id="closeRuleModal">×</button>
-        </div>
-        <form id="ruleForm" class="rule-form">
-          <div class="form-group">
-            <label>Tên Rule</label>
-            <input type="text" name="ruleName" placeholder="VD: Tưới khi đất khô" required />
-          </div>
-          <div class="form-group">
-            <label>Mô tả</label>
-            <input type="text" name="ruleDescription" placeholder="Mô tả ngắn về rule" />
-          </div>
-          
-          <div class="form-section">
-            <h4>Điều kiện kích hoạt (IF)</h4>
-            <div class="condition-builder">
-              <select name="sensorType">
-                <option value="soil">Độ ẩm đất</option>
-                <option value="temperature">Nhiệt độ</option>
-                <option value="humidity">Độ ẩm không khí</option>
-                <option value="light">Ánh sáng</option>
-                <option value="ph">pH đất</option>
-                <option value="water">Mực nước</option>
-              </select>
-              <select name="operator">
-                <option value="<">&lt; (Nhỏ hơn)</option>
-                <option value=">">&gt; (Lớn hơn)</option>
-                <option value="<=">≤ (Nhỏ hơn hoặc bằng)</option>
-                <option value=">=">≥ (Lớn hơn hoặc bằng)</option>
-                <option value="==">= (Bằng)</option>
-              </select>
-              <input type="number" name="threshold" placeholder="Giá trị" step="0.1" required />
-              <span class="condition-unit">%</span>
-            </div>
-            <div class="condition-logic">
-              <label>
-                <input type="checkbox" name="useTimeCondition" />
-                Thêm điều kiện thời gian
-              </label>
-              <div class="time-conditions" id="timeConditions" style="display: none;">
-                <select name="timeOperator">
-                  <option value="between">Trong khoảng</option>
-                  <option value="outside">Ngoài khoảng</option>
-                </select>
-                <input type="time" name="timeStart" /> - <input type="time" name="timeEnd" />
-              </div>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h4>Hành động (THEN)</h4>
-            <div class="action-builder">
-              <select name="actionType">
-                <option value="valve_open">Mở van tưới</option>
-                <option value="valve_close">Đóng van tưới</option>
-                <option value="pump_start">Bật bơm</option>
-                <option value="pump_stop">Tắt bơm</option>
-                <option value="fan_on">Bật quạt</option>
-                <option value="fan_off">Tắt quạt</option>
-                <option value="light_on">Bật đèn</option>
-                <option value="light_off">Tắt đèn</option>
-                <option value="alert">Gửi cảnh báo</option>
-              </select>
-              <select name="targetZone">
-                <option value="zone1">Zone 1</option>
-                <option value="zone2">Zone 2</option>
-                <option value="zone3">Zone 3</option>
-                <option value="zone4">Zone 4</option>
-                <option value="zone5">Zone 5</option>
-                <option value="all">Tất cả zones</option>
-              </select>
-            </div>
-            <div class="action-delay">
-              <label>Độ trễ thực hiện:</label>
-              <input type="number" name="delayMinutes" value="0" min="0" max="60" />
-              <span>phút</span>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h4>Cài đặt nâng cao</h4>
-            <div class="advanced-options">
-              <label>
-                <input type="checkbox" name="enabled" checked />
-                Rule đang hoạt động
-              </label>
-              <label>
-                <input type="checkbox" name="sendNotification" checked />
-                Gửi thông báo khi kích hoạt
-              </label>
-              <label>
-                <input type="checkbox" name="requireConfirmation" />
-                Yêu cầu xác nhận trước khi thực hiện
-              </label>
-            </div>
-            <div class="cooldown-setting">
-              <label>Khoảng cách tối thiểu giữa 2 lần kích hoạt:</label>
-              <input type="number" name="cooldownMinutes" value="30" min="1" max="1440" />
-              <span>phút</span>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="ghost" id="cancelRule">Hủy</button>
-            <button type="submit" class="cta">Lưu Rule</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="rule-modal" id="deviceConfigModal">
-      <div class="rule-modal-content">
-        <div class="rule-modal-header">
-          <h3>Cấu hình thiết bị</h3>
-          <button class="ghost" id="closeDeviceConfig">×</button>
-        </div>
-        <form id="deviceConfigForm">
-          <div class="form-group">
-            <label>Tên thiết bị</label>
-            <input type="text" name="deviceName" placeholder="VD: SoilSense-001" required />
-          </div>
-          <div class="form-group">
-            <label>Loại thiết bị</label>
-            <select name="deviceType">
-              <option value="sensor">Cảm biến</option>
-              <option value="valve">Van tưới</option>
-              <option value="pump">Bơm nước</option>
-              <option value="fan">Quạt thông gió</option>
-              <option value="light">Đèn grow</option>
-              <option value="gateway">Gateway</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Zone/Vùng</label>
-            <select name="deviceZone">
-              <option value="zone1">Zone 1</option>
-              <option value="zone2">Zone 2</option>
-              <option value="zone3">Zone 3</option>
-              <option value="zone4">Zone 4</option>
-              <option value="zone5">Zone 5</option>
-              <option value="all">Tất cả</option>
-            </select>
-          </div>
-          <div class="form-section">
-            <h4>Cài đặt ngưỡng cảnh báo</h4>
-            <div class="threshold-settings">
-              <div class="form-group">
-                <label>Ngưỡng cảnh báo (thấp)</label>
-                <input type="number" name="thresholdLow" placeholder="VD: 30" step="0.1" />
-              </div>
-              <div class="form-group">
-                <label>Ngưỡng nguy hiểm</label>
-                <input type="number" name="thresholdCritical" placeholder="VD: 20" step="0.1" />
-              </div>
-            </div>
-          </div>
-          <div class="form-section">
-            <h4>Cài đặt gửi dữ liệu</h4>
-            <div class="form-group">
-              <label>Khoảng thời gian gửi (giây)</label>
-              <input type="number" name="reportInterval" value="300" min="30" max="3600" />
-            </div>
-          </div>
-          <div class="form-group">
+      <div class="planner-layout">
+        <form class="planner-card reveal" id="plannerForm">
+          <div class="field-grid">
             <label>
-              <input type="checkbox" name="deviceEnabled" checked />
-              Thiết bị đang hoạt động
+              Quy mo trang trai
+              <select name="farmSize">
+                <option value="1">Duoi 1 ha</option>
+                <option value="3" selected>1-3 ha</option>
+                <option value="8">3-10 ha</option>
+                <option value="20">Tren 10 ha</option>
+              </select>
+            </label>
+
+            <label>
+              Loai cay trong
+              <select name="cropType">
+                <option value="vegetable" selected>Rau nha kinh</option>
+                <option value="fruit">Cay an trai</option>
+                <option value="rice">Lua va cay ngan ngay</option>
+                <option value="herb">Duoc lieu va rau gia vi</option>
+              </select>
+            </label>
+
+            <label>
+              Muc do tu dong hoa
+              <select name="automationLevel">
+                <option value="starter">Giam sat co ban</option>
+                <option value="growth" selected>Giam sat + tuoi tu dong</option>
+                <option value="pro">Full automation</option>
+              </select>
+            </label>
+
+            <label>
+              Muc tieu uu tien
+              <select name="businessGoal">
+                <option value="water" selected>Tiet kiem nuoc</option>
+                <option value="yield">Tang nang suat</option>
+                <option value="labor">Giam nhan cong</option>
+                <option value="trace">Bao cao va truy xuat</option>
+              </select>
             </label>
           </div>
-          <div class="form-actions">
-            <button type="button" class="ghost" id="cancelDeviceConfig">Hủy</button>
-            <button type="submit" class="cta">Lưu cấu hình</button>
+
+          <div class="slider-group">
+            <label for="budgetRange">Ngan sach du kien</label>
+            <input id="budgetRange" name="budgetRange" type="range" min="40" max="400" step="10" value="140" />
+            <div class="range-row">
+              <span>40M</span>
+              <strong id="budgetValue">140M VND</strong>
+              <span>400M</span>
+            </div>
+          </div>
+
+          <div class="planner-actions">
+            <button class="cta" type="submit">Cap nhat de xuat</button>
+            <button class="ghost" type="button" id="addBundleToCart">Them goi de xuat vao bao gia</button>
           </div>
         </form>
-      </div>
-    </div>
 
-    <section class="logos">
-      <p>Được tin dùng bởi hợp tác xã, trang trại và doanh nghiệp nông nghiệp:</p>
-      <div class="logo-row">
-        <span>GreenDelta</span>
-        <span>AgriVista</span>
-        <span>Mekong Fresh</span>
-        <span>Hợp tác xã Nắng Mới</span>
-        <span>VietHerb</span>
+        <div class="recommend-card reveal">
+          <div class="recommend-head">
+            <div>
+              <p class="mini-label">Goi de xuat</p>
+              <h3 id="bundleName">EcoSyn Growth Kit</h3>
+            </div>
+            <span class="tag">Khuyen nghi</span>
+          </div>
+
+          <p id="bundleSummary">
+            Cau hinh can bang giua giamsat va tuoi tu dong, phu hop farm 1-3 ha can giam luong nuoc va on dinh nang suat.
+          </p>
+
+          <div class="recommend-metrics">
+            <article>
+              <span>Chi phi dau tu</span>
+              <strong id="bundlePrice">138.000.000 VND</strong>
+            </article>
+            <article>
+              <span>Hoan von uoc tinh</span>
+              <strong id="bundlePayback">11 thang</strong>
+            </article>
+            <article>
+              <span>Tiet kiem nuoc</span>
+              <strong id="bundleWater">31%</strong>
+            </article>
+            <article>
+              <span>Giam nhan cong</span>
+              <strong id="bundleLabor">22%</strong>
+            </article>
+          </div>
+
+          <div class="bundle-composition">
+            <h4>Thanh phan chinh</h4>
+            <ul id="bundleItems"></ul>
+          </div>
+
+          <div class="roi-card">
+            <div>
+              <span>Gia tri tiep can khach hang</span>
+              <strong id="roiValue">+186M / nam</strong>
+            </div>
+            <p id="roiNarrative">
+              Cau hinh nay giup khach hang de hinh dung loi ich qua tiet kiem nuoc, giam thao tac tay va giam rui ro bat thuong moi truong.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="store" class="store">
-      <div class="store-header">
-        <div>
-          <p class="eyebrow">Cửa hàng thiết bị</p>
-          <h2>Chọn thiết bị IoT theo từng vùng canh tác.</h2>
-          <p class="lead">
-            Dòng thiết bị EcoSynTech được cấu hình sẵn cho nông nghiệp Việt Nam, bảo hành tại chỗ
-            và kết nối trực tiếp nền tảng EcoCloud.
+    <section id="catalog" class="section-block catalog-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Catalog san pham</p>
+        <h2>Cua hang thiet bi cho phep tu chon tung thanh phan vao goi bao gia.</h2>
+      </div>
+
+      <div class="catalog-tools reveal">
+        <div class="filter-row" id="filterRow">
+          <button class="filter-button active" type="button" data-filter="all">Tat ca</button>
+          <button class="filter-button" type="button" data-filter="sensor">Cam bien</button>
+          <button class="filter-button" type="button" data-filter="gateway">Gateway</button>
+          <button class="filter-button" type="button" data-filter="control">Dieu khien</button>
+          <button class="filter-button" type="button" data-filter="cloud">Cloud</button>
+        </div>
+
+        <label class="search-field">
+          <span>Tim san pham</span>
+          <input id="catalogSearch" type="search" placeholder="VD: Soil, Gateway, Pump..." />
+        </label>
+      </div>
+
+      <div class="catalog-grid reveal" id="catalogGrid"></div>
+    </section>
+
+    <section id="operations" class="operations-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Mo phong van hanh</p>
+        <h2>Trinh bay cho khach hang cach he thong se duoc van hanh sau khi trien khai.</h2>
+      </div>
+
+      <div class="operations-grid">
+        <article class="ops-card reveal">
+          <div class="ops-top">
+            <h3>Dashboard thoi gian thuc</h3>
+            <span class="status-pill">On farm</span>
+          </div>
+          <div class="sensor-grid">
+            <div class="sensor-tile">
+              <span>Do am dat</span>
+              <strong>42%</strong>
+              <small>On dinh</small>
+            </div>
+            <div class="sensor-tile">
+              <span>Nhiet do</span>
+              <strong>27.8 C</strong>
+              <small>+0.8 C</small>
+            </div>
+            <div class="sensor-tile">
+              <span>EC dinh duong</span>
+              <strong>1.9 mS</strong>
+              <small>Hop ly</small>
+            </div>
+            <div class="sensor-tile">
+              <span>Muc nuoc</span>
+              <strong>78%</strong>
+              <small>An toan</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="ops-card reveal">
+          <div class="ops-top">
+            <h3>Rule dieu khien</h3>
+            <span class="tag">IF THEN</span>
+          </div>
+          <div class="rule-list">
+            <div class="rule-item">
+              <strong>Neu do am dat &lt; 35%</strong>
+              <span>Mo van Zone 1 trong 12 phut</span>
+            </div>
+            <div class="rule-item">
+              <strong>Neu nhiet do &gt; 31 C</strong>
+              <span>Bat quat thong gio va gui canh bao</span>
+            </div>
+            <div class="rule-item">
+              <strong>Neu muc nuoc &lt; 25%</strong>
+              <span>Canh bao doi van hanh qua app</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ops-card reveal">
+          <div class="ops-top">
+            <h3>Goc nhin kinh doanh</h3>
+            <span class="status-pill muted">Sales asset</span>
+          </div>
+          <div class="business-points">
+            <div>
+              <strong>Case study</strong>
+              <p>Mo phong ket qua cho vuon xoai: giam 40% nuoc tuoi sau 2 thang.</p>
+            </div>
+            <div>
+              <strong>ESG va truy xuat</strong>
+              <p>Co san chu ky bao cao nuoc, nang luong va lich su can thiep.</p>
+            </div>
+            <div>
+              <strong>Upsell cloud</strong>
+              <p>De dang ban them goi canh bao, bao cao, dashboard theo nhom trang trai.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block timeline-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Lo trinh trien khai</p>
+        <h2>Trien khai duoc trinh bay thanh 4 buoc ngan gon de ho tro chot deal.</h2>
+      </div>
+
+      <div class="timeline-grid">
+        <article class="timeline-card reveal">
+          <span>01</span>
+          <h3>Khao sat farm</h3>
+          <p>Xac dinh zone, dien tich, nguon nuoc, nguon dien va bai toan van hanh.</p>
+        </article>
+        <article class="timeline-card reveal">
+          <span>02</span>
+          <h3>Chot cau hinh</h3>
+          <p>Ghep thiet bi vao goi, tinh tong muc dau tu, tao bao gia va tai lieu demo.</p>
+        </article>
+        <article class="timeline-card reveal">
+          <span>03</span>
+          <h3>Lap dat va calibrate</h3>
+          <p>Gan sensor, gateway, rule dieu khien va kiem thu moi truong theo cay trong.</p>
+        </article>
+        <article class="timeline-card reveal">
+          <span>04</span>
+          <h3>Van hanh va upsell</h3>
+          <p>Theo doi sau trien khai, ban them cloud analytics, dashboard ESG va traceability.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="pricing" class="pricing-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Bang gia dinh huong</p>
+        <h2>Ba tang gia tri de ban nhanh tu muc co ban den enterprise.</h2>
+      </div>
+
+      <div class="pricing-grid">
+        <article class="price-card reveal">
+          <p class="tier">Starter</p>
+          <h3>Giam sat co ban</h3>
+          <strong>49M - 79M</strong>
+          <ul>
+            <li>Cam bien dat va vi khi hau co ban</li>
+            <li>1 gateway</li>
+            <li>Dashboard cloud 12 thang</li>
+          </ul>
+          <button class="ghost" type="button" data-plan="Starter">Them vao bao gia</button>
+        </article>
+
+        <article class="price-card featured reveal">
+          <p class="tier">Growth</p>
+          <h3>Giam sat + tuoi tu dong</h3>
+          <strong>118M - 168M</strong>
+          <ul>
+            <li>Cam bien dat, thoi tiet, muc nuoc</li>
+            <li>Van va bom dieu khien theo zone</li>
+            <li>Rule canh bao va lich tuoi</li>
+          </ul>
+          <button class="cta" type="button" data-plan="Growth">Chon goi nay</button>
+        </article>
+
+        <article class="price-card reveal">
+          <p class="tier">Enterprise</p>
+          <h3>Full automation + bao cao</h3>
+          <strong>Theo du an</strong>
+          <ul>
+            <li>Da khu vuc, da trang trai</li>
+            <li>Tich hop ERP va ESG report</li>
+            <li>Dong hanh trien khai 24/7</li>
+          </ul>
+          <button class="ghost" type="button" data-plan="Enterprise">Dat lich tu van</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block case-section">
+      <div class="case-layout">
+        <div class="case-copy reveal">
+          <p class="eyebrow">Tinh huong ban hang</p>
+          <h2>Mot case study ro rang lam tang kha nang chot deal.</h2>
+          <p>
+            Voi vuon cay an trai 6 ha, EcoSynTech co the de xuat goi Growth + cloud analytics.
+            Khach hang duoc thay ngay bai toan tiet kiem nuoc, giam nhan cong va canh bao som tai mot giao dien duy nhat.
           </p>
         </div>
-        <div class="store-meta">
-          <div class="meta-card">
-            <strong>48 giờ</strong>
-            <span>Lắp đặt chuẩn</span>
-          </div>
-          <div class="meta-card">
-            <strong>2 năm</strong>
-            <span>Bảo hành phần cứng</span>
-          </div>
-          <div class="meta-card">
-            <strong>Miễn phí</strong>
-            <span>Hiệu chuẩn lần đầu</span>
-          </div>
-        </div>
-      </div>
-      <div class="filter-bar">
-        <div class="filters">
-          <button class="filter-button active" data-filter="all">Tất cả</button>
-          <button class="filter-button" data-filter="sensor">Cảm biến</button>
-          <button class="filter-button" data-filter="gateway">Gateway</button>
-          <button class="filter-button" data-filter="automation">Tự động hóa</button>
-          <button class="filter-button" data-filter="power">Năng lượng</button>
-        </div>
-        <div class="search">
-          <input type="text" placeholder="Tìm thiết bị theo tên..." aria-label="Tìm thiết bị" />
-        </div>
-      </div>
-      <div id="storeGrid" class="store-grid"></div>
-    </section>
 
-    <section id="solutions" class="solutions">
-      <div class="section-title">
-        <p class="eyebrow">Giải pháp tích hợp</p>
-        <h2>Ba lớp giải pháp đồng bộ từ hiện trường tới dữ liệu.</h2>
-      </div>
-      <div class="solution-grid">
-        <article>
-          <h3>Cảm biến & thu thập dữ liệu</h3>
-          <p>Đo độ ẩm đất, pH, EC, vi khí hậu và mức nước hồ chứa với chuẩn kết nối LoRaWAN.</p>
-          <ul>
-            <li>Pin 2 năm, chịu nắng mưa</li>
-            <li>Tự hiệu chuẩn định kỳ</li>
-            <li>Cảnh báo rò rỉ hoặc khô hạn</li>
-          </ul>
-        </article>
-        <article>
-          <h3>Tự động hóa & điều khiển</h3>
-          <p>Tưới tiêu, bón phân, quạt thông gió và đèn chiếu theo kịch bản điều kiện.</p>
-          <ul>
-            <li>Điều khiển theo zone</li>
-            <li>Hẹn giờ theo mùa vụ</li>
-            <li>Điện năng tối ưu</li>
-          </ul>
-        </article>
-        <article>
-          <h3>Phân tích & dự báo AI</h3>
-          <p>Mô hình AI theo dõi xu hướng sinh trưởng, cảnh báo sâu bệnh và dự báo năng suất.</p>
-          <ul>
-            <li>Chấm điểm rủi ro mùa vụ</li>
-            <li>Gợi ý lịch tưới - bón</li>
-            <li>Báo cáo tài chính theo lô</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section id="kits" class="products">
-      <div class="section-title">
-        <p class="eyebrow">Bộ kit bán hàng</p>
-        <h2>Chọn cấu hình phù hợp quy mô trang trại.</h2>
-      </div>
-      <div class="product-grid">
-        <article class="product-card">
-          <h3>EcoSyn Starter</h3>
-          <p>Cho mô hình nhà kính 1.000–3.000 m².</p>
-          <div class="price">49.000.000₫</div>
-          <ul>
-            <li>6 cảm biến đất + 1 trạm thời tiết</li>
-            <li>2 van tưới tự động</li>
-            <li>1 năm nền tảng EcoCloud</li>
-          </ul>
-          <button class="ghost">Nhận báo giá</button>
-        </article>
-        <article class="product-card highlight">
-          <div class="ribbon">Phổ biến</div>
-          <h3>EcoSyn Pro</h3>
-          <p>Cho trang trại mở 1–5 ha.</p>
-          <div class="price">128.000.000₫</div>
-          <ul>
-            <li>12 cảm biến đất + 2 trạm thời tiết</li>
-            <li>6 zone tưới, 2 pump controller</li>
-            <li>AI cảnh báo sâu bệnh</li>
-          </ul>
-          <button class="cta">Đặt demo</button>
-        </article>
-        <article class="product-card">
-          <h3>EcoSyn Enterprise</h3>
-          <p>Cho hợp tác xã và doanh nghiệp lớn.</p>
-          <div class="price">Liên hệ</div>
-          <ul>
-            <li>Giám sát đa vùng</li>
-            <li>Tích hợp ERP nông nghiệp</li>
-            <li>Chuyên gia đồng hành 24/7</li>
-          </ul>
-          <button class="ghost">Tư vấn giải pháp</button>
-        </article>
-      </div>
-    </section>
-
-    <section id="platform" class="platform">
-      <div class="section-title">
-        <p class="eyebrow">Nền tảng EcoCloud</p>
-        <h2>Điều hành trang trại từ mọi thiết bị, mọi nơi.</h2>
-      </div>
-      <div class="platform-grid">
-        <div class="platform-card">
-          <h3>Dashboard trực quan</h3>
-          <p>Bản đồ khu ruộng, biểu đồ theo thời gian thực và cảnh báo theo từng lô.</p>
-        </div>
-        <div class="platform-card">
-          <h3>Workflow nông nghiệp</h3>
-          <p>Tự động hóa lịch tưới, ghi chú chăm sóc và giao việc cho đội ngũ.</p>
-        </div>
-        <div class="platform-card">
-          <h3>Kết nối mở API</h3>
-          <p>Dễ dàng tích hợp cảm biến bên thứ ba, ERP và hệ thống quản trị kho.</p>
-        </div>
-        <div class="platform-card">
-          <h3>Báo cáo ESG</h3>
-          <p>Theo dõi tiêu thụ nước, phân bón và phát thải để đáp ứng chuẩn xuất khẩu.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="case">
-      <div class="case-left">
-        <p class="eyebrow">Case study</p>
-        <h2>Trang trại xoài An Thuận: giảm 40% nước tưới chỉ sau 2 tháng.</h2>
-        <p>
-          EcoSynTech triển khai 18 cảm biến và điều khiển 8 vùng tưới. AI dự báo khô hạn sớm giúp
-          đội ngũ điều chỉnh lịch tưới, tiết kiệm 3200 m³ nước mỗi vụ.
-        </p>
-        <button class="ghost">Tải báo cáo chi tiết</button>
-      </div>
-      <div class="case-right">
-        <div class="signal">
-          <div class="pulse"></div>
-          <div class="pulse"></div>
-          <div class="pulse"></div>
-          <div class="pulse"></div>
-        </div>
-        <div class="case-stats">
-          <div>
-            <strong>+18%</strong>
-            <span>Sản lượng</span>
-          </div>
-          <div>
+        <div class="case-panel reveal">
+          <div class="case-stat">
+            <span>Nuoc tuoi</span>
             <strong>-40%</strong>
-            <span>Nước tưới</span>
           </div>
-          <div>
+          <div class="case-stat">
+            <span>San luong</span>
+            <strong>+18%</strong>
+          </div>
+          <div class="case-stat">
+            <span>Loi nhuan</span>
             <strong>+22%</strong>
-            <span>Lợi nhuận</span>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="contact" class="contact">
-      <div class="contact-card">
-        <div>
-          <p class="eyebrow">Liên hệ tư vấn</p>
-          <h2>Hãy để EcoSynTech thiết kế hệ IoT phù hợp mùa vụ của bạn.</h2>
-          <p>Nhận bản khảo sát, demo dashboard và đề xuất triển khai trong 48 giờ.</p>
-          <div class="contact-info">
+    <section id="contact" class="contact-section">
+      <div class="contact-card reveal">
+        <div class="contact-copy">
+          <p class="eyebrow">Lien he tu van</p>
+          <h2>Gui thong tin de nhan dashboard demo va bao gia cau hinh trong 48 gio.</h2>
+          <p>
+            Form nay phu hop cho doi sales hoac doi ky thuat su dung ngay khi demo voi khach hang.
+          </p>
+          <div class="contact-lines">
             <span>Hotline: 1900 88 66 92</span>
             <span>Email: hello@ecosyntech.vn</span>
-            <span>Văn phòng: TP. Hồ Chí Minh · Đồng Tháp · Lâm Đồng</span>
+            <span>Van phong: Ho Chi Minh, Dong Thap, Lam Dong</span>
           </div>
         </div>
-        <form class="contact-form">
+
+        <form class="contact-form" id="contactForm">
           <label>
-            Tên doanh nghiệp
-            <input type="text" placeholder="VD: Hợp tác xã Lúa Vàng" />
+            Ten doanh nghiep
+            <input type="text" name="company" placeholder="Vi du: Hop tac xa Lua Vang" required />
           </label>
           <label>
-            Quy mô canh tác (ha)
-            <input type="text" placeholder="VD: 3 ha" />
+            Quy mo canh tac
+            <input type="text" name="scale" placeholder="Vi du: 3 ha, 8 nha kinh" required />
           </label>
           <label>
-            Nhu cầu quan tâm
-            <select>
-              <option>Cảm biến & giám sát</option>
-              <option>Tưới tiêu tự động</option>
-              <option>AI dự báo mùa vụ</option>
-              <option>Tích hợp ERP</option>
+            Muc tieu uu tien
+            <select name="interest">
+              <option value="water">Tiet kiem nuoc</option>
+              <option value="yield">Tang nang suat</option>
+              <option value="labor">Giam nhan cong</option>
+              <option value="trace">Truy xuat va ESG</option>
             </select>
           </label>
           <label>
-            Số điện thoại
-            <input type="text" placeholder="VD: 0901 123 456" />
+            So dien thoai
+            <input type="tel" name="phone" placeholder="Vi du: 0901 123 456" required />
           </label>
-          <button class="cta" type="submit">Gửi yêu cầu tư vấn</button>
+          <button class="cta" type="submit">Gui yeu cau tu van</button>
+          <p class="form-note" id="contactMessage" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -914,1292 +565,57 @@
 
   <aside class="cart-drawer" aria-hidden="true">
     <div class="cart-header">
-      <h3>Giỏ hàng EcoSynTech</h3>
-      <button class="ghost cart-close" aria-label="Đóng giỏ hàng">Đóng</button>
+      <div>
+        <p class="mini-label">Bao gia tam tinh</p>
+        <h3>Goi EcoSynTech</h3>
+      </div>
+      <button class="ghost small-button" type="button" data-close-cart>Dong</button>
     </div>
+
     <div class="cart-body">
-      <div class="cart-items"></div>
+      <div class="cart-items" id="cartItems"></div>
+
       <div class="cart-summary">
         <div>
-          <span>Tạm tính</span>
-          <strong class="cart-subtotal">0₫</strong>
+          <span>Tam tinh thiet bi</span>
+          <strong id="subtotalValue">0 VND</strong>
         </div>
         <div>
-          <span>Hỗ trợ triển khai</span>
-          <strong>Miễn phí</strong>
+          <span>Trien khai va calibrate</span>
+          <strong id="serviceValue">0 VND</strong>
         </div>
-        <div class="total">
-          <span>Tổng cộng</span>
-          <strong class="cart-total">0₫</strong>
+        <div class="cart-total-row">
+          <span>Tong muc de xuat</span>
+          <strong id="totalValue">0 VND</strong>
         </div>
       </div>
-      <form class="checkout">
-        <h4>Thông tin nhận báo giá</h4>
-        <input type="text" placeholder="Tên người liên hệ" />
-        <input type="text" placeholder="Số điện thoại" />
-        <input type="text" placeholder="Khu vực triển khai" />
-        <div class="checkout-actions">
-          <button class="ghost" type="button" id="exportQuote">Xuất báo giá PDF</button>
-          <button class="cta" type="submit">Gửi yêu cầu báo giá</button>
-        </div>
+
+      <form class="quote-form" id="quoteForm">
+        <h4>Gui bao gia</h4>
+        <input type="text" name="contactName" placeholder="Ten nguoi lien he" required />
+        <input type="text" name="contactPhone" placeholder="So dien thoai" required />
+        <input type="text" name="contactRegion" placeholder="Khu vuc trien khai" required />
+        <textarea name="note" rows="4" placeholder="Ghi chu them nhu so zone, loai cay trong, nhu cau dac thu"></textarea>
+        <button class="cta" type="submit">Gui yeu cau bao gia</button>
+        <p class="form-note" id="quoteMessage" aria-live="polite"></p>
       </form>
     </div>
   </aside>
-  <div class="cart-overlay" aria-hidden="true"></div>
-
-  <div class="modal" id="productModal" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="modalTitle">Tên thiết bị</h3>
-        <button class="ghost" id="modalClose">Đóng</button>
-      </div>
-      <p id="modalDescription"></p>
-      <div class="modal-specs" id="modalSpecs"></div>
-      <p class="modal-detail" id="modalDetail"></p>
-      <div class="modal-footer">
-        <strong id="modalPrice">0₫</strong>
-        <button class="cta" id="modalAdd">Thêm vào giỏ</button>
-      </div>
-    </div>
-  </div>
+  <div class="cart-overlay" data-close-cart></div>
 
   <footer class="footer">
     <div>
       <strong>EcoSynTech</strong>
-      <p>Giải pháp IoT cho nông nghiệp thông minh.</p>
+      <p>He thong ban giai phap IoT cho nong nghiep thong minh.</p>
     </div>
     <div class="footer-links">
-      <span>Chính sách bảo mật</span>
-      <span>Hỗ trợ kỹ thuật</span>
-      <span>Tài liệu kỹ thuật</span>
+      <a href="#solutions">Giai phap</a>
+      <a href="#catalog">Thiet bi</a>
+      <a href="#pricing">Bang gia</a>
+      <a href="#contact">Lien he</a>
     </div>
-    <div class="footer-note">© 2026 EcoSynTech. All rights reserved.</div>
+    <small>© 2026 EcoSynTech. All rights reserved.</small>
   </footer>
-
-  <!-- IoT Dashboard Section -->
-  <section id="iot-dashboard-panel" class="iot-dashboard">
-    <div class="dashboard-header">
-      <div class="dashboard-title">
-        <h2>🌱 IoT Control Center</h2>
-        <p>Giám sát và điều khiển trang trại thông minh</p>
-      </div>
-      <div class="dashboard-controls">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Đổi giao diện">
-          <span class="theme-icon">🌙</span>
-        </button>
-        <button class="refresh-btn" onclick="refreshDashboard()" title="Làm mới">
-          <span>🔄</span>
-        </button>
-        <div class="connection-status" id="ws-status">
-          <span class="status-dot"></span>
-          <span>WebSocket</span>
-        </div>
-        <div class="connection-status mqtt" id="mqtt-status">
-          <span class="status-dot"></span>
-          <span>MQTT</span>
-        </div>
-        <button class="esp32-guide-btn" onclick="showESP32Guide()">
-          📋 ESP32 Guide
-        </button>
-      </div>
-    </div>
-
-    <!-- Sensor Cards Grid -->
-    <div class="sensors-grid" id="sensors-grid">
-      <div class="sensor-card" data-type="temperature">
-        <div class="sensor-icon">🌡️</div>
-        <div class="sensor-info">
-          <span class="sensor-label">Nhiệt độ</span>
-          <span class="sensor-value" id="sensor-temperature">--</span>
-          <span class="sensor-unit">°C</span>
-        </div>
-        <div class="sensor-status normal">Bình thường</div>
-        <div class="sensor-chart" id="chart-temperature"></div>
-      </div>
-      <div class="sensor-card" data-type="humidity">
-        <div class="sensor-icon">💧</div>
-        <div class="sensor-info">
-          <span class="sensor-label">Độ ẩm</span>
-          <span class="sensor-value" id="sensor-humidity">--</span>
-          <span class="sensor-unit">%</span>
-        </div>
-        <div class="sensor-status normal">Bình thường</div>
-        <div class="sensor-chart" id="chart-humidity"></div>
-      </div>
-      <div class="sensor-card" data-type="soil">
-        <div class="sensor-icon">🌍</div>
-        <div class="sensor-info">
-          <span class="sensor-label">Độ ẩm đất</span>
-          <span class="sensor-value" id="sensor-soil">--</span>
-          <span class="sensor-unit">%</span>
-        </div>
-        <div class="sensor-status warning">Cần tưới</div>
-        <div class="sensor-chart" id="chart-soil"></div>
-      </div>
-      <div class="sensor-card" data-type="light">
-        <div class="sensor-icon">☀️</div>
-        <div class="sensor-info">
-          <span class="sensor-label">Ánh sáng</span>
-          <span class="sensor-value" id="sensor-light">--</span>
-          <span class="sensor-unit">klux</span>
-        </div>
-        <div class="sensor-status normal">Bình thường</div>
-        <div class="sensor-chart" id="chart-light"></div>
-      </div>
-      <div class="sensor-card" data-type="ph">
-        <div class="sensor-icon">⚗️</div>
-        <div class="sensor-info">
-          <span class="sensor-label">pH</span>
-          <span class="sensor-value" id="sensor-ph">--</span>
-          <span class="sensor-unit">pH</span>
-        </div>
-        <div class="sensor-status normal">Bình thường</div>
-        <div class="sensor-chart" id="chart-ph"></div>
-      </div>
-      <div class="sensor-card" data-type="co2">
-        <div class="sensor-icon">🌬️</div>
-        <div class="sensor-info">
-          <span class="sensor-label">CO₂</span>
-          <span class="sensor-value" id="sensor-co2">--</span>
-          <span class="sensor-unit">ppm</span>
-        </div>
-        <div class="sensor-status normal">Bình thường</div>
-        <div class="sensor-chart" id="chart-co2"></div>
-      </div>
-      <div class="sensor-card" data-type="ec">
-        <div class="sensor-icon">⚡</div>
-        <div class="sensor-info">
-          <span class="sensor-label">EC</span>
-          <span class="sensor-value" id="sensor-ec">--</span>
-          <span class="sensor-unit">mS/cm</span>
-        </div>
-        <div class="sensor-status normal">Bình thường</div>
-        <div class="sensor-chart" id="chart-ec"></div>
-      </div>
-      <div class="sensor-card" data-type="water">
-        <div class="sensor-icon">🚿</div>
-        <div class="sensor-info">
-          <span class="sensor-label">Mực nước</span>
-          <span class="sensor-value" id="sensor-water">--</span>
-          <span class="sensor-unit">%</span>
-        </div>
-        <div class="sensor-status warning">Thấp</div>
-        <div class="sensor-chart" id="chart-water"></div>
-      </div>
-    </div>
-
-    <!-- Dashboard Panels -->
-    <div class="dashboard-panels">
-      <!-- Devices Panel -->
-      <div class="dashboard-panel devices-panel">
-        <div class="panel-header">
-          <h3>📱 Thiết bị</h3>
-          <button class="add-btn" onclick="showAddDevice()">+ Thêm</button>
-        </div>
-        <div class="devices-list" id="devices-list">
-          <div class="device-item online">
-            <span class="device-status-dot"></span>
-            <span class="device-name">SoilSense-001</span>
-            <span class="device-zone">Zone 1</span>
-            <span class="device-type">Sensor</span>
-          </div>
-          <div class="device-item online">
-            <span class="device-status-dot"></span>
-            <span class="device-name">AirPulse-002</span>
-            <span class="device-zone">Zone 2</span>
-            <span class="device-type">Sensor</span>
-          </div>
-          <div class="device-item offline">
-            <span class="device-status-dot"></span>
-            <span class="device-name">AirSense-002</span>
-            <span class="device-zone">Zone 2</span>
-            <span class="device-type">Sensor</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alerts Panel -->
-      <div class="dashboard-panel alerts-panel">
-        <div class="panel-header">
-          <h3>🔔 Cảnh báo</h3>
-          <span class="alert-count" id="alert-count">0</span>
-        </div>
-        <div class="alerts-list" id="alerts-list">
-          <div class="alert-item warning">
-            <span class="alert-time">14:30</span>
-            <span class="alert-msg">Độ ẩm đất Zone 1 xuống dưới ngưỡng</span>
-          </div>
-          <div class="alert-item danger">
-            <span class="alert-time">12:15</span>
-            <span class="alert-msg">Thiết bị AirSense-002 mất kết nối</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rules Panel -->
-      <div class="dashboard-panel rules-panel">
-        <div class="panel-header">
-          <h3>⚙️ Quy tắc tự động</h3>
-          <button class="add-btn" onclick="showAddRule()">+ Thêm</button>
-        </div>
-        <div class="rules-list" id="rules-list">
-          <div class="rule-item active">
-            <div class="rule-info">
-              <span class="rule-name">Tưới khi đất khô</span>
-              <span class="rule-condition">soil &lt; 35%</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked onchange="toggleRule(this)">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="rule-item active">
-            <div class="rule-info">
-              <span class="rule-name">Bật quạt khi nóng</span>
-              <span class="rule-condition">temp &gt; 30°C</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked onchange="toggleRule(this)">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="rule-item">
-            <div class="rule-info">
-              <span class="rule-name">Cảnh báo nước thấp</span>
-              <span class="rule-condition">water &lt; 25%</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" onchange="toggleRule(this)">
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- History Panel -->
-      <div class="dashboard-panel history-panel">
-        <div class="panel-header">
-          <h3>📊 Lịch sử hoạt động</h3>
-          <button class="export-btn" onclick="exportHistory()">📥 Export</button>
-        </div>
-        <div class="history-list" id="history-list">
-          <div class="history-item">
-            <span class="history-time">14:35</span>
-            <span class="history-action">Valve mở - Zone 1</span>
-            <span class="history-trigger">soil &lt; 35%</span>
-          </div>
-          <div class="history-item">
-            <span class="history-time">14:30</span>
-            <span class="history-action">Quạt bật - All</span>
-            <span class="history-trigger">temp &gt; 30°C</span>
-          </div>
-          <div class="history-item">
-            <span class="history-time">08:00</span>
-            <span class="history-action">Lịch tưới sáng</span>
-            <span class="history-trigger">schedule</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Chart -->
-    <div class="main-chart-container">
-      <div class="chart-header">
-        <h3>📈 Biểu đồ cảm biến</h3>
-        <div class="chart-controls">
-          <select id="chart-sensor-select" onchange="updateMainChart()">
-            <option value="temperature">Nhiệt độ</option>
-            <option value="humidity">Độ ẩm</option>
-            <option value="soil">Độ ẩm đất</option>
-            <option value="light">Ánh sáng</option>
-          </select>
-          <select id="chart-time-range">
-            <option value="1">1 giờ</option>
-            <option value="6">6 giờ</option>
-            <option value="24" selected>24 giờ</option>
-          </select>
-        </div>
-      </div>
-      <div class="main-chart" id="main-chart">
-        <canvas id="sensorChart"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <style>
-    /* IoT Dashboard Styles */
-    .iot-dashboard {
-      background: var(--bg-secondary);
-      padding: 2rem;
-      border-radius: 16px;
-      margin: 2rem 0;
-    }
-
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .dashboard-title h2 {
-      font-size: 1.8rem;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
-    }
-
-    .dashboard-title p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-
-    .dashboard-controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .theme-toggle, .refresh-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-card);
-      cursor: pointer;
-      font-size: 1.2rem;
-      transition: all 0.2s;
-    }
-
-    .theme-toggle:hover, .refresh-btn:hover {
-      background: var(--accent-color);
-      transform: scale(1.05);
-    }
-
-    .connection-status {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: var(--bg-card);
-      border-radius: 20px;
-      font-size: 0.85rem;
-    }
-
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #f59e0b;
-      animation: pulse 1.5s infinite;
-    }
-
-    .status-dot.connected {
-      background: #10b981;
-      animation: none;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Sensors Grid */
-    .sensors-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .sensor-card {
-      background: var(--bg-card);
-      border-radius: 16px;
-      padding: 1.25rem;
-      border: 1px solid var(--border-color);
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .sensor-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-    }
-
-    .sensor-icon {
-      font-size: 2rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .sensor-info {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 0.5rem;
-    }
-
-    .sensor-label {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    .sensor-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .sensor-unit {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-top: -0.25rem;
-    }
-
-    .sensor-status {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      display: inline-block;
-      width: fit-content;
-    }
-
-    .sensor-status.normal {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-    }
-
-    .sensor-status.warning {
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-    }
-
-    .sensor-status.danger {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-    }
-
-    /* Dashboard Panels */
-    .dashboard-panels {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .dashboard-panel {
-      background: var(--bg-card);
-      border-radius: 16px;
-      padding: 1.25rem;
-      border: 1px solid var(--border-color);
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .panel-header h3 {
-      font-size: 1.1rem;
-      color: var(--text-primary);
-    }
-
-    .add-btn, .export-btn {
-      padding: 0.4rem 1rem;
-      border-radius: 8px;
-      border: none;
-      background: var(--accent-color);
-      color: white;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-    }
-
-    .add-btn:hover, .export-btn:hover {
-      opacity: 0.9;
-      transform: scale(1.02);
-    }
-
-    /* Devices List */
-    .devices-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .device-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem;
-      background: var(--bg-secondary);
-      border-radius: 10px;
-      font-size: 0.9rem;
-    }
-
-    .device-status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    .device-item.online .device-status-dot {
-      background: #10b981;
-    }
-
-    .device-item.offline .device-status-dot {
-      background: #ef4444;
-    }
-
-    .device-name {
-      flex: 1;
-      font-weight: 500;
-    }
-
-    .device-zone, .device-type {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
-
-    /* Alerts List */
-    .alert-count {
-      background: var(--accent-color);
-      color: white;
-      padding: 0.2rem 0.6rem;
-      border-radius: 10px;
-      font-size: 0.8rem;
-    }
-
-    .alerts-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .alert-item {
-      display: flex;
-      gap: 0.75rem;
-      padding: 0.75rem;
-      border-radius: 10px;
-      font-size: 0.85rem;
-    }
-
-    .alert-item.warning {
-      background: rgba(245, 158, 11, 0.1);
-      border-left: 3px solid #f59e0b;
-    }
-
-    .alert-item.danger {
-      background: rgba(239, 68, 68, 0.1);
-      border-left: 3px solid #ef4444;
-    }
-
-    .alert-time {
-      color: var(--text-secondary);
-      font-size: 0.8rem;
-      min-width: 50px;
-    }
-
-    /* Rules List */
-    .rules-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .rule-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem;
-      background: var(--bg-secondary);
-      border-radius: 10px;
-    }
-
-    .rule-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .rule-name {
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
-
-    .rule-condition {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      font-family: monospace;
-    }
-
-    .toggle-switch {
-      position: relative;
-      width: 44px;
-      height: 24px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--border-color);
-      border-radius: 24px;
-      transition: 0.3s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-
-    input:checked + .slider {
-      background: var(--accent-color);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
-
-    /* History List */
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .history-item {
-      display: grid;
-      grid-template-columns: 50px 1fr auto;
-      gap: 0.75rem;
-      padding: 0.6rem;
-      background: var(--bg-secondary);
-      border-radius: 8px;
-      font-size: 0.85rem;
-    }
-
-    .history-time {
-      color: var(--text-secondary);
-    }
-
-    .history-action {
-      font-weight: 500;
-    }
-
-    .history-trigger {
-      color: var(--accent-color);
-      font-size: 0.75rem;
-    }
-
-    /* Main Chart */
-    .main-chart-container {
-      background: var(--bg-card);
-      border-radius: 16px;
-      padding: 1.5rem;
-      border: 1px solid var(--border-color);
-    }
-
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .chart-header h3 {
-      font-size: 1.1rem;
-      color: var(--text-primary);
-    }
-
-    .chart-controls {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .chart-controls select {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      cursor: pointer;
-    }
-
-    .main-chart {
-      height: 300px;
-      position: relative;
-    }
-
-    .main-chart canvas {
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .iot-dashboard {
-        padding: 1rem;
-      }
-
-      .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .sensors-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .dashboard-panels {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
-
-  <script>
-    // IoT Dashboard Logic
-    let ws = null;
-    let sensorHistory = {};
-    let theme = localStorage.getItem('theme') || 'dark';
-
-    function initDashboard() {
-      applyTheme();
-      initWebSocket();
-      loadInitialData();
-    }
-
-    function applyTheme() {
-      document.body.setAttribute('data-theme', theme);
-      document.querySelector('.theme-icon').textContent = theme === 'dark' ? '🌙' : '☀️';
-    }
-
-    function toggleTheme() {
-      theme = theme === 'dark' ? 'light' : 'light';
-      localStorage.setItem('theme', theme);
-      applyTheme();
-    }
-
-    function initWebSocket() {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws`;
-      
-      ws = new WebSocket(wsUrl);
-      
-      ws.onopen = () => {
-        document.querySelector('#ws-status .status-dot').classList.add('connected');
-        document.querySelector('#ws-status span:last-child').textContent = 'Connected';
-        console.log('WebSocket connected');
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          handleSensorUpdate(data);
-        } catch (e) {
-          console.error('WS message parse error:', e);
-        }
-      };
-
-      ws.onclose = () => {
-        document.querySelector('#ws-status .status-dot').classList.remove('connected');
-        document.querySelector('#ws-status span:last-child').textContent = 'Disconnected';
-        setTimeout(initWebSocket, 3000);
-      };
-
-      ws.onerror = (err) => {
-        console.error('WebSocket error:', err);
-      };
-    }
-
-    function handleSensorUpdate(data) {
-      if (data.type === 'sensor-update') {
-        updateSensorCard(data.data);
-        addToHistory(data.data);
-      } else if (data.type === 'alert') {
-        addAlert(data.data);
-      }
-    }
-
-    function updateSensorCard(sensor) {
-      const valueEl = document.getElementById(`sensor-${sensor.type}`);
-      if (valueEl) {
-        valueEl.textContent = sensor.value.toFixed(1);
-        
-        const card = valueEl.closest('.sensor-card');
-        const statusEl = card.querySelector('.sensor-status');
-        
-        // Update status based on thresholds
-        const thresholds = {
-          temperature: { min: 18, max: 32, warn: { low: 20, high: 30 } },
-          humidity: { min: 60, max: 85 },
-          soil: { min: 30, max: 70 },
-          water: { min: 20, max: 100 },
-          light: { min: 20, max: 60 },
-          ph: { min: 6.0, max: 7.5 },
-          co2: { min: 350, max: 800 },
-          ec: { min: 1.5, max: 3.0 }
-        };
-
-        const t = thresholds[sensor.type];
-        if (t) {
-          if (sensor.value < t.min || sensor.value > t.max) {
-            statusEl.className = 'sensor-status danger';
-            statusEl.textContent = 'Nguy hiểm';
-          } else if (t.warn && (sensor.value < t.warn.low || sensor.value > t.warn.high)) {
-            statusEl.className = 'sensor-status warning';
-            statusEl.textContent = 'Cảnh báo';
-          } else {
-            statusEl.className = 'sensor-status normal';
-            statusEl.textContent = 'Bình thường';
-          }
-        }
-      }
-    }
-
-    function loadInitialData() {
-      // Load from API
-      fetch('/api/sensors')
-        .then(r => r.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            data.forEach(sensor => updateSensorCard(sensor));
-          }
-        })
-        .catch(console.error);
-
-      // Load devices
-      fetch('/api/devices')
-        .then(r => r.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            renderDevices(data);
-          }
-        })
-        .catch(console.error);
-
-      // Load rules
-      fetch('/api/rules')
-        .then(r => r.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            renderRules(data);
-          }
-        })
-        .catch(console.error);
-
-      // Load history
-      fetch('/api/history')
-        .then(r => r.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            renderHistory(data);
-          }
-        })
-        .catch(console.error);
-
-      // Load alerts
-      fetch('/api/alerts')
-        .then(r => r.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            renderAlerts(data);
-          }
-        })
-        .catch(console.error);
-    }
-
-    function renderDevices(devices) {
-      const container = document.getElementById('devices-list');
-      if (!container) return;
-      container.innerHTML = devices.map(d => `
-        <div class="device-item ${d.status || 'offline'}">
-          <span class="device-status-dot"></span>
-          <span class="device-name">${d.name}</span>
-          <span class="device-zone">${d.zone || '-'}</span>
-          <span class="device-type">${d.type}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderRules(rules) {
-      const container = document.getElementById('rules-list');
-      if (!container) return;
-      container.innerHTML = rules.map(r => {
-        const cond = JSON.parse(r.condition || '{}');
-        return `
-          <div class="rule-item ${r.enabled ? 'active' : ''}">
-            <div class="rule-info">
-              <span class="rule-name">${r.name}</span>
-              <span class="rule-condition">${cond.sensor} ${cond.operator} ${cond.value}</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" ${r.enabled ? 'checked' : ''} onchange="toggleRule('${r.id}', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function renderHistory(history) {
-      const container = document.getElementById('history-list');
-      if (!container) return;
-      container.innerHTML = history.slice(0, 10).map(h => `
-        <div class="history-item">
-          <span class="history-time">${new Date(h.timestamp).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'})}</span>
-          <span class="history-action">${h.action}</span>
-          <span class="history-trigger">${h.trigger || '-'}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderAlerts(alerts) {
-      const container = document.getElementById('alerts-list');
-      const countEl = document.getElementById('alert-count');
-      if (!container) return;
-      const unack = alerts.filter(a => !a.acknowledged);
-      countEl.textContent = unack.length;
-      container.innerHTML = unack.slice(0, 5).map(a => `
-        <div class="alert-item ${a.severity}">
-          <span class="alert-time">${new Date(a.timestamp).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'})}</span>
-          <span class="alert-msg">${a.message || a.type}</span>
-        </div>
-      `).join('');
-    }
-
-    function addAlert(alert) {
-      const container = document.getElementById('alerts-list');
-      const countEl = document.getElementById('alert-count');
-      const item = document.createElement('div');
-      item.className = `alert-item ${alert.severity || 'warning'}`;
-      item.innerHTML = `
-        <span class="alert-time">${new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'})}</span>
-        <span class="alert-msg">${alert.message}</span>
-      `;
-      container.insertBefore(item, container.firstChild);
-      countEl.textContent = parseInt(countEl.textContent) + 1;
-    }
-
-    function addToHistory(data) {
-      sensorHistory[data.type] = sensorHistory[data.type] || [];
-      sensorHistory[data.type].push({ value: data.value, time: Date.now() });
-      if (sensorHistory[data.type].length > 100) {
-        sensorHistory[data.type].shift();
-      }
-    }
-
-    function refreshDashboard() {
-      loadInitialData();
-    }
-
-    function toggleRule(id, enabled) {
-      fetch(`/api/rules/${id}/toggle`, { method: 'POST' })
-        .catch(console.error);
-    }
-
-    function exportHistory() {
-      window.open('/api/export', '_blank');
-    }
-
-    function showAddDevice() {
-      alert('Tính năng thêm thiết bị sẽ sớm ra mắt!');
-    }
-
-    function showAddRule() {
-      alert('Tính năng thêm quy tắc sẽ sớm ra mắt!');
-    }
-
-    function showESP32Guide() {
-      const modal = document.createElement('div');
-      modal.className = 'esp32-modal';
-      modal.innerHTML = `
-        <div class="esp32-modal-content">
-          <div class="esp32-modal-header">
-            <h2>📡 EcoSynTech Firmware V8.5.0 Guide</h2>
-            <button onclick="this.closest('.esp32-modal').remove()" class="close-btn">×</button>
-          </div>
-          <div class="esp32-modal-body">
-            <section>
-              <h3>🔌 MQTT Broker Configuration</h3>
-              <div class="config-box">
-                <p><strong>Broker:</strong> <code>mqtt.ecosyntech.com</code></p>
-                <p><strong>Port:</strong> <code>8883</code> (TLS) hoặc <code>1883</code> (Plain)</p>
-                <p><strong>Username:</strong> <code>ecosyntech</code></p>
-                <p><strong>Password:</strong> <code>change_me</code> (đổi trong config)</p>
-                <p><strong>Protocol:</strong> MQTT với HMAC-SHA256 signature</p>
-              </div>
-            </section>
-
-            <section>
-              <h3>📋 Topic Structure (EcoSynTech V8.5.0)</h3>
-              <div class="config-box">
-                <p><strong>Device ID Format:</strong></p>
-                <code>ECOSYNTECH0001</code>
-                <p><strong>Publish Sensor Data:</strong></p>
-                <code>ecosyntech/{device_id}/sensor</code>
-                <p><strong>Publish Heartbeat:</strong></p>
-                <code>ecosyntech/{device_id}/heartbeat</code>
-                <p><strong>Publish Status:</strong></p>
-                <code>ecosyntech/{device_id}/status</code>
-                <p><strong>Subscribe Commands:</strong></p>
-                <code>ecosyntech/{device_id}/command</code>
-              </div>
-            </section>
-
-            <section>
-              <h3>📡 Supported Sensors</h3>
-              <div class="config-box">
-                <table class="sensor-table">
-                  <tr><th>Sensor</th><th>Topic Payload</th><th>Unit</th></tr>
-                  <tr><td>DS18B20</td><td>temp</td><td>°C</td></tr>
-                  <tr><td>DHT22</td><td>temp, humidity</td><td>°C, %</td></tr>
-                  <tr><td>Soil Moisture</td><td>soil_moisture</td><td>%</td></tr>
-                  <tr><td>ADS1115 pH</td><td>pH</td><td>pH</td></tr>
-                  <tr><td>ADS1115 TDS</td><td>tds</td><td>ppm</td></tr>
-                  <tr><td>ADS1115 DO</td><td>do</td><td>mg/L</td></tr>
-                  <tr><td>Battery</td><td>voltage</td><td>V</td></tr>
-                </table>
-              </div>
-            </section>
-
-            <section>
-              <h3>⚙️ Control Commands (via MQTT)</h3>
-              <div class="config-box">
-                <p><strong>Relay Control:</strong></p>
-                <code>relay1_on, relay1_off, relay2_on, relay2_off, relay3_on, relay3_off, relay4_on, relay4_off</code>
-                <p><strong>System:</strong></p>
-                <code>reboot, maintenance_on, maintenance_off</code>
-                <p><strong>Config:</strong></p>
-                <code>set_deep_sleep, set_profile</code>
-              </div>
-            </section>
-
-            <section>
-              <h3>💻 ESP32 Pinout (EcoSynTech 5.3 PRO-X)</h3>
-              <div class="config-box">
-                <p><strong>SD Card:</strong> CS=5, SCK=18, MOSI=23, MISO=19</p>
-                <p><strong>I2C:</strong> SDA=21, SCL=22</p>
-                <p><strong>DHT22:</strong> DATA=33</p>
-                <p><strong>DS18B20:</strong> DATA=32</p>
-                <p><strong>Soil ADC:</strong> GPIO36</p>
-                <p><strong>Battery ADC:</strong> GPIO35</p>
-                <p><strong>Relays:</strong> GPIO26, 27, 25, 14</p>
-              </div>
-            </section>
-
-            <section>
-              <h3>🔐 Security Features</h3>
-              <div class="config-box">
-                <ul>
-                  <li><strong>HMAC-SHA256</strong> signature for all payloads</li>
-                  <li><strong>Nonce-based</strong> replay protection</li>
-                  <li><strong>Rate limiting</strong> (20 requests/minute)</li>
-                  <li><strong>Device authentication</strong> via API Key & HMAC Secret</li>
-                </ul>
-              </div>
-            </section>
-
-            <section>
-              <h3>📦 Payload Format</h3>
-              <div class="config-box">
-                <pre class="code-block">
-{
-  "device_id": "ECOSYNTECH0001",
-  "fw_version": "8.5.0",
-  "readings": [
-    {"sensor": "temp", "value": 28.5, "unit": "C"},
-    {"sensor": "humidity", "value": 72.0, "unit": "%"},
-    {"sensor": "soil_moisture", "value": 45.0, "unit": "%"}
-  ],
-  "timestamp": "2026-04-12T00:00:00Z"
-}
-                </pre>
-              </div>
-            </section>
-
-            <section>
-              <h3>🌐 HiveMQ Cloud Free Tier</h3>
-              <div class="config-box">
-                <p>HiveMQ Cloud cung cấp <strong>Free Tier</strong> với:</p>
-                <ul>
-                  <li>100 concurrent connections</li>
-                  <li>Unlimited messages</li>
-                  <li>TLS/SSL encryption</li>
-                  <li>WebSocket support</li>
-                </ul>
-                <p><a href="https://www.hivemq.com/cloud/" target="_blank">Đăng ký tại đây →</a></p>
-              </div>
-            </section>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
-      });
-    }
-
-    function updateMQTTStatus(connected) {
-      const mqttEl = document.getElementById('mqtt-status');
-      if (mqttEl) {
-        const dot = mqttEl.querySelector('.status-dot');
-        if (connected) {
-          dot.classList.add('connected');
-          mqttEl.querySelector('span:last-child').textContent = 'MQTT ✓';
-        } else {
-          dot.classList.remove('connected');
-          mqttEl.querySelector('span:last-child').textContent = 'MQTT';
-        }
-      }
-    }
-
-    // Update MQTT status from WebSocket messages
-    window.updateMQTTStatus = updateMQTTStatus;
-
-    // Init on load
-    document.addEventListener('DOMContentLoaded', initDashboard);
-  </script>
-
-  <style>
-    .esp32-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-    .esp32-modal-content {
-      background: var(--bg-card, #fff);
-      border-radius: 16px;
-      max-width: 700px;
-      max-height: 90vh;
-      overflow-y: auto;
-      width: 100%;
-    }
-    .esp32-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-    .esp32-modal-header h2 { margin: 0; }
-    .close-btn {
-      background: none;
-      border: none;
-      font-size: 2rem;
-      cursor: pointer;
-      color: var(--text-secondary);
-    }
-    .esp32-modal-body {
-      padding: 1.5rem;
-    }
-    .esp32-modal-body section {
-      margin-bottom: 2rem;
-    }
-    .esp32-modal-body h3 {
-      margin-bottom: 0.75rem;
-      color: var(--text-primary);
-    }
-    .config-box {
-      background: var(--bg-secondary, #f5f5f5);
-      padding: 1rem;
-      border-radius: 10px;
-    }
-    .config-box code {
-      display: block;
-      background: #2d2d2d;
-      color: #98c379;
-      padding: 0.5rem;
-      border-radius: 6px;
-      margin: 0.5rem 0;
-      font-size: 0.85rem;
-    }
-    .code-block {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 1rem;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 0.8rem;
-      line-height: 1.4;
-    }
-    .lib-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    .lib-item {
-      background: var(--accent-color);
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-    }
-    .esp32-guide-btn {
-      padding: 0.5rem 1rem;
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-    }
-    .esp32-guide-btn:hover {
-      opacity: 0.9;
-      transform: scale(1.02);
-    }
-    .connection-status.mqtt {
-      background: rgba(88, 179, 104, 0.15);
-    }
-    .sensor-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 0.5rem;
-    }
-    .sensor-table th, .sensor-table td {
-      border: 1px solid var(--border-color);
-      padding: 0.5rem;
-      text-align: left;
-      font-size: 0.85rem;
-    }
-    .sensor-table th {
-      background: var(--bg-secondary);
-      font-weight: 600;
-    }
-  </style>
 
   <script src="app.js" defer></script>
 </body>
