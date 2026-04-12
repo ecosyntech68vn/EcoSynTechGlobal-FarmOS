@@ -1943,94 +1943,105 @@
       modal.innerHTML = `
         <div class="esp32-modal-content">
           <div class="esp32-modal-header">
-            <h2>📡 ESP32 Firmware Guide</h2>
+            <h2>📡 EcoSynTech Firmware V8.5.0 Guide</h2>
             <button onclick="this.closest('.esp32-modal').remove()" class="close-btn">×</button>
           </div>
           <div class="esp32-modal-body">
             <section>
               <h3>🔌 MQTT Broker Configuration</h3>
               <div class="config-box">
-                <p><strong>Broker:</strong> <code>broker.hivemq.com</code></p>
-                <p><strong>Port:</strong> <code>8884</code> (WebSocket SSL)</p>
-                <p><strong>Protocol:</strong> MQTT over TLS</p>
+                <p><strong>Broker:</strong> <code>mqtt.ecosyntech.com</code></p>
+                <p><strong>Port:</strong> <code>8883</code> (TLS) hoặc <code>1883</code> (Plain)</p>
+                <p><strong>Username:</strong> <code>ecosyntech</code></p>
+                <p><strong>Password:</strong> <code>change_me</code> (đổi trong config)</p>
+                <p><strong>Protocol:</strong> MQTT với HMAC-SHA256 signature</p>
               </div>
             </section>
 
             <section>
-              <h3>📋 Topic Structure</h3>
+              <h3>📋 Topic Structure (EcoSynTech V8.5.0)</h3>
               <div class="config-box">
-                <p><strong>Subscribe:</strong></p>
-                <code>ecosyn/commands/{device_id}</code>
-                <p><strong>Publish Sensor:</strong></p>
-                <code>ecosyn/sensors/{sensor_type}</code>
-                <p><strong>Publish Alert:</strong></p>
-                <code>ecosyn/alerts/{alert_type}</code>
+                <p><strong>Device ID Format:</strong></p>
+                <code>ECOSYNTECH0001</code>
+                <p><strong>Publish Sensor Data:</strong></p>
+                <code>ecosyntech/{device_id}/sensor</code>
+                <p><strong>Publish Heartbeat:</strong></p>
+                <code>ecosyntech/{device_id}/heartbeat</code>
+                <p><strong>Publish Status:</strong></p>
+                <code>ecosyntech/{device_id}/status</code>
+                <p><strong>Subscribe Commands:</strong></p>
+                <code>ecosyntech/{device_id}/command</code>
               </div>
             </section>
 
             <section>
-              <h3>💻 ESP32 Arduino Code</h3>
-              <pre class="code-block">
-#include &lt;WiFi.h&gt;
-#include &lt;PubSubClient.h&gt;
-#include &lt;DHT.h&gt;
-
-const char* ssid = "YOUR_WIFI";
-const char* password = "YOUR_WIFI_PASS";
-const char* mqtt_server = "broker.hivemq.com";
-const int mqtt_port = 8884;
-
-#define DHTPIN 4
-#define DHTTYPE DHT22
-DHT dht(DHTPIN, DHTTYPE);
-
-WiFiClient espClient;
-PubSubClient client(espClient);
-
-void setup() {
-  Serial.begin(115200);
-  dht.begin();
-  setup_wifi();
-  client.setServer(mqtt_server, mqtt_port);
-  client.setCallback(callback);
-}
-
-void loop() {
-  if (!client.connected()) {
-    reconnect();
-  }
-  client.loop();
-  
-  // Read sensors
-  float temp = dht.readTemperature();
-  float hum = dht.readHumidity();
-  
-  // Publish to MQTT
-  char payload[128];
-  sprintf(payload, "{\"sensor\":\"temperature\",\"value\":%.1f,\"unit\":\"°C\"}", temp);
-  client.publish("ecosyn/sensors/temperature", payload);
-  
-  sprintf(payload, "{\"sensor\":\"humidity\",\"value\":%.1f,\"unit\":\"%\"}", hum);
-  client.publish("ecosyn/sensors/humidity", payload);
-  
-  delay(5000);
-}
-
-void callback(char* topic, byte* message, unsigned int length) {
-  // Handle commands
-  if (String(topic).indexOf("commands") != -1) {
-    // Parse and execute command
-  }
-}
-              </pre>
+              <h3>📡 Supported Sensors</h3>
+              <div class="config-box">
+                <table class="sensor-table">
+                  <tr><th>Sensor</th><th>Topic Payload</th><th>Unit</th></tr>
+                  <tr><td>DS18B20</td><td>temp</td><td>°C</td></tr>
+                  <tr><td>DHT22</td><td>temp, humidity</td><td>°C, %</td></tr>
+                  <tr><td>Soil Moisture</td><td>soil_moisture</td><td>%</td></tr>
+                  <tr><td>ADS1115 pH</td><td>pH</td><td>pH</td></tr>
+                  <tr><td>ADS1115 TDS</td><td>tds</td><td>ppm</td></tr>
+                  <tr><td>ADS1115 DO</td><td>do</td><td>mg/L</td></tr>
+                  <tr><td>Battery</td><td>voltage</td><td>V</td></tr>
+                </table>
+              </div>
             </section>
 
             <section>
-              <h3>📦 Required Libraries</h3>
-              <div class="lib-list">
-                <span class="lib-item">WiFi.h</span>
-                <span class="lib-item">PubSubClient.h</span>
-                <span class="lib-item">DHT.h</span>
+              <h3>⚙️ Control Commands (via MQTT)</h3>
+              <div class="config-box">
+                <p><strong>Relay Control:</strong></p>
+                <code>relay1_on, relay1_off, relay2_on, relay2_off, relay3_on, relay3_off, relay4_on, relay4_off</code>
+                <p><strong>System:</strong></p>
+                <code>reboot, maintenance_on, maintenance_off</code>
+                <p><strong>Config:</strong></p>
+                <code>set_deep_sleep, set_profile</code>
+              </div>
+            </section>
+
+            <section>
+              <h3>💻 ESP32 Pinout (EcoSynTech 5.3 PRO-X)</h3>
+              <div class="config-box">
+                <p><strong>SD Card:</strong> CS=5, SCK=18, MOSI=23, MISO=19</p>
+                <p><strong>I2C:</strong> SDA=21, SCL=22</p>
+                <p><strong>DHT22:</strong> DATA=33</p>
+                <p><strong>DS18B20:</strong> DATA=32</p>
+                <p><strong>Soil ADC:</strong> GPIO36</p>
+                <p><strong>Battery ADC:</strong> GPIO35</p>
+                <p><strong>Relays:</strong> GPIO26, 27, 25, 14</p>
+              </div>
+            </section>
+
+            <section>
+              <h3>🔐 Security Features</h3>
+              <div class="config-box">
+                <ul>
+                  <li><strong>HMAC-SHA256</strong> signature for all payloads</li>
+                  <li><strong>Nonce-based</strong> replay protection</li>
+                  <li><strong>Rate limiting</strong> (20 requests/minute)</li>
+                  <li><strong>Device authentication</strong> via API Key & HMAC Secret</li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h3>📦 Payload Format</h3>
+              <div class="config-box">
+                <pre class="code-block">
+{
+  "device_id": "ECOSYNTECH0001",
+  "fw_version": "8.5.0",
+  "readings": [
+    {"sensor": "temp", "value": 28.5, "unit": "C"},
+    {"sensor": "humidity", "value": 72.0, "unit": "%"},
+    {"sensor": "soil_moisture", "value": 45.0, "unit": "%"}
+  ],
+  "timestamp": "2026-04-12T00:00:00Z"
+}
+                </pre>
               </div>
             </section>
 
@@ -2040,7 +2051,7 @@ void callback(char* topic, byte* message, unsigned int length) {
                 <p>HiveMQ Cloud cung cấp <strong>Free Tier</strong> với:</p>
                 <ul>
                   <li>100 concurrent connections</li>
-                  <li> unlimited messages</li>
+                  <li>Unlimited messages</li>
                   <li>TLS/SSL encryption</li>
                   <li>WebSocket support</li>
                 </ul>
@@ -2172,6 +2183,21 @@ void callback(char* topic, byte* message, unsigned int length) {
     }
     .connection-status.mqtt {
       background: rgba(88, 179, 104, 0.15);
+    }
+    .sensor-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    .sensor-table th, .sensor-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.5rem;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    .sensor-table th {
+      background: var(--bg-secondary);
+      font-weight: 600;
     }
   </style>
 
