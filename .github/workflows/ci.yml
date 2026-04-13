@@ -99,5 +99,3 @@ jobs:
         run: |
           echo "PR URL: ${{ steps.create-pr.outputs.pr_url }}"
           echo "PR Number: ${{ steps.create-pr.outputs.pr_number }}"
-          echo "Telegram Token Set: ${{ secrets.TELEGRAM_BOT_TOKEN != '' }}"
-          echo "Telegram Chat ID Set: ${{ secrets.TELEGRAM_CHAT_ID != '' }}"
