@@ -424,23 +424,31 @@ class SmartControlEngine {
 
 async function sendTelegramNotification(botToken, chatId, message, parseMode = 'HTML') {
   if (!botToken || !chatId) return null;
-  
-  const TelegramBot = require('telegraf') || null;
-  if (!TelegramBot) {
-    logger.warn('[Telegram] telegraf not installed, skipping notification');
-    return null;
-  }
-  
-  try {
-    const { Telegraf } = require('telegraf');
-    const bot = new Telegraf(botToken);
-    await bot.telegram.sendMessage(chatId, message, { parse_mode: parseMode });
-    logger.info(`[Telegram] Notification sent to ${chatId}`);
-    return true;
-  } catch (err) {
-    logger.error('[Telegram] Send error:', err.message);
-    return false;
-  }
+
+  const https = require('https');
+  const encodedMsg = encodeURIComponent(message);
+  const path = `/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodedMsg}&parse_mode=${parseMode}`;
+
+  return new Promise((resolve) => {
+    const req = https.get({ hostname: 'api.telegram.org', path }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          logger.info(`[Telegram] Notification sent to ${chatId}`);
+          resolve(true);
+        } else {
+          logger.error(`[Telegram] Send error: ${res.statusCode} - ${data}`);
+          resolve(false);
+        }
+      });
+    });
+    req.on('error', err => {
+      logger.error('[Telegram] Send error:', err.message);
+      resolve(false);
+    });
+    req.end();
+  });
 }
 
 async function processSensorData(data, deviceId) {
