@@ -23,6 +23,11 @@ const statsRoutes = require('./src/routes/stats');
 const authRoutes = require('./src/routes/auth');
 const webhookRoutes = require('./src/routes/webhook');
 const traceabilityRoutes = require('./src/routes/traceability');
+const analyticsRoutes = require('./src/routes/analytics');
+const devicemgmtRoutes = require('./src/routes/devicemgmt');
+const agricultureRoutes = require('./src/routes/agriculture');
+const securityRoutes = require('./src/routes/security');
+const docsRoutes = require('./src/routes/docs');
 
 function createApp() {
   const app = express();
@@ -94,6 +99,11 @@ function createApp() {
   app.use('/api/auth', authRoutes);
   app.use('/api/webhook', webhookRoutes);
   app.use('/api/traceability', traceabilityRoutes);
+  app.use('/api/analytics', analyticsRoutes);
+  app.use('/api/device-mgmt', devicemgmtRoutes);
+  app.use('/api/agriculture', agricultureRoutes);
+  app.use('/api/security', securityRoutes);
+  app.use('/api/docs', docsRoutes);
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {

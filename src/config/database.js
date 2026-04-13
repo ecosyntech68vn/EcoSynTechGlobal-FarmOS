@@ -243,6 +243,127 @@ function createTables() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS sensor_readings (
+      id TEXT PRIMARY KEY,
+      sensor_type TEXT NOT NULL,
+      value REAL NOT NULL,
+      timestamp TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS device_firmwares (
+      id TEXT PRIMARY KEY,
+      version TEXT NOT NULL,
+      description TEXT,
+      device_type TEXT NOT NULL,
+      file_url TEXT,
+      checksum TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS ota_updates (
+      id TEXT PRIMARY KEY,
+      device_id TEXT NOT NULL,
+      firmware_id TEXT NOT NULL,
+      status TEXT DEFAULT 'pending',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      completed_at TEXT
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS device_config_history (
+      id TEXT PRIMARY KEY,
+      device_id TEXT NOT NULL,
+      old_config TEXT,
+      new_config TEXT,
+      changed_by TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS crops (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      variety TEXT,
+      planting_date TEXT,
+      expected_harvest TEXT,
+      harvest_date TEXT,
+      harvest_quantity REAL,
+      kc_stage TEXT DEFAULT '{}',
+      area REAL,
+      unit TEXT,
+      status TEXT DEFAULT 'active',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS crop_stages (
+      id TEXT PRIMARY KEY,
+      crop_id TEXT NOT NULL,
+      stage_name TEXT NOT NULL,
+      stage_order INTEGER DEFAULT 0,
+      start_date TEXT,
+      end_date TEXT,
+      notes TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (crop_id) REFERENCES crops(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS crop_yields (
+      id TEXT PRIMARY KEY,
+      crop_id TEXT NOT NULL,
+      harvest_date TEXT,
+      quantity REAL,
+      quality TEXT,
+      notes TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (crop_id) REFERENCES crops(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS ip_whitelist (
+      id TEXT PRIMARY KEY,
+      ip TEXT UNIQUE NOT NULL,
+      description TEXT,
+      expires_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id TEXT PRIMARY KEY,
+      action TEXT NOT NULL,
+      user_id TEXT,
+      details TEXT DEFAULT '{}',
+      ip TEXT,
+      timestamp TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS sessions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT,
+      token TEXT,
+      ip TEXT,
+      user_agent TEXT,
+      last_activity TEXT DEFAULT CURRENT_TIMESTAMP,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   logger.info('Database tables created');
 }
 
