@@ -29,6 +29,8 @@ const agricultureRoutes = require('./src/routes/agriculture');
 const securityRoutes = require('./src/routes/security');
 const docsRoutes = require('./src/routes/docs');
 const firmwareRoutes = require('./src/routes/firmware');
+const rbacRoutes = require('./src/routes/rbac');
+const otaRoutes = require('./src/routes/ota');
 
 function createApp() {
   const app = express();
@@ -106,6 +108,8 @@ function createApp() {
   app.use('/api/security', securityRoutes);
   app.use('/api/docs', docsRoutes);
   app.use('/api/firmware', firmwareRoutes);
+  app.use('/api/rbac', rbacRoutes);
+  app.use('/api/ota', otaRoutes);
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {

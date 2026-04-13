@@ -1,6 +1,6 @@
 # EcoSynTech IoT Platform
 
-Hệ thống IoT toàn diện cho nông nghiệp thông minh - **Version 2.1.1**
+Hệ thống IoT toàn diện cho nông nghiệp thông minh - **Version 2.2.0**
 
 ## Tính năng chính
 
@@ -277,6 +277,28 @@ GET  /api/firmware/devices/:id   - Get device firmware info
 POST /api/firmware/devices/:id/command - Send command to device
 GET  /api/firmware/devices/:id/history - Device history
 POST /api/firmware/batch/:id/attach - Attach device to batch
+```
+
+### RBAC & Multi-tenant
+```
+GET    /api/rbac/roles                    - List all roles
+GET    /api/rbac/users                    - List users (admin)
+POST   /api/rbac/users                    - Create user
+PUT    /api/rbac/users/:id                - Update user
+DELETE /api/rbac/users/:id               - Delete user
+GET    /api/rbac/tenants                  - List tenants (admin)
+POST   /api/rbac/tenants                  - Create tenant
+```
+
+### OTA Updates
+```
+GET  /api/ota/firmwares             - List firmwares
+POST /api/ota/firmwares             - Upload firmware
+GET  /api/ota/firmwares/latest      - Latest firmware
+GET  /api/ota/devices/:id/ota-check - Check for updates
+POST /api/ota/devices/:id/ota-update - Report update result
+GET  /api/ota/ota/manifest          - Get update manifest
+GET  /api/ota/stats                 - OTA statistics
 ```
 
 ---

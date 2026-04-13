@@ -1,6 +1,6 @@
 {
   "name": "ecosyntech-iot-backend",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "EcoSynTech IoT Backend - MQTT Broker, REST API, WebSocket, Authentication",
   "main": "server.js",
   "scripts": {

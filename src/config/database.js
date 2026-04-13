@@ -364,6 +364,31 @@ function createTables() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS tenants (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      domain TEXT,
+      settings TEXT DEFAULT '{}',
+      active INTEGER DEFAULT 1,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS ota_history (
+      id TEXT PRIMARY KEY,
+      device_id TEXT NOT NULL,
+      current_version TEXT,
+      target_version TEXT,
+      status TEXT DEFAULT 'pending',
+      result TEXT,
+      checked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      completed_at TEXT
+    )
+  `);
+
   logger.info('Database tables created');
 }
 
