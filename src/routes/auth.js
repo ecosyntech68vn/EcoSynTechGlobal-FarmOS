@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { getOne, runQuery } = require('../config/database');
 const { validateMiddleware } = require('../middleware/validation');
 const { asyncHandler } = require('../middleware/errorHandler');
-const { authenticate } = require('../middleware/auth');
+const { auth: authenticate } = require('../middleware/auth');
 const config = require('../config');
 const logger = require('../config/logger');
 

@@ -146,6 +146,103 @@ function createTables() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS api_keys (
+      id TEXT PRIMARY KEY,
+      key TEXT UNIQUE NOT NULL,
+      device_id TEXT,
+      user_id TEXT,
+      name TEXT,
+      permissions TEXT DEFAULT '[]',
+      expires_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (device_id) REFERENCES devices(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS commands (
+      id TEXT PRIMARY KEY,
+      device_id TEXT,
+      command TEXT NOT NULL,
+      params TEXT DEFAULT '{}',
+      status TEXT DEFAULT 'pending',
+      result TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      delivered_at TEXT,
+      completed_at TEXT,
+      FOREIGN KEY (device_id) REFERENCES devices(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS traceability_batches (
+      id TEXT PRIMARY KEY,
+      batch_code TEXT UNIQUE NOT NULL,
+      product_name TEXT NOT NULL,
+      product_type TEXT,
+      quantity REAL,
+      unit TEXT,
+      farm_name TEXT,
+      zone TEXT,
+      seed_variety TEXT,
+      planting_date TEXT,
+      expected_harvest TEXT,
+      harvest_date TEXT,
+      harvest_quantity REAL,
+      harvest_notes TEXT,
+      status TEXT DEFAULT 'active',
+      metadata TEXT DEFAULT '{}',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS traceability_stages (
+      id TEXT PRIMARY KEY,
+      batch_id TEXT NOT NULL,
+      stage_name TEXT NOT NULL,
+      stage_type TEXT NOT NULL,
+      stage_order INTEGER DEFAULT 0,
+      description TEXT,
+      performed_by TEXT,
+      location TEXT,
+      inputs_used TEXT DEFAULT '[]',
+      photos TEXT DEFAULT '[]',
+      notes TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (batch_id) REFERENCES traceability_batches(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS traceability_readings (
+      id TEXT PRIMARY KEY,
+      batch_id TEXT,
+      device_id TEXT,
+      sensor_type TEXT,
+      value REAL,
+      unit TEXT,
+      timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (batch_id) REFERENCES traceability_batches(id),
+      FOREIGN KEY (device_id) REFERENCES devices(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS rule_history (
+      id TEXT PRIMARY KEY,
+      rule_id TEXT NOT NULL,
+      sensor_value REAL,
+      triggered INTEGER DEFAULT 0,
+      action_taken TEXT,
+      executed_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (rule_id) REFERENCES rules(id)
+    )
+  `);
+
   logger.info('Database tables created');
 }
 

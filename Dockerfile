@@ -1,32 +1,37 @@
-FROM node:20-alpine
+# EcoSynTech IoT Backend - Production Dockerfile
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/cache/apk/*
-
 COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
 
-RUN npm ci --only=production
+FROM node:18-alpine
 
+WORKDIR /app
+
+RUN apk add --no-cache dumb-init tini
+
+COPY --from=builder /app/node_modules ./node_modules
 COPY . .
 
-RUN mkdir -p logs data && \
-    chown -R node:node /app
+RUN mkdir -p /app/data && \
+    chown -R node:node /app && \
+    chmod +x /app/scripts/*.js 2>/dev/null || true
 
 USER node
 
-EXPOSE 3000
-
-VOLUME ["/app/data", "/app/logs"]
+EXPOSE 3000 1883 8884
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV MQTT_PORT=1883
+ENV MQTT_WS_PORT=8884
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+VOLUME [ "/app/data" ]
 
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+
+ENTRYPOINT ["tini", "--"]
 CMD ["node", "server.js"]

@@ -21,6 +21,8 @@ const alertsRoutes = require('./src/routes/alerts');
 const webhooksRoutes = require('./src/routes/webhooks');
 const statsRoutes = require('./src/routes/stats');
 const authRoutes = require('./src/routes/auth');
+const webhookRoutes = require('./src/routes/webhook');
+const traceabilityRoutes = require('./src/routes/traceability');
 
 function createApp() {
   const app = express();
@@ -90,6 +92,26 @@ function createApp() {
   app.use('/api/webhooks', webhooksRoutes);
   app.use('/api/stats', statsRoutes);
   app.use('/api/auth', authRoutes);
+  app.use('/api/webhook', webhookRoutes);
+  app.use('/api/traceability', traceabilityRoutes);
+
+  // Health endpoints for deployment health and readiness
+  app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString(), version: require('./package.json').version });
+  });
+
+  app.get('/readiness', async (req, res) => {
+    try {
+      // Use DB helper to perform a lightweight check if DB is initialized
+      if (typeof getOne === 'function') {
+        // If DB not initialized, this will throw
+        getOne('SELECT 1');
+      }
+      res.status(200).json({ status: 'ready' });
+    } catch (err) {
+      res.status(503).json({ status: 'not_ready', error: err?.message || String(err) });
+    }
+  });
   
   app.post('/api/export', (req, res) => {
     const exportData = {

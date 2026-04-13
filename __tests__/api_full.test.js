@@ -63,7 +63,7 @@ describe('API - Full End-to-End', () => {
     };
     const res = await request(app).post('/api/rules').set(authHeader()).send(payload);
     expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty('id');
+    expect(res.body).toHaveProperty('rule.id');
   });
 
   test('Fetch history', async () => {
