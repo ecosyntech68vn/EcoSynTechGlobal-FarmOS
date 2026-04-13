@@ -268,3 +268,4 @@ All-In Release 2.0.0
 ## License
 
 MIT License - EcoSynTech 2026
+# Test CI trigger
