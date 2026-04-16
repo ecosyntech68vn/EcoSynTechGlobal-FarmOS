@@ -13,14 +13,147 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 const HMAC_SECRET = process.env.HMAC_SECRET || 'CEOTAQUANGTHUAN_TADUYANH_CTYTNHHDUYANH_ECOSYNTECH_2026';
 const TIMEOUT_WINDOW = 300000;
 
+const NONCE_WINDOW_SEC = 1200;
+const seenNonces = new Map();
+
+function cleanupSeenNonces() {
+  const now = Date.now();
+  for (const [key, ts] of seenNonces.entries()) {
+    if (now - ts > NONCE_WINDOW_SEC * 1000) seenNonces.delete(key);
+  }
+}
+
 function canonicalStringify(obj) {
   if (obj === null || obj === undefined) return 'null';
   if (typeof obj !== 'object') return String(obj);
+
   if (Array.isArray(obj)) {
     return '[' + obj.map(canonicalStringify).join(',') + ']';
   }
+
   const keys = Object.keys(obj).sort();
   const pairs = keys.map(k => `"${k}":${canonicalStringify(obj[k])}`);
+  return '{' + pairs.join(',') + '}';
+}
+
+function hmacHex(message) {
+  return crypto.createHmac('sha256', HMAC_SECRET).update(message).digest('hex');
+}
+
+function timingSafeEqualHex(a, b) {
+  if (!a || !b || a.length !== b.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(a, 'hex'), Buffer.from(b, 'hex'));
+}
+
+function normalizeReading(r) {
+  if (!r || typeof r !== 'object') return null;
+
+  const sensorType = String(r.sensor_type || r.type || '').trim();
+  const value = Number(r.value);
+
+  if (!sensorType || Number.isNaN(value)) return null;
+
+  return {
+    sensor_type: sensorType,
+    value,
+    unit: String(r.unit || ''),
+    sensor_id: String(r.sensor_id || r.id || ''),
+    zone: String(r.zone || ''),
+    event_ts: String(r.event_ts || r.timestamp || new Date().toISOString()),
+    local_time: String(r.local_time || '')
+  };
+}
+
+function normalizeReadings(payload) {
+  const raw = Array.isArray(payload.readings)
+    ? payload.readings
+    : (Array.isArray(payload.sensor_data) ? payload.sensor_data : []);
+
+  return raw.map(normalizeReading).filter(Boolean);
+}
+
+function verifyFirmwareEnvelope(payload, signature, deviceId, timestamp, nonce) {
+  const ts = Number(timestamp || payload?._ts || 0);
+  const did = String(deviceId || payload?._did || payload?.device_id || '');
+
+  if (!payload || typeof payload !== 'object') return { valid: false, error: 'Invalid payload' };
+  if (!signature) return { valid: false, error: 'Missing signature' };
+  if (!did) return { valid: false, error: 'Missing device id' };
+  if (!ts) return { valid: false, error: 'Missing timestamp' };
+  if (!payload._nonce) return { valid: false, error: 'Missing nonce' };
+  if (!payload._did) return { valid: false, error: 'Missing payload device id' };
+  if (payload._did !== did) return { valid: false, error: 'Device id mismatch' };
+
+  const now = Math.floor(Date.now() / 1000);
+  if (Math.abs(now - ts) > NONCE_WINDOW_SEC) {
+    return { valid: false, error: 'Timestamp expired' };
+  }
+
+  cleanupSeenNonces();
+  const nonceKey = `${did}:${payload._nonce}`;
+  if (seenNonces.has(nonceKey)) {
+    return { valid: false, error: 'Replay detected' };
+  }
+
+  const expected = hmacHex(canonicalStringify(payload));
+  if (!timingSafeEqualHex(signature, expected)) {
+    return { valid: false, error: 'Invalid signature' };
+  }
+
+  seenNonces.set(nonceKey, Date.now());
+  return { valid: true };
+}
+
+function signResponsePayload(payload) {
+  return {
+    payload,
+    signature: hmacHex(canonicalStringify(payload))
+  };
+}
+
+function getPendingCommandsPayload(deviceId) {
+  const pendingCommands = getAll(
+    'SELECT * FROM commands WHERE device_id = ? AND status = "pending" ORDER BY created_at ASC LIMIT 10',
+    [deviceId]
+  );
+
+  const commands = pendingCommands.map(cmd => ({
+    command: cmd.command,
+    command_id: cmd.id,
+    params: JSON.parse(cmd.params || '{}')
+  }));
+
+  pendingCommands.forEach(cmd => {
+    runQuery('UPDATE commands SET status = "sent" WHERE id = ?', [cmd.id]);
+  });
+
+  return commands;
+}
+
+function upsertDeviceOnline(deviceId, fwVersion) {
+  const device = getOne('SELECT * FROM devices WHERE id = ?', [deviceId]);
+
+  if (!device) {
+    runQuery(
+      'INSERT INTO devices (id, name, type, zone, status, config, last_seen) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [deviceId, `Device-${deviceId.substring(0, 8)}`, 'esp32', 'default', 'online', JSON.stringify({ firmware_version: fwVersion || '8.5.0' }), new Date().toISOString()]
+    );
+  } else {
+    runQuery(
+      'UPDATE devices SET status = ?, last_seen = ? WHERE id = ?',
+      ['online', new Date().toISOString(), deviceId]
+    );
+  }
+}
+
+function canonicalStringifyOld(obj) {
+  if (obj === null || obj === undefined) return 'null';
+  if (typeof obj !== 'object') return String(obj);
+  if (Array.isArray(obj)) {
+    return '[' + obj.map(canonicalStringifyOld).join(',') + ']';
+  }
+  const keys = Object.keys(obj).sort();
+  const pairs = keys.map(k => `"${k}":${canonicalStringifyOld(obj[k])}`);
   return '{' + pairs.join(',') + '}';
 }
 
@@ -30,7 +163,7 @@ function verifySignature(payload, signature, timestamp) {
     return { valid: false, error: 'Timestamp expired' };
   }
   
-  const canonical = canonicalStringify(payload);
+  const canonical = canonicalStringifyOld(payload);
   const expectedSig = crypto.createHmac('sha256', HMAC_SECRET).update(canonical).digest('hex');
   
   return { valid: signature === expectedSig, error: signature !== expectedSig ? 'Invalid signature' : null };
@@ -38,95 +171,108 @@ function verifySignature(payload, signature, timestamp) {
 
 router.post('/webhook', async (req, res) => {
   try {
-    const { payload, signature, _ts, _did } = req.body;
-    
-    if (!payload || !signature || !_ts) {
+    const body = req.body || {};
+
+    // Firmware hiện tại gửi body dạng { payload, signature }
+    // nhưng vẫn cho phép fallback nếu ai đó post raw payload.
+    const payload = (body.payload && typeof body.payload === 'object') ? body.payload : body;
+    const signature = String(body.signature || req.get('x-ecoSynTech-signature') || req.get('x-signature') || '');
+    const deviceId = String(
+      body._did ||
+      payload._did ||
+      req.get('x-device-id') ||
+      payload.device_id ||
+      ''
+    );
+    const fwVersion = String(req.get('x-fw-version') || payload.fw_version || '8.5.0');
+    const timestamp = body._ts || payload._ts || req.get('x-timestamp') || 0;
+    const nonce = payload._nonce || body._nonce || '';
+
+    if (!signature || !deviceId) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const verification = verifySignature(payload, signature, _ts);
+    const verification = verifyFirmwareEnvelope(payload, signature, deviceId, timestamp, nonce);
     if (!verification.valid) {
-      logger.warn(`[Firmware] Auth failed: ${verification.error} for device ${_did}`);
+      logger.warn(`[Firmware] Auth failed: ${verification.error} for device ${deviceId}`);
       return res.status(401).json({ error: verification.error });
     }
 
-    const device = getOne('SELECT * FROM devices WHERE id = ?', [_did]);
-    if (!device) {
-      runQuery(
-        'INSERT INTO devices (id, name, type, zone, status, config, last_seen) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [_did, `Device-${_did.substring(0, 8)}`, 'esp32', 'default', 'online', '{}', new Date().toISOString()]
-      );
-    } else {
-      runQuery('UPDATE devices SET status = ?, last_seen = ? WHERE id = ?', ['online', new Date().toISOString(), _did]);
+    upsertDeviceOnline(deviceId, fwVersion);
+
+    const responsePayload = {
+      ok: true,
+      device_id: deviceId,
+      fw_version: fwVersion,
+      server_ts: new Date().toISOString()
+    };
+
+    // 1) Sensor data
+    const readings = normalizeReadings(payload);
+    if (readings.length > 0) {
+      const processResult = await processFirmwareData(readings, deviceId, payload);
+      responsePayload.processed = processResult;
     }
 
-    const response = { success: true };
-
-    if (payload.sensor_data && Array.isArray(payload.sensor_data)) {
-      const processResult = await processFirmwareData(payload, _did);
-      response.processed = processResult;
-    }
-
+    // 2) Commands
     if (payload.get_commands) {
-      const pendingCommands = getAll(
-        'SELECT * FROM commands WHERE device_id = ? AND status = "pending" ORDER BY created_at ASC LIMIT 10',
-        [_did]
-      );
-      
-      if (pendingCommands.length > 0) {
-        response.commands = pendingCommands.map(cmd => ({
-          command: cmd.command,
-          command_id: cmd.id,
-          params: JSON.parse(cmd.params || '{}')
-        }));
-        
-        pendingCommands.forEach(cmd => {
-          runQuery('UPDATE commands SET status = "sent" WHERE id = ?', [cmd.id]);
-        });
-      }
+      responsePayload.commands = getPendingCommandsPayload(deviceId);
     }
 
+    // 3) Config
     if (payload.get_config) {
-      const device = getOne('SELECT * FROM devices WHERE id = ?', [_did]);
-      response.config = {
-        post_interval_sec: 1800,
-        sensor_interval_sec: 30,
+      responsePayload.config = {
+        post_interval_sec: 600,
+        sensor_interval_sec: 600,
         deep_sleep_enabled: true,
-        version: '8.5.0',
+        version: fwVersion,
         server_url: process.env.API_BASE_URL || 'http://localhost:3000'
       };
-      response.config_version = 5;
+      responsePayload.config_version = 6;
     }
 
-    res.json(response);
+    return res.json(signResponsePayload(responsePayload));
   } catch (err) {
     logger.error('[FirmwareWebhook] Error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-async function processFirmwareData(payload, deviceId) {
-  const readings = payload.sensor_data || [];
-  const batchId = payload.batch_id;
-  const timestamp = payload._ts ? new Date(payload._ts * 1000).toISOString() : new Date().toISOString();
+async function processFirmwareData(readings, deviceId, payload) {
+  const timestamp = payload?._ts
+    ? new Date(Number(payload._ts) * 1000).toISOString()
+    : new Date().toISOString();
 
   readings.forEach(sensor => {
     runQuery(
       'INSERT INTO sensor_readings (id, sensor_type, value, timestamp) VALUES (?, ?, ?, ?)',
-      [uuidv4(), sensor.type, sensor.value, timestamp]
+      [uuidv4(), sensor.sensor_type, sensor.value, timestamp]
     );
-    
-    const existing = getOne('SELECT id FROM sensors WHERE type = ?', [sensor.type]);
+
+    const existing = getOne('SELECT id FROM sensors WHERE type = ?', [sensor.sensor_type]);
     if (existing) {
-      runQuery('UPDATE sensors SET value = ?, timestamp = ? WHERE type = ?', [sensor.value, timestamp, sensor.type]);
+      runQuery(
+        'UPDATE sensors SET value = ?, timestamp = ? WHERE type = ?',
+        [sensor.value, timestamp, sensor.sensor_type]
+      );
     } else {
-      runQuery('INSERT INTO sensors (id, type, value, unit, timestamp) VALUES (?, ?, ?, ?, ?)',
-        [uuidv4(), sensor.type, sensor.value, 'unit', timestamp]);
+      runQuery(
+        'INSERT INTO sensors (id, type, value, unit, timestamp) VALUES (?, ?, ?, ?, ?)',
+        [uuidv4(), sensor.sensor_type, sensor.value, sensor.unit || 'unit', timestamp]
+      );
     }
   });
 
-  const advisory = AdvisoryEngine.analyzeLatestReadings(readings);
-  
+  // Nếu engine của bạn đang dùng { type, value }, convert alias trước khi analyze
+  const advisoryInput = readings.map(r => ({
+    type: r.sensor_type,
+    value: r.value,
+    unit: r.unit,
+    timestamp
+  }));
+
+  const advisory = AdvisoryEngine.analyzeLatestReadings(advisoryInput);
+
   advisory.alerts.forEach(alert => {
     runQuery(
       'INSERT INTO alerts (id, type, severity, sensor, value, message, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -143,7 +289,10 @@ async function processFirmwareData(payload, deviceId) {
     }
   }
 
-  return { sensors: readings.length, alerts: advisory.alerts.length };
+  return {
+    sensors: readings.length,
+    alerts: advisory.alerts.length
+  };
 }
 
 router.get('/devices/:deviceId/firmware', async (req, res) => {
@@ -250,6 +399,38 @@ router.post('/batch/:batchId/attach', async (req, res) => {
   } catch (err) {
     logger.error('[Firmware] Batch attach error:', err);
     res.status(500).json({ error: 'Failed to attach device' });
+  }
+});
+
+// ACK endpoint for command lifecycle (queued → sent → done)
+router.post('/devices/:deviceId/ack', async (req, res) => {
+  try {
+    const { deviceId } = req.params;
+    const { command_id, status = 'done', note = '' } = req.body || {};
+
+    if (!command_id) {
+      return res.status(400).json({ error: 'Missing command_id' });
+    }
+
+    const cmd = getOne('SELECT * FROM commands WHERE id = ? AND device_id = ?', [command_id, deviceId]);
+    if (!cmd) {
+      return res.status(404).json({ error: 'Command not found' });
+    }
+
+    runQuery(
+      'UPDATE commands SET status = ?, executed_at = ?, note = ? WHERE id = ?',
+      [status, new Date().toISOString(), note, command_id]
+    );
+
+    return res.json(signResponsePayload({
+      ok: true,
+      command_id,
+      device_id: deviceId,
+      status
+    }));
+  } catch (err) {
+    logger.error('[FirmwareAck] Error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
