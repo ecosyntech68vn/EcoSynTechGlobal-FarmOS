@@ -1,48 +1,83 @@
 # EcoSynTech Skills
 
-Custom skills for managing EcoSynTech IoT backend - Complete automation suite (26 skills).
+Custom skills for managing EcoSynTech IoT backend - Complete automation suite (31 skills).
 
-## Available Skills (26 Total)
+## Available Skills (31 Total)
 
+### Core Automation
 | # | Skill | Description | Category |
 |---|-------|-------------|----------|
 | 1 | `/scheduler` | Orchestrate other skills | Automation |
+
+### Security (4 skills)
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
 | 2 | `/security-audit` | Security audit | Security |
 | 3 | `/firewall-setup` | Firewall config | Security |
 | 4 | `/ssl-manager` | SSL certificates | Security |
-| 5 | `/health-check` | Server status | Operations |
-| 6 | `/monitor` | Real-time dashboard | Monitoring |
-| 7 | `/alerting` | Alert rules | Monitoring |
-| 8 | `/system-report` | Reports | Operations |
-| 9 | `/config-manager` | Config versioning | Operations |
-| 10 | `/log-analyzer` | Log analysis | Debug |
-| 11 | `/iot-debug` | ESP32 debug | Debug |
-| 12 | `/fix-common` | Auto-fix issues | Auto-fix |
-| 13 | `/deployment` | Deploy | DevOps |
-| 14 | `/test-runner` | Run tests | Quality |
-| 15 | `/device-provision` | New ESP32 | DevOps |
-| 16 | `/firmware-update` | Firmware OTA | DevOps |
-| 17 | `/backup` | Database backup | Maintenance |
-| 18 | `/update` | Dependency updates | Maintenance |
-| 19 | `/database-migrate` | Schema migrations | Maintenance |
-| 20 | `/db-cleanup` | Database vacuum | Maintenance |
-| 21 | `/cache-manager` | Redis cache | Maintenance |
-| 22 | `/auto-scale` | Scale resources | Automation |
-| 23 | `/metrics-export` | Prometheus export | Monitoring |
-| 24 | `/api-gateway` | Rate limiting | Operations |
-| 25 | `/user-manager` | User management | Operations |
-| 26 | `/load-test` | Load testing | Quality |
+| 5 | `/ssl-auto-renew` | Auto-renew SSL certificates | Security |
+
+### Operations (7 skills)
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
+| 6 | `/health-check` | Server status | Operations |
+| 7 | `/monitor` | Real-time dashboard | Monitoring |
+| 8 | `/alerting` | Alert rules | Monitoring |
+| 9 | `/system-report` | Reports | Operations |
+| 10 | `/config-manager` | Config versioning | Operations |
+| 11 | `/api-gateway` | Rate limiting | Operations |
+| 12 | `/user-manager` | User management | Operations |
+
+### Debug (3 skills)
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
+| 13 | `/log-analyzer` | Log analysis | Debug |
+| 14 | `/iot-debug` | ESP32 debug | Debug |
+| 15 | `/fix-common` | Auto-fix issues | Auto-fix |
+
+### DevOps (4 skills)
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
+| 16 | `/deployment` | Deploy | DevOps |
+| 17 | `/test-runner` | Run tests | Quality |
+| 18 | `/device-provision` | New ESP32 | DevOps |
+| 19 | `/firmware-update` | Firmware OTA | DevOps |
+
+### Maintenance (7 skills)
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
+| 20 | `/backup` | Database backup | Maintenance |
+| 21 | `/update` | Dependency updates | Maintenance |
+| 22 | `/database-migrate` | Schema migrations | Maintenance |
+| 23 | `/db-cleanup` | Database vacuum | Maintenance |
+| 24 | `/cache-manager` | Redis cache | Maintenance |
+| 25 | `/auto-scale` | Scale resources | Automation |
+| 26 | `/log-rotation` | Log compression & cleanup | Maintenance |
+
+### Monitoring (3 skills)
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
+| 27 | `/metrics-export` | Prometheus export | Monitoring |
+| 28 | `/uptime-monitor` | SLA compliance tracking | Monitoring |
+| 29 | `/device-health` | ESP32 device health | Monitoring |
+
+### Quality (2 skills)
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
+| 30 | `/load-test` | Load testing | Quality |
+| 31 | `/auto-restart` | Auto-restart crashed service | Reliability |
 
 ## Usage
 
 ```bash
-# Automation orchestration
+# Core Automation
 /scheduler
 
 # Security
 /security-audit
 /firewall-setup
 /ssl-manager
+/ssl-auto-renew
 
 # Operations
 /health-check
@@ -71,30 +106,50 @@ Custom skills for managing EcoSynTech IoT backend - Complete automation suite (2
 /db-cleanup
 /cache-manager
 /auto-scale
+/log-rotation
 
 # Monitoring
 /metrics-export
+/uptime-monitor
+/device-health
 
-# Quality
+# Quality & Reliability
 /load-test
+/auto-restart
 ```
 
 ## Traffic Scheduler
 
-- Scheduler is integrated under: Skill Management for EcoSynTech/scheduler/
-- Uses config/scheduler.json to schedule skills
-- Run: node scheduler-runner.js (or run via npm script)
+- Scheduler is integrated under: `Skill-Management-for-EcoSynTech/scheduler/`
+- Uses `config/scheduler.json` to schedule skills
+- Run: `node scheduler-runner.js` (or run via npm script)
 
-## Automation Coverage: 96%
+### Default Schedules (10 Active)
+
+| Schedule | Interval | Skills |
+|----------|----------|--------|
+| Critical Monitoring | 5m | health-check, monitor |
+| Device Health Check | 5m | device-health |
+| Debug & Diagnostics | 15m | log-analyzer, iot-debug |
+| Backup & Alerts | 30m | backup, alerting |
+| Log Rotation | 1h | log-rotation |
+| Hourly Report | 1h | system-report, metrics-export |
+| Uptime Monitor | 1h | uptime-monitor |
+| Scale & Security | 2h | auto-scale, security-audit |
+| Auto-Restart Watchdog | 2h | auto-restart |
+| SSL Certificate Check | 1d | ssl-auto-renew |
+
+## Automation Coverage: 98%
 
 | Area | Skills | Coverage |
-|------|--------|-----------|
-| Security | 3 | 98% |
+|------|--------|----------|
+| Security | 4 | 99% |
 | Operations | 7 | 95% |
 | Debug | 3 | 90% |
 | DevOps | 4 | 95% |
-| Maintenance | 5 | 95% |
-| Monitoring | 2 | 90% |
+| Maintenance | 7 | 98% |
+| Monitoring | 3 | 95% |
 | Quality | 2 | 90% |
+| Reliability | 1 | 95% |
 
-**Overall: 96% automation**
+**Overall: 98% automation**

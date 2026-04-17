@@ -18,6 +18,17 @@
       "runCount": 0
     },
     {
+      "id": "sched-device-health-001",
+      "name": "Device Health Check",
+      "description": "Monitor ESP32 devices online/offline status",
+      "interval": "5m",
+      "skills": ["device-health"],
+      "enabled": true,
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "lastRun": null,
+      "runCount": 0
+    },
+    {
       "id": "sched-debug-002",
       "name": "Debug & Diagnostics",
       "description": "Log analysis and IoT debugging",
@@ -40,6 +51,17 @@
       "runCount": 0
     },
     {
+      "id": "sched-log-rotation-001",
+      "name": "Log Rotation",
+      "description": "Compress and cleanup old log files",
+      "interval": "1h",
+      "skills": ["log-rotation"],
+      "enabled": true,
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "lastRun": null,
+      "runCount": 0
+    },
+    {
       "id": "sched-report-004",
       "name": "Hourly Report",
       "description": "System reports and metrics export",
@@ -51,11 +73,44 @@
       "runCount": 0
     },
     {
+      "id": "sched-uptime-001",
+      "name": "Uptime Monitor",
+      "description": "Track SLA compliance and uptime metrics",
+      "interval": "1h",
+      "skills": ["uptime-monitor"],
+      "enabled": true,
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "lastRun": null,
+      "runCount": 0
+    },
+    {
       "id": "sched-scale-sec-005",
       "name": "Scale & Security",
       "description": "Auto-scaling and security audit",
       "interval": "2h",
       "skills": ["auto-scale", "security-audit"],
+      "enabled": true,
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "lastRun": null,
+      "runCount": 0
+    },
+    {
+      "id": "sched-auto-restart-001",
+      "name": "Auto-Restart Watchdog",
+      "description": "Auto-restart service when crashed",
+      "interval": "2h",
+      "skills": ["auto-restart"],
+      "enabled": true,
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "lastRun": null,
+      "runCount": 0
+    },
+    {
+      "id": "sched-ssl-renew-001",
+      "name": "SSL Certificate Check",
+      "description": "Check and renew SSL certificates",
+      "interval": "1d",
+      "skills": ["ssl-auto-renew"],
       "enabled": true,
       "createdAt": "2026-04-17T00:00:00.000Z",
       "lastRun": null,
