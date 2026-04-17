@@ -200,7 +200,6 @@ function createTables() {
       harvest_notes TEXT,
       status TEXT DEFAULT 'active',
       metadata TEXT DEFAULT '{}',
-      farm_name TEXT,
       farm_address TEXT,
       farm_certifications TEXT DEFAULT '[]',
       buyer_name TEXT,

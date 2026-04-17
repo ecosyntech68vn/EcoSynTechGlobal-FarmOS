@@ -1,90 +1,45 @@
-# EcoSynTech IoT Platform
+# EcoSynTech IoT Platform v2.3.2
 
-Hệ thống IoT toàn diện cho nông nghiệp thông minh - **Version 2.2.0**
+Hệ thống IoT toàn diện cho nông nghiệp thông minh với **55+ skills tự động** và **QR Code Traceability** + **Aptos Blockchain**.
 
-## Tính năng chính
+## Tính năng nổi bật
 
-### Backend (Node.js + Express)
-- **REST API** đầy đủ với validation và error handling
-- **WebSocket** cho cập nhật thời gian thực
-- **SQLite Database** với sql.js (pure JavaScript, không cần compile)
-- **JWT Authentication** và User Management
-- **Rate Limiting** và Security (Helmet, CORS)
-- **Webhook Integration** với signature verification
-- **Structured Architecture** (Routes, Middleware, Config)
-- **Swagger API Documentation** (/api/docs)
-- **InfluxDB Integration** cho time-series data
-- **MQTT Bridge** cho external brokers
+### 🎯 Core Features
+- **58 Skills tự động** - Quản lý, vận hành, giám sát, sửa lỗi
+- **QR Code Traceability** - Truy xuất nguồn gốc từ gieo trồng đến xuất bán
+- **Aptos Blockchain** - Ghi nhận hash (có thể bật/tắt)
+- **i18n đa ngôn ngữ** - Tiếng Việt, English, 中文
+- **Tối ưu RAM thấp** - Chạy được trên 512MB RAM, Win7 compatible
 
-### Frontend (Vanilla JS)
-- **Dark/Light Mode** với system preference detection
-- **Real-time Updates** qua WebSocket
-- **Push Notifications** cho cảnh báo
-- **Toast Notifications** cho UX tốt hơn
-- **Responsive Design** cho mobile
+### 📡 Connectivity
+- REST API với Swagger documentation
+- WebSocket real-time updates
+- MQTT integration
+- Webhook support
 
-### DevOps
-- **Docker** + **Docker Compose**
-- **CI/CD Pipeline** với GitHub Actions
-- **Auto-installer Script** cho Linux/Mac/Windows
-
----
+### 🛡️ Security & Governance
+- JWT Authentication
+- RBAC (Role-Based Access Control)
+- Rate Limiting
+- Audit Trail
+- Secrets checking
 
 ## Cài đặt nhanh
 
-### 🐧 Linux / macOS
-
 ```bash
-# Clone hoặc cd vào thư mục project
+# 1. Clone và cài đặt
 cd Ecosyntech-web
-
-# Cấp quyền và chạy installer
-chmod +x install.sh
-./install.sh
-```
-
-Installer sẽ hỏi bạn:
-- **Port server** (mặc định: 3000)
-- **JWT Secret** (tự động tạo nếu để trống)
-- **Môi trường** (development/production)
-- **CORS Origin**
-- **Tài khoản admin**
-
-### 🪟 Windows
-
-```batch
-# Clone hoặc cd vào thư mục project
-cd Ecosyntech-web
-
-# Chạy installer (cần chạy với quyền Administrator)
-install.bat
-```
-
-### 📦 Manual Installation
-
-```bash
-# 1. Clone repository
-git clone https://github.com/ecosyntech68vn/Ecosyntech-web.git
-cd Ecosyntech-web
-
-# 2. Cài đặt dependencies
 npm install
 
-# 3. Tạo file .env
+# 2. Cấu hình (optional)
 cp .env.example .env
-# Chỉnh sửa .env theo nhu cầu
+# Chỉnh sửa .env nếu cần
 
-# 4. Khởi động server
+# 3. Chạy server
 npm start
 ```
 
----
-
-## Cấu hình
-
-### Environment Variables
-
-Tạo file `.env` trong thư mục gốc:
+## Cấu hình môi trường (.env)
 
 ```env
 # Server
@@ -94,281 +49,171 @@ NODE_ENV=development
 # Database
 DB_PATH=./data/ecosyntech.db
 
-# JWT Authentication
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
+# JWT
+JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
 
-# CORS
-CORS_ORIGIN=*
+# MQTT (optional)
+MQTT_BROKER_URL=wss://broker.hivemq.com:8884/mqtt
+MQTT_USERNAME=
+MQTT_PASSWORD=
 
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
+# Blockchain (bật/tắt)
+BLOCKCHAIN_ENABLED=false
+BLOCKCHAIN_TYPE=aptos
+APTOS_NETWORK=testnet
 
-# Webhooks
-WEBHOOK_SECRET=your-webhook-secret
-```
+# QR Code
+QR_CODE_ENABLED=true
+QR_CODE_BASE_URL=https://ecosyntech.com
 
----
-
-## Chạy hệ thống
-
-### Development Mode
-```bash
-npm run dev
+# Scheduler
+OPS_SCHEDULER_DISABLED=false
+OPS_SCHEDULER_INTERVAL=600000
 ```
-
-### Production Mode
-```bash
-npm start
-```
-
-### Với Docker
-```bash
-docker-compose up -d
-```
-
----
-
-## API Endpoints
-
-### Authentication
-```
-POST /api/auth/register - Đăng ký user mới
-POST /api/auth/login    - Đăng nhập
-GET  /api/auth/me       - Lấy thông tin user hiện tại
-```
-
-### Sensors
-```
-GET  /api/sensors           - Lấy tất cả sensors
-GET  /api/sensors/:type     - Lấy sensor theo type
-POST /api/sensors/update    - Cập nhật giá trị sensor
-```
-
-### Devices
-```
-GET    /api/devices              - Lấy tất cả thiết bị
-GET    /api/devices/:id          - Lấy thiết bị theo ID
-POST   /api/devices              - Tạo thiết bị mới
-PUT    /api/devices/:id/config   - Cập nhật cấu hình
-POST   /api/devices/:id/command  - Gửi lệnh đến thiết bị
-DELETE /api/devices/:id          - Xóa thiết bị
-```
-
-### Rules (Automation)
-```
-GET    /api/rules           - Lấy tất cả rules
-POST   /api/rules            - Tạo rule mới
-PUT    /api/rules/:id        - Cập nhật rule
-DELETE /api/rules/:id        - Xóa rule
-POST   /api/rules/:id/toggle - Bật/tắt rule
-```
-
-### Schedules
-```
-GET    /api/schedules           - Lấy tất cả lịch
-POST   /api/schedules            - Tạo lịch mới
-PUT    /api/schedules/:id        - Cập nhật lịch
-DELETE /api/schedules/:id        - Xóa lịch
-POST   /api/schedules/:id/toggle - Bật/tắt lịch
-```
-
-### Alerts
-```
-GET    /api/alerts                 - Lấy tất cả alerts
-POST   /api/alerts                 - Tạo alert mới
-POST   /api/alerts/:id/acknowledge - Xác nhận alert
-POST   /api/alerts/acknowledge-all - Xác nhận tất cả alerts
-DELETE /api/alerts/:id             - Xóa alert
-```
-
-### System
-```
-GET  /api/health    - Health check
-GET  /api/stats      - System statistics
-POST /api/export     - Export all data
-POST /api/import     - Import data
-```
-
-### Webhooks
-```
-POST /api/webhooks/sensor-alert   - Sensor alert webhook
-POST /api/webhooks/device-status  - Device status webhook
-POST /api/webhooks/rule-triggered - Rule triggered webhook
-POST /api/webhooks/schedule-run   - Schedule run webhook
-```
-
-### WebSocket
-```
-Endpoint: /ws
-
-Client Messages:
-- { type: "auth", token: "jwt-token" }
-- { type: "subscribe", topics: ["sensors", "alerts"] }
-- { type: "ping" }
-
-Server Messages:
-- { type: "sensor-update", data: {...} }
-- { type: "alert", action: "created", data: {...} }
-- { type: "device-update", data: {...} }
-```
-
-### Analytics & Dashboard
-```
-GET  /api/analytics/dashboard      - Dashboard KPIs
-GET  /api/analytics/kpis           - System KPIs
-GET  /api/analytics/sensor-history - Sensor history data
-GET  /api/analytics/export/pdf      - Export PDF report
-GET  /api/analytics/export/excel   - Export Excel report
-```
-
-### Device Management
-```
-GET    /api/device-mgmt/ota/firmwares     - List firmwares
-POST   /api/device-mgmt/ota/firmwares    - Upload firmware
-GET    /api/device-mgmt/ota/devices/:id  - Check device firmware
-POST   /api/device-mgmt/ota/deploy       - Deploy OTA update
-GET    /api/device-mgmt/qr/provision     - Generate QR provisioning
-POST   /api/device-mgmt/qr/activate       - Activate device via QR
-GET    /api/device-mgmt/:id/config        - Get device config
-PUT    /api/device-mgmt/:id/config        - Update device config
-POST   /api/device-mgmt/:id/remote-command - Send command
-```
-
-### Agriculture
-```
-GET  /api/agriculture/eto                  - ETo calculation
-GET  /api/agriculture/irrigation-schedule  - Auto irrigation recommendation
-POST /api/agriculture/auto-irrigation       - Enable/disable auto irrigation
-GET  /api/agriculture/crops                - List crops
-POST /api/agriculture/crops                - Add new crop
-GET  /api/agriculture/crops/:id            - Get crop details
-POST /api/agriculture/crops/:id/harvest    - Record harvest
-GET  /api/agriculture/reports/daily        - Daily report
-GET  /api/agriculture/reports/yield        - Yield report
-```
-
-### Security
-```
-GET    /api/security/ip-whitelist     - List IP whitelist
-POST   /api/security/ip-whitelist     - Add IP to whitelist
-DELETE /api/security/ip-whitelist/:id - Remove IP
-GET    /api/security/audit-log       - View audit logs
-GET    /api/security/security-scan    - Security scan results
-GET    /api/security/sessions        - List active sessions
-DELETE /api/security/sessions/:id     - Terminate session
-GET    /api/security/api-keys        - List API keys
-POST   /api/security/api-keys        - Create API key
-DELETE /api/security/api-keys/:id    - Revoke API key
-GET    /api/security/rate-limit-status - Rate limit status
-```
-
-### Documentation
-```
-GET /api/docs        - Swagger UI
-GET /api/docs/json   - OpenAPI spec
-```
-
-### Firmware Integration (ESP32 V8.5.0)
-```
-POST /api/firmware/webhook       - Receive sensor data from ESP32
-GET  /api/firmware/devices/:id   - Get device firmware info
-POST /api/firmware/devices/:id/command - Send command to device
-GET  /api/firmware/devices/:id/history - Device history
-POST /api/firmware/batch/:id/attach - Attach device to batch
-```
-
-### RBAC & Multi-tenant
-```
-GET    /api/rbac/roles                    - List all roles
-GET    /api/rbac/users                    - List users (admin)
-POST   /api/rbac/users                    - Create user
-PUT    /api/rbac/users/:id                - Update user
-DELETE /api/rbac/users/:id               - Delete user
-GET    /api/rbac/tenants                  - List tenants (admin)
-POST   /api/rbac/tenants                  - Create tenant
-```
-
-### OTA Updates
-```
-GET  /api/ota/firmwares             - List firmwares
-POST /api/ota/firmwares             - Upload firmware
-GET  /api/ota/firmwares/latest      - Latest firmware
-GET  /api/ota/devices/:id/ota-check - Check for updates
-POST /api/ota/devices/:id/ota-update - Report update result
-GET  /api/ota/ota/manifest          - Get update manifest
-GET  /api/ota/stats                 - OTA statistics
-```
-
----
-
-## Kiến trúc
-
-```
-ecosyntech-web/
-├── server.js              # Main server entry
-├── src/
-│   ├── config/           # Configuration
-│   │   ├── index.js      # Environment config
-│   │   ├── logger.js     # Winston logger
-│   │   └── database.js   # SQLite setup (sql.js)
-│   ├── middleware/       # Express middleware
-│   │   ├── auth.js       # JWT authentication
-│   │   ├── errorHandler.js
-│   │   └── validation.js  # Joi validation
-│   ├── routes/           # API routes
-│   │   ├── auth.js
-│   │   ├── sensors.js
-│   │   ├── devices.js
-│   │   ├── rules.js
-│   │   ├── schedules.js
-│   │   ├── history.js
-│   │   ├── alerts.js
-│   │   ├── webhooks.js
-│   │   ├── stats.js
-│   │   ├── analytics.js   # Dashboard & KPIs
-│   │   ├── devicemgmt.js  # OTA, QR, remote config
-│   │   ├── agriculture.js # ETo, irrigation, crops
-│   │   ├── security.js   # IP whitelist, audit logs
-│   │   └── docs.js       # Swagger docs
-│   ├── websocket/        # WebSocket handlers
-│   │   └── index.js
-│   ├── integrations.js    # InfluxDB & MQTT bridge
-│   └── modules/
-│       └── iot-engine.js # Advisory Engine, Smart Control
-├── data/                 # SQLite database (auto-created)
-├── logs/                 # Application logs (auto-created)
-├── install.sh           # Linux/Mac auto-installer
-├── install.bat          # Windows auto-installer
-├── Dockerfile
-├── docker-compose.yml
-└── .env.example
-```
-
----
 
 ## Scripts
 
 ```bash
-npm start       # Chạy server production
-npm run dev     # Chạy development mode (với nodemon)
-npm run lint    # Kiểm tra code style
-npm test        # Chạy tests
-npm run build   # Kiểm tra syntax
-
-All-In Release 2.1.1
-- Analytics: Dashboard KPIs, sensor history, PDF/Excel export
-- Device Management: OTA firmware, QR provisioning, remote config
-- Agriculture: ETo calculation, auto irrigation, crop management
-- Security: IP whitelist, audit logging, API keys, sessions
-- Integration: Swagger docs, InfluxDB/MQTT bridge support
-- Firmware Integration: ESP32 V8.5.0 webhook, HMAC security, Advisory Engine
-- Smart Control: Real-time rules evaluation, Telegram notifications
-- See RELEASE_NOTES.md for full details.
+npm start          # Chạy server production
+npm run dev        # Chạy development với hot reload
+npm run test       # Chạy tests
+npm run lint       # ESLint
 ```
 
----
+## API Endpoints chính
+
+### Sensors
+- `GET /api/sensors` - Danh sách sensors
+- `GET /api/sensors/:type` - Chi tiết sensor
+
+### Devices
+- `GET /api/devices` - Danh sách devices
+- `POST /api/devices` - Thêm device
+- `PUT /api/devices/:id` - Cập nhật device
+- `DELETE /api/devices/:id` - Xóa device
+
+### Rules
+- `GET /api/rules` - Danh sách rules
+- `POST /api/rules` - Tạo rule
+- `PUT /api/rules/:id` - Cập nhật rule
+
+### Traceability (QR Code + Blockchain)
+- `POST /api/traceability/batch` - Tạo batch + QR code
+- `GET /api/traceability/batch/:code` - Truy xuất batch
+- `POST /api/traceability/batch/:code/stage` - Thêm giai đoạn
+- `POST /api/traceability/batch/:code/harvest` - Thu hoạch
+- `POST /api/traceability/batch/:code/export` - Xuất bán
+- `POST /api/traceability/batch/:code/certify` - Chứng nhận
+- `GET /api/traceability/batch/:code/full` - Timeline đầy đủ
+- `GET /api/traceability/batch/:code/qr` - Lấy QR code
+- `GET /api/traceability/batch/:code/label` - Label in được
+- `POST /api/traceability/scan` - Scan QR check nguồn gốc
+- `GET /api/traceability/verify/:code` - Verify blockchain hash
+- `GET /api/traceability/export/pdf` - Export PDF report
+- `GET /api/traceability/export/excel` - Export Excel report
+
+### System
+- `GET /api/stats` - Thống kê hệ thống
+- `GET /api/alerts` - Alerts
+- `GET /api/docs` - Swagger docs
+
+## Skills System
+
+### Categories
+
+| Category | Skills | Mô tả |
+|----------|--------|-------|
+| **drift** | version-drift, config-drift | Monitor version/config changes |
+| **network** | ws-heartbeat, mqtt-watch | Network connectivity |
+| **data** | alert-deduper, incident-correlator | Data processing |
+| **diagnosis** | route-mapper, webhook-correlator, anomaly-classifier, device-state-diff, kpi-drift, root-cause-hint | Chẩn đoán lỗi |
+| **selfheal** | retry-job, reconnect-bridge, reset-device, clear-cache, rollback-ota, auto-acknowledge | Tự sửa lỗi |
+| **orchestration** | rules-engine, schedules-engine, webhook-dispatch, command-router, ota-orchestrator, report-export | Điều phối |
+| **governance** | rbac-guard, audit-trail, secrets-check, tenant-isolation, rate-limit-guard, approval-gate-advanced | Quản trị |
+| **analysis** | root-cause-analyzer, auto-backup, anomaly-predictor, system-health-scorer | Phân tích |
+| **recovery** | auto-restore | Khôi phục |
+| **security** | vuln-scanner | Bảo mật |
+| **defense** | intrusion-detector | Phòng thủ |
+| **communication** | telegram-notifier, report-generator, voice-notifier, language-switcher | Giao tiếp |
+| **agriculture** | weather-decision, water-optimization, crop-growth-tracker, pest-alert, fertilizer-scheduler | Nông nghiệp |
+| **iot** | energy-saver, predictive-maintenance, multi-farm-manager | IoT devices |
+| **maintenance** | cleanup-agent, log-rotator, db-optimizer | Bảo trì |
+| **ai** | ai-predict-weather | AI prediction |
+| **traceability** | qr-traceability, aptos-blockchain, aptos-integration | QR + Blockchain |
+
+## QR Code Traceability Flow
+
+```
+1. Tạo batch → QR Code tự động
+       ↓
+2. Gieo trồng → Stage 1 (planting)
+       ↓
+3. Chăm sóc → Stage 2-N (growing)
+       ↓
+4. Thu hoạch → harvest event → Blockchain hash
+       ↓
+5. Đóng gói → Stage (processing, packaging)
+       ↓
+6. Vận chuyển → Stage (transport, storage)
+       ↓
+7. Xuất bán → export event → Blockchain hash
+       ↓
+8. Chứng nhận → certify event → Blockchain hash
+```
+
+## Blockchain Configuration
+
+```bash
+# Bật blockchain (Aptos)
+BLOCKCHAIN_ENABLED=true
+
+# Tắt (mặc định)
+BLOCKCHAIN_ENABLED=false
+```
+
+Khi bật, các events sau sẽ được ghi hash lên blockchain:
+- `traceability.harvest` - Khi thu hoạch
+- `traceability.export` - Khi xuất bán
+- `traceability.certify` - Khi thêm chứng nhận
+
+## i18n - Đa ngôn ngữ
+
+Hỗ trợ: Tiếng Việt (vi), English (en), 中文 (zh)
+
+Đổi ngôn ngữ qua:
+- Header `Accept-Language`
+- Event `language-change` trigger skill
+
+## Performance Optimization
+
+Tự động điều chỉnh theo RAM:
+
+| RAM | Scheduler Interval | Backup Interval | Heartbeat |
+|-----|-------------------|-----------------|-----------|
+| >= 2GB | 10 phút | 3 giờ | 60s |
+| 1-2GB | 30 phút | 6 giờ | 120s |
+| < 1GB | 60 phút | 12 giờ | 300s |
+
+## Docker (optional)
+
+```bash
+# Build
+docker build -t ecosyntech .
+
+# Run
+docker run -p 3000:3000 -v ./data:/app/data ecosyntech
+```
+
+## Testing
+
+```bash
+# Test all skills
+node scripts/test-skills.js
+
+# Test specific feature
+node manage.js status
+```
 
 ## License
 

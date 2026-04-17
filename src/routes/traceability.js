@@ -3,9 +3,12 @@ const router = express.Router();
 const QRCode = require('qrcode');
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
+const PDFDocument = require('pdfkit');
+const ExcelJS = require('exceljs');
 const { runQuery, getOne, getAll } = require('../config/database');
 const logger = require('../config/logger');
 const { auth } = require('../middleware/auth');
+const blockchainHelper = require('../modules/blockchain-helper');
 
 const BASE_URL = process.env.BASE_URL || 'https://ecosyntech.com';
 
@@ -296,12 +299,30 @@ router.post('/batch/:code/harvest', auth, async (req, res) => {
 
     logger.info(`[Traceability] Batch harvested: ${req.params.code}`);
 
-    res.json({
+    const response = {
       success: true,
       message: 'Batch marked as harvested',
       batch_code: req.params.code,
       harvest_date: new Date().toISOString()
-    });
+    };
+
+    if (blockchainHelper.shouldRecordToBlockchain()) {
+      const ops = req.app.get('ops');
+      if (ops) {
+        const metadata = blockchainHelper.createHarvestMetadata(harvest_quantity, harvest_notes);
+        const stages = getAll('SELECT * FROM traceability_stages WHERE batch_id = ? ORDER BY stage_order ASC', [batch.id]);
+        const batchData = { ...batch, stages: stages };
+        
+        await ops.trigger('traceability.harvest', {
+          batch: batchData,
+          metadata: metadata
+        });
+        response.blockchain_recorded = true;
+        logger.info(`[Blockchain] Harvest recorded for batch: ${req.params.code}`);
+      }
+    }
+
+    res.json(response);
   } catch (err) {
     logger.error('[Traceability] Harvest error:', err);
     res.status(500).json({ error: 'Failed to mark batch as harvested' });
@@ -380,20 +401,38 @@ router.post('/batch/:code/export', auth, async (req, res) => {
 
     logger.info(`[Traceability] Batch exported: ${req.params.code} to ${buyer_name}`);
 
-    res.json({
+    const response = {
       success: true,
       message: 'Batch exported successfully',
       batch_code: req.params.code,
       export_date: new Date().toISOString(),
       buyer: buyer_name
-    });
+    };
+
+    if (blockchainHelper.shouldRecordToBlockchain()) {
+      const ops = req.app.get('ops');
+      if (ops) {
+        const metadata = blockchainHelper.createExportMetadata(buyer_name, buyer_contact, export_price, export_unit, notes);
+        const stages = getAll('SELECT * FROM traceability_stages WHERE batch_id = ? ORDER BY stage_order ASC', [batch.id]);
+        const batchData = { ...batch, stages: stages };
+        
+        await ops.trigger('traceability.export', {
+          batch: batchData,
+          metadata: metadata
+        });
+        response.blockchain_recorded = true;
+        logger.info(`[Blockchain] Export recorded for batch: ${req.params.code}`);
+      }
+    }
+
+    res.json(response);
   } catch (err) {
     logger.error('[Traceability] Export error:', err);
     res.status(500).json({ error: 'Failed to export batch' });
   }
 });
 
-// POST /api/traceability/batch/:code/ certify - Add certification
+// POST /api/traceability/batch/:code/certify - Add certification
 router.post('/batch/:code/certify', auth, async (req, res) => {
   try {
     const batch = getOne('SELECT * FROM traceability_batches WHERE batch_code = ?', [req.params.code]);
@@ -420,11 +459,29 @@ router.post('/batch/:code/certify', auth, async (req, res) => {
 
     logger.info(`[Traceability] Certification added: ${certification_name} for ${req.params.code}`);
 
-    res.json({
+    const response = {
       success: true,
       message: 'Certification added successfully',
       certification: newCert
-    });
+    };
+
+    if (blockchainHelper.shouldRecordToBlockchain()) {
+      const ops = req.app.get('ops');
+      if (ops) {
+        const metadata = blockchainHelper.createCertMetadata(certification_name, certification_body, certification_date, certification_expire, certificate_number);
+        const stages = getAll('SELECT * FROM traceability_stages WHERE batch_id = ? ORDER BY stage_order ASC', [batch.id]);
+        const batchData = { ...batch, stages: stages };
+        
+        await ops.trigger('traceability.certify', {
+          batch: batchData,
+          metadata: metadata
+        });
+        response.blockchain_recorded = true;
+        logger.info(`[Blockchain] Certification recorded for batch: ${req.params.code}`);
+      }
+    }
+
+    res.json(response);
   } catch (err) {
     logger.error('[Traceability] Certification error:', err);
     res.status(500).json({ error: 'Failed to add certification' });
@@ -469,11 +526,527 @@ router.get('/batch/:code/full', async (req, res) => {
       device_info: device ? { id: device.id, name: device.name, status: device.status } : null,
       certifications: JSON.parse(batch.farm_certifications || '[]'),
       trace_url: `${BASE_URL}/trace/${batch.batch_code}`,
-      qr_code_url: `${BASE_URL}/api/traceability/batch/${batch.batch_code}/qr`
+      qr_code_url: `${BASE_URL}/api/traceability/batch/${batch.batch_code}/qr`,
+      blockchain: blockchainHelper.isEnabled() ? { enabled: true, network: 'aptos' } : { enabled: false }
     });
   } catch (err) {
     logger.error('[Traceability] Full timeline error:', err);
     res.status(500).json({ error: 'Failed to fetch full timeline' });
+  }
+});
+
+// GET /api/traceability/verify/:batchCode - Verify blockchain record for batch
+router.get('/verify/:batchCode', async (req, res) => {
+  try {
+    const batch = getOne('SELECT * FROM traceability_batches WHERE batch_code = ?', [req.params.batchCode]);
+    
+    if (!batch) {
+      return res.status(404).json({ error: 'Batch not found' });
+    }
+
+    const stages = getAll('SELECT * FROM traceability_stages WHERE batch_id = ? ORDER BY stage_order ASC', [batch.id]);
+    const readings = getAll('SELECT * FROM traceability_readings WHERE batch_id = ? ORDER BY timestamp DESC LIMIT 10', [batch.id]);
+    
+    const bcSkill = require('../skills/traceability/aptos-blockchain.skill');
+    const computedHash = bcSkill.computeBatchHash(batch, stages, readings);
+
+    res.json({
+      success: true,
+      batch_code: batch.batch_code,
+      current_hash: computedHash,
+      blockchain_enabled: blockchainHelper.isEnabled(),
+      network: 'aptos',
+      status: batch.status,
+      harvest_date: batch.harvest_date,
+      export_date: batch.export_date,
+      certifications: JSON.parse(batch.farm_certifications || '[]').length
+    });
+  } catch (err) {
+    logger.error('[Traceability] Verify error:', err);
+    res.status(500).json({ error: 'Failed to verify batch' });
+  }
+});
+
+// POST /api/traceability/scan - Scan QR code to check origin
+router.post('/scan', async (req, res) => {
+  try {
+    const { qr_data, batch_code } = req.body;
+    
+    let targetCode = batch_code;
+    
+    if (qr_data) {
+      const urlMatch = qr_data.match(/trace\/([A-Z0-9-]+)/i);
+      if (urlMatch) {
+        targetCode = urlMatch[1];
+      } else if (qr_data.startsWith('BATCH-') || qr_data.startsWith('ECO-')) {
+        targetCode = qr_data;
+      }
+    }
+    
+    if (!targetCode) {
+      return res.status(400).json({ error: 'Invalid QR data or batch code' });
+    }
+    
+    const batch = getOne('SELECT * FROM traceability_batches WHERE batch_code = ?', [targetCode]);
+    
+    if (!batch) {
+      return res.json({
+        success: false,
+        valid: false,
+        message: 'Batch not found in system',
+        scanned_data: qr_data || batch_code
+      });
+    }
+    
+    const stages = getAll('SELECT * FROM traceability_stages WHERE batch_id = ? ORDER BY stage_order ASC', [batch.id]);
+    const certifications = JSON.parse(batch.farm_certifications || '[]');
+    
+    const bcSkill = require('../skills/traceability/aptos-blockchain.skill');
+    const computedHash = bcSkill.computeBatchHash(batch, stages, []);
+    
+    const origin = {
+      farm_name: batch.farm_name,
+      zone: batch.zone,
+      product_name: batch.product_name,
+      product_type: batch.product_type,
+      seed_variety: batch.seed_variety,
+      planting_date: batch.planting_date,
+      expected_harvest: batch.expected_harvest,
+      farm_certifications: certifications.map(c => c.name)
+    };
+    
+    const timeline = [
+      { step: 'Gieo trồng', date: batch.planting_date, completed: !!batch.planting_date }
+    ];
+    
+    stages.forEach(s => {
+      timeline.push({
+        step: s.stage_name,
+        date: s.created_at,
+        type: s.stage_type,
+        completed: true
+      });
+    });
+    
+    if (batch.harvest_date) {
+      timeline.push({
+        step: 'Thu hoạch',
+        date: batch.harvest_date,
+        quantity: batch.harvest_quantity,
+        completed: true
+      });
+    }
+    
+    if (batch.export_date) {
+      timeline.push({
+        step: 'Xuất bán',
+        date: batch.export_date,
+        buyer: batch.buyer_name,
+        completed: true
+      });
+    }
+    
+    res.json({
+      success: true,
+      valid: true,
+      origin: origin,
+      status: batch.status,
+      timeline: timeline,
+      blockchain: {
+        enabled: blockchainHelper.isEnabled(),
+        hash: computedHash,
+        verified: true
+      },
+      trace_url: `${BASE_URL}/trace/${batch.batch_code}`,
+      qr_code_url: `${BASE_URL}/api/traceability/batch/${batch.batch_code}/qr`,
+      scanned_at: new Date().toISOString()
+    });
+  } catch (err) {
+    logger.error('[Traceability] Scan error:', err);
+    res.status(500).json({ error: 'Failed to scan QR code' });
+  }
+});
+
+// GET /api/traceability/batch/:code/label - Generate printable QR label
+router.get('/batch/:code/label', async (req, res) => {
+  try {
+    const { size, format } = req.query;
+    const batch = getOne('SELECT * FROM traceability_batches WHERE batch_code = ?', [req.params.code]);
+    
+    if (!batch) {
+      return res.status(404).json({ error: 'Batch not found' });
+    }
+    
+    const traceUrl = `${BASE_URL}/trace/${batch.batch_code}`;
+    const labelSize = size || 'medium';
+    
+    const qrOptions = {
+      width: labelSize === 'small' ? 150 : (labelSize === 'large' ? 400 : 250),
+      margin: 2,
+      color: { dark: '#0f2b1f', light: '#ffffff' }
+    };
+    
+    const qrDataUrl = await QRCode.toDataURL(traceUrl, qrOptions);
+    const qrSvg = await QRCode.toString(traceUrl, { type: 'svg', width: qrOptions.width });
+    
+    const labelData = {
+      batch_code: batch.batch_code,
+      product_name: batch.product_name,
+      product_type: batch.product_type,
+      farm_name: batch.farm_name,
+      status: batch.status,
+      harvest_date: batch.harvest_date,
+      qr_code: qrDataUrl,
+      qr_svg: qrSvg,
+      trace_url: traceUrl,
+      certifications: JSON.parse(batch.farm_certifications || '[]'),
+      generated_at: new Date().toISOString()
+    };
+    
+    if (format === 'html') {
+      const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>QR Label - ${batch.batch_code}</title>
+  <style>
+    @media print {
+      .label { page-break-after: always; }
+      .no-print { display: none; }
+    }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .label { 
+      border: 2px solid #0f2b1f; 
+      padding: 15px; 
+      max-width: 350px; 
+      border-radius: 8px;
+      background: #fff;
+    }
+    .label-header { 
+      text-align: center; 
+      border-bottom: 1px solid #ddd; 
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .label-header h2 { margin: 0; color: #0f2b1f; font-size: 16px; }
+    .qr-section { text-align: center; margin: 10px 0; }
+    .qr-section img { max-width: 100%; }
+    .info-section { font-size: 12px; }
+    .info-row { display: flex; justify-content: space-between; margin: 4px 0; }
+    .info-label { font-weight: bold; color: #666; }
+    .info-value { color: #333; }
+    .status { 
+      display: inline-block; 
+      padding: 4px 12px; 
+      border-radius: 12px; 
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .status.active { background: #e3f2fd; color: #1565c0; }
+    .status.harvested { background: #e8f5e9; color: #2e7d32; }
+    .status.exported { background: #fff3e0; color: #ef6c00; }
+    .print-btn {
+      background: #0f2b1f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    .footer { text-align: center; font-size: 10px; color: #999; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="label">
+    <div class="label-header">
+      <h2>🌱 ECO SYNTECH</h2>
+      <p style="margin: 5px 0; font-size: 11px;">Traceability Label</p>
+    </div>
+    <div class="qr-section">
+      <img src="${qrDataUrl}" alt="QR Code" />
+    </div>
+    <div class="info-section">
+      <div class="info-row">
+        <span class="info-label">Mã:</span>
+        <span class="info-value">${batch.batch_code}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Sản phẩm:</span>
+        <span class="info-value">${batch.product_name}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Loại:</span>
+        <span class="info-value">${batch.product_type}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Trang trại:</span>
+        <span class="info-value">${batch.farm_name || 'N/A'}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Trạng thái:</span>
+        <span class="status ${batch.status}">${batch.status}</span>
+      </div>
+      ${batch.harvest_date ? `
+      <div class="info-row">
+        <span class="info-label">Thu hoạch:</span>
+        <span class="info-value">${new Date(batch.harvest_date).toLocaleDateString('vi-VN')}</span>
+      </div>` : ''}
+    </div>
+    <div class="footer">
+      Scan QR để xem chi tiết nguồn gốc
+    </div>
+  </div>
+  <button class="print-btn no-print" onclick="window.print()">🖨️ In nhãn</button>
+</body>
+</html>`;
+      res.type('text/html').send(html);
+    } else {
+      res.json({
+        success: true,
+        label: labelData,
+        print_url: `${BASE_URL}/api/traceability/batch/${batch.batch_code}/label?format=html`
+      });
+    }
+  } catch (err) {
+    logger.error('[Traceability] Label error:', err);
+    res.status(500).json({ error: 'Failed to generate label' });
+  }
+});
+
+// GET /api/traceability/export/pdf - Export traceability report as PDF
+router.get('/export/pdf', auth, async (req, res) => {
+  try {
+    const { batch_code, status, from_date, to_date } = req.query;
+    
+    let query = 'SELECT * FROM traceability_batches WHERE 1=1';
+    const params = [];
+    
+    if (batch_code) {
+      query += ' AND batch_code = ?';
+      params.push(batch_code);
+    }
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
+    if (from_date) {
+      query += ' AND created_at >= ?';
+      params.push(from_date);
+    }
+    if (to_date) {
+      query += ' AND created_at <= ?';
+      params.push(to_date);
+    }
+    
+    query += ' ORDER BY created_at DESC LIMIT 50';
+    
+    const batches = getAll(query, params);
+    
+    const doc = new PDFDocument({ margin: 50 });
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=traceability-report.pdf');
+    doc.pipe(res);
+    
+    doc.fontSize(20).text('EcoSynTech - Báo Cáo Truy Xuất Nguồn Gốc', { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(10).text(`Ngày xuất báo cáo: ${new Date().toLocaleDateString('vi-VN')}`, { align: 'right' });
+    doc.moveDown();
+    
+    doc.fontSize(12).text(`Tổng số lô: ${batches.length}`, { align: 'left' });
+    doc.moveDown();
+    
+    for (const batch of batches) {
+      const stages = getAll('SELECT * FROM traceability_stages WHERE batch_id = ? ORDER BY stage_order ASC', [batch.id]);
+      const certifications = JSON.parse(batch.farm_certifications || '[]');
+      
+      doc.rect(doc.x, doc.y, 500, 2).fill('#0f2b1f').moveDown();
+      doc.moveDown();
+      doc.fontSize(14).fillColor('#0f2b1f').text(`Lô: ${batch.batch_code}`, { continued: false });
+      doc.fontSize(10).fillColor('#333');
+      doc.text(`Sản phẩm: ${batch.product_name} | Loại: ${batch.product_type}`);
+      doc.text(`Trang trại: ${batch.farm_name || 'N/A'} | Zone: ${batch.zone || 'N/A'}`);
+      doc.text(`Trạng thái: ${batch.status} | Ngày tạo: ${new Date(batch.created_at).toLocaleDateString('vi-VN')}`);
+      
+      if (batch.planting_date) {
+        doc.text(`Ngày gieo trồng: ${new Date(batch.planting_date).toLocaleDateString('vi-VN')}`);
+      }
+      if (batch.harvest_date) {
+        doc.text(`Ngày thu hoạch: ${new Date(batch.harvest_date).toLocaleDateString('vi-VN')} | Số lượng: ${batch.harvest_quantity} ${batch.unit || 'kg'}`);
+      }
+      if (batch.export_date) {
+        doc.text(`Ngày xuất bán: ${new Date(batch.export_date).toLocaleDateString('vi-VN')} | Người mua: ${batch.buyer_name || 'N/A'}`);
+      }
+      
+      if (stages.length > 0) {
+        doc.moveDown();
+        doc.fontSize(10).text('Các giai đoạn:', { underline: true });
+        stages.forEach((s, i) => {
+          doc.text(`${i + 1}. ${s.stage_name} (${s.stage_type}) - ${new Date(s.created_at).toLocaleDateString('vi-VN')}`);
+        });
+      }
+      
+      if (certifications.length > 0) {
+        doc.moveDown();
+        doc.text('Chứng nhận: ' + certifications.map(c => c.name).join(', '));
+      }
+      
+      doc.moveDown(2);
+    }
+    
+    doc.fontSize(8).fillColor('#999').text('Generated by EcoSynTech IoT System', { align: 'center' });
+    doc.end();
+  } catch (err) {
+    logger.error('[Traceability] PDF export error:', err);
+    res.status(500).json({ error: 'Failed to export PDF' });
+  }
+});
+
+// GET /api/traceability/export/excel - Export traceability report as Excel
+router.get('/export/excel', auth, async (req, res) => {
+  try {
+    const { batch_code, status, from_date, to_date } = req.query;
+    
+    let query = 'SELECT * FROM traceability_batches WHERE 1=1';
+    const params = [];
+    
+    if (batch_code) {
+      query += ' AND batch_code = ?';
+      params.push(batch_code);
+    }
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
+    if (from_date) {
+      query += ' AND created_at >= ?';
+      params.push(from_date);
+    }
+    if (to_date) {
+      query += ' AND created_at <= ?';
+      params.push(to_date);
+    }
+    
+    query += ' ORDER BY created_at DESC LIMIT 50';
+    
+    const batches = getAll(query, params);
+    
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'EcoSynTech';
+    workbook.created = new Date();
+    
+    const batchSheet = workbook.addWorksheet('Batches');
+    batchSheet.columns = [
+      { header: 'Mã lô', key: 'batch_code', width: 25 },
+      { header: 'Sản phẩm', key: 'product_name', width: 25 },
+      { header: 'Loại', key: 'product_type', width: 15 },
+      { header: 'Trang trại', key: 'farm_name', width: 20 },
+      { header: 'Zone', key: 'zone', width: 15 },
+      { header: 'Trạng thái', key: 'status', width: 12 },
+      { header: 'Ngày tạo', key: 'created_at', width: 15 },
+      { header: 'Ngày gieo trồng', key: 'planting_date', width: 15 },
+      { header: 'Ngày thu hoạch', key: 'harvest_date', width: 15 },
+      { header: 'Số lượng thu hoạch', key: 'harvest_quantity', width: 18 },
+      { header: 'Ngày xuất bán', key: 'export_date', width: 15 },
+      { header: 'Người mua', key: 'buyer_name', width: 20 },
+      { header: 'Giá xuất', key: 'export_price', width: 12 },
+      { header: 'Giống', key: 'seed_variety', width: 15 }
+    ];
+    
+    batches.forEach(batch => {
+      batchSheet.addRow({
+        batch_code: batch.batch_code,
+        product_name: batch.product_name,
+        product_type: batch.product_type,
+        farm_name: batch.farm_name,
+        zone: batch.zone,
+        status: batch.status,
+        created_at: batch.created_at ? new Date(batch.created_at).toLocaleDateString('vi-VN') : '',
+        planting_date: batch.planting_date ? new Date(batch.planting_date).toLocaleDateString('vi-VN') : '',
+        harvest_date: batch.harvest_date ? new Date(batch.harvest_date).toLocaleDateString('vi-VN') : '',
+        harvest_quantity: batch.harvest_quantity,
+        export_date: batch.export_date ? new Date(batch.export_date).toLocaleDateString('vi-VN') : '',
+        buyer_name: batch.buyer_name,
+        export_price: batch.export_price,
+        seed_variety: batch.seed_variety
+      });
+    });
+    
+    batchSheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    batchSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0f2b1f' } };
+    batchSheet.getRow(1).alignment = { horizontal: 'center' };
+    
+    const stagesSheet = workbook.addWorksheet('Stages');
+    stagesSheet.columns = [
+      { header: 'Mã lô', key: 'batch_code', width: 25 },
+      { header: 'Tên giai đoạn', key: 'stage_name', width: 20 },
+      { header: 'Loại giai đoạn', key: 'stage_type', width: 15 },
+      { header: 'Thứ tự', key: 'stage_order', width: 10 },
+      { header: 'Mô tả', key: 'description', width: 30 },
+      { header: 'Người thực hiện', key: 'performed_by', width: 18 },
+      { header: 'Vị trí', key: 'location', width: 18 },
+      { header: 'Ngày tạo', key: 'created_at', width: 15 }
+    ];
+    
+    batches.forEach(batch => {
+      const stages = getAll('SELECT * FROM traceability_stages WHERE batch_id = ?', [batch.id]);
+      stages.forEach(stage => {
+        stagesSheet.addRow({
+          batch_code: batch.batch_code,
+          stage_name: stage.stage_name,
+          stage_type: stage.stage_type,
+          stage_order: stage.stage_order,
+          description: stage.description,
+          performed_by: stage.performed_by,
+          location: stage.location,
+          created_at: stage.created_at ? new Date(stage.created_at).toLocaleDateString('vi-VN') : ''
+        });
+      });
+    });
+    
+    if (stagesSheet.getRow(1).values.length > 0) {
+      stagesSheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      stagesSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0f2b1f' } };
+    }
+    
+    const certSheet = workbook.addWorksheet('Certifications');
+    certSheet.columns = [
+      { header: 'Mã lô', key: 'batch_code', width: 25 },
+      { header: 'Tên chứng nhận', key: 'name', width: 25 },
+      { header: 'Tổ chức', key: 'body', width: 20 },
+      { header: 'Ngày cấp', key: 'date', width: 15 },
+      { header: 'Ngày hết hạn', key: 'expire', width: 15 },
+      { header: 'Số chứng nhận', key: 'number', width: 20 }
+    ];
+    
+    batches.forEach(batch => {
+      const certs = JSON.parse(batch.farm_certifications || '[]');
+      certs.forEach(cert => {
+        certSheet.addRow({
+          batch_code: batch.batch_code,
+          name: cert.name,
+          body: cert.body,
+          date: cert.date ? new Date(cert.date).toLocaleDateString('vi-VN') : '',
+          expire: cert.expire ? new Date(cert.expire).toLocaleDateString('vi-VN') : '',
+          number: cert.number
+        });
+      });
+    });
+    
+    if (certSheet.getRow(1).values.length > 0) {
+      certSheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      certSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0f2b1f' } };
+    }
+    
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=traceability-report.xlsx');
+    
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (err) {
+    logger.error('[Traceability] Excel export error:', err);
+    res.status(500).json({ error: 'Failed to export Excel' });
   }
 });
 

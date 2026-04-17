@@ -5,12 +5,15 @@ const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const http = require('http');
+const os = require('os');
 
 const config = require('./src/config');
 const logger = require('./src/config/logger');
 const { initDatabase, closeDatabase, getAll, getOne, runQuery, saveDatabase } = require('./src/config/database');
 const { errorHandler, notFoundHandler } = require('./src/middleware/errorHandler');
 const { initWebSocket, broadcast } = require('./src/websocket');
+
+const optimization = require('./src/optimization');
 
 const sensorsRoutes = require('./src/routes/sensors');
 const devicesRoutes = require('./src/routes/devices');
@@ -78,19 +81,48 @@ function createApp() {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       environment: config.nodeEnv,
-      version: '2.0.0'
+      version: pkg.version
     });
   });
-  
+
   app.get('/api/version', (req, res) => {
     res.json({
-      api: '2.0.0',
+      api: pkg.version,
       server: 'Express',
       websocket: 'enabled',
       database: 'sql.js'
     });
   });
-  
+
+  const i18n = require('./src/i18n');
+
+  app.get('/api/i18n/languages', (req, res) => {
+    res.json(i18n.getSupportedLanguages());
+  });
+
+  app.get('/api/i18n/current', (req, res) => {
+    res.json({
+      language: i18n.getLanguage(),
+      default: i18n.DEFAULT_LANGUAGE
+    });
+  });
+
+  app.post('/api/i18n/set', (req, res) => {
+    const { language } = req.body;
+    const success = i18n.setLanguage(language);
+    res.json({
+      ok: success,
+      language: i18n.getLanguage(),
+      available: i18n.getSupportedLanguages()
+    });
+  });
+
+  app.get('/api/translations/:lang', (req, res) => {
+    const { lang } = req.params;
+    const translations = i18n.loadTranslations(lang, './src/i18n') ? i18n.translationCache[lang] : {};
+    res.json(translations);
+  });
+
   app.use('/api/sensors', sensorsRoutes);
   app.use('/api/devices', devicesRoutes);
   app.use('/api/rules', rulesRoutes);
@@ -113,7 +145,22 @@ function createApp() {
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString(), version: require('./package.json').version });
+    var sysInfo = optimization.getSystemInfo();
+    var memStatus = optimization.getMemoryStatus();
+    var level = optimization.getOptimizationLevel();
+    res.status(200).json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      version: require('./package.json').version,
+      optimization: level,
+      memory: memStatus,
+      system: sysInfo
+    });
+  });
+
+  app.get('/api/optimization/status', (req, res) => {
+    var result = optimization.optimizeForDevice();
+    res.json(result);
   });
 
   app.get('/readiness', async (req, res) => {
@@ -212,6 +259,9 @@ function createApp() {
   return app;
 }
 
+const pkg = require('./package.json');
+const { createOps } = require('./src/ops');
+
 async function startServer() {
   try {
     await initDatabase();
@@ -222,12 +272,47 @@ async function startServer() {
     
     initWebSocket(server);
     
+    ops = createOps(logger, `http://127.0.0.1:${config.port}`, pkg.version, config);
+    app.set('ops', ops);
+
+    ops.incidentBus.on('alert', async (alert) => {
+      await ops.handleAlert(alert);
+    });
+
+    const deviceMemory = os.totalmem() / 1024 / 1024 / 1024;
+    var schedulerInterval = 600000;
+    if (deviceMemory < 1.5) {
+      schedulerInterval = 1800000;
+    } else if (deviceMemory < 1) {
+      schedulerInterval = 3600000;
+    }
+
+    const schedulerConfig = {
+      defaultInterval: schedulerInterval,
+      minInterval: 360000,
+    };
+
+    if (!config.opsSchedulerDisabled) {
+      ops.startScheduler(schedulerConfig);
+    }
+
+    if (config.opsHotReloadEnabled) {
+      ops.enableHotReload();
+    }
+
+    if (logger && logger.info) {
+      logger.info('[Ops] Scheduler started with ' + (schedulerInterval/60000).toFixed(0) + 'min interval');
+      if (config.opsHotReloadEnabled) {
+        logger.info('[Ops] Hot reload enabled');
+      }
+    }
+
     startSensorSimulation();
     
     server.listen(config.port, () => {
       logger.info(`
 ╔══════════════════════════════════════════════════════════════╗
-║           EcoSynTech IoT Backend Server v2.0.0               ║
+║           EcoSynTech IoT Backend Server v${pkg.version}               ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Status:      Running                                        ║
 ║  Port:        ${String(config.port).padEnd(48)}║
