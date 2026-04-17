@@ -1,108 +1,108 @@
 const catalog = [
   {
-    id: "soil-sense",
-    name: "EcoSyn SoilSense 4X",
-    category: "sensor",
+    id: 'soil-sense',
+    name: 'EcoSyn SoilSense 4X',
+    category: 'sensor',
     price: 6800000,
-    badge: "Ban chay",
-    summary: "Cam bien dat 4-trong-1 cho do am, nhiet do, pH va EC.",
-    specs: ["LoRaWAN", "IP67", "Pin 24 thang"]
+    badge: 'Ban chay',
+    summary: 'Cam bien dat 4-trong-1 cho do am, nhiet do, pH va EC.',
+    specs: ['LoRaWAN', 'IP67', 'Pin 24 thang']
   },
   {
-    id: "air-pulse",
-    name: "EcoSyn AirPulse",
-    category: "sensor",
+    id: 'air-pulse',
+    name: 'EcoSyn AirPulse',
+    category: 'sensor',
     price: 5200000,
-    badge: "Moi",
-    summary: "Cam bien vi khi hau cho nhiet do, do am khong khi va anh sang.",
-    specs: ["Tuong thich nha kinh", "Sai so thap", "Canh bao som"]
+    badge: 'Moi',
+    summary: 'Cam bien vi khi hau cho nhiet do, do am khong khi va anh sang.',
+    specs: ['Tuong thich nha kinh', 'Sai so thap', 'Canh bao som']
   },
   {
-    id: "water-guard",
-    name: "EcoSyn WaterGuard",
-    category: "sensor",
+    id: 'water-guard',
+    name: 'EcoSyn WaterGuard',
+    category: 'sensor',
     price: 4700000,
-    badge: "On farm",
-    summary: "Cam bien muc nuoc va luu luong cho bon chua, kenh cap va tram bom.",
-    specs: ["Muc nuoc", "Luu luong", "Bao rong"]
+    badge: 'On farm',
+    summary: 'Cam bien muc nuoc va luu luong cho bon chua, kenh cap va tram bom.',
+    specs: ['Muc nuoc', 'Luu luong', 'Bao rong']
   },
   {
-    id: "bridge-x2",
-    name: "EcoSyn Bridge X2",
-    category: "gateway",
+    id: 'bridge-x2',
+    name: 'EcoSyn Bridge X2',
+    category: 'gateway',
     price: 15800000,
-    badge: "Pro",
-    summary: "Gateway LoRaWAN + 4G/LTE giup giu ket noi on dinh tai khu vuc xa.",
-    specs: ["SIM kep", "UPS 8 gio", "Edge sync"]
+    badge: 'Pro',
+    summary: 'Gateway LoRaWAN + 4G/LTE giup giu ket noi on dinh tai khu vuc xa.',
+    specs: ['SIM kep', 'UPS 8 gio', 'Edge sync']
   },
   {
-    id: "field-hub",
-    name: "EcoSyn FieldHub Mini",
-    category: "gateway",
+    id: 'field-hub',
+    name: 'EcoSyn FieldHub Mini',
+    category: 'gateway',
     price: 11800000,
-    badge: "Compact",
-    summary: "Gateway gon nhe phu hop nha kinh, khu gieo trong va farm nho.",
-    specs: ["Wi-Fi/4G", "Lap nhanh", "Monitoring"]
+    badge: 'Compact',
+    summary: 'Gateway gon nhe phu hop nha kinh, khu gieo trong va farm nho.',
+    specs: ['Wi-Fi/4G', 'Lap nhanh', 'Monitoring']
   },
   {
-    id: "valve-kit",
-    name: "EcoSyn Valve Control Kit",
-    category: "control",
+    id: 'valve-kit',
+    name: 'EcoSyn Valve Control Kit',
+    category: 'control',
     price: 9600000,
-    badge: "Tiet kiem nuoc",
-    summary: "Bo dieu khien van tuoi 2 zone kem relay an toan va cam bien ap suat.",
-    specs: ["2 zone", "12V/24V", "Rule IF THEN"]
+    badge: 'Tiet kiem nuoc',
+    summary: 'Bo dieu khien van tuoi 2 zone kem relay an toan va cam bien ap suat.',
+    specs: ['2 zone', '12V/24V', 'Rule IF THEN']
   },
   {
-    id: "pump-brain",
-    name: "EcoSyn Pump Brain",
-    category: "control",
+    id: 'pump-brain',
+    name: 'EcoSyn Pump Brain',
+    category: 'control',
     price: 12400000,
-    badge: "Automation",
-    summary: "Dieu khien bom trung tam, phat hien ro ri va khoa lien dong khi co su co.",
-    specs: ["3 pha", "Flow sensor", "Safety lock"]
+    badge: 'Automation',
+    summary: 'Dieu khien bom trung tam, phat hien ro ri va khoa lien dong khi co su co.',
+    specs: ['3 pha', 'Flow sensor', 'Safety lock']
   },
   {
-    id: "cloud-plus",
-    name: "EcoCloud Plus",
-    category: "cloud",
+    id: 'cloud-plus',
+    name: 'EcoCloud Plus',
+    category: 'cloud',
     price: 9900000,
-    badge: "Hang nam",
-    summary: "Dashboard, canh bao, lich su hoat dong va bao cao ROI co ban.",
-    specs: ["Cloud 12 thang", "Alert", "Bao cao PDF"]
+    badge: 'Hang nam',
+    summary: 'Dashboard, canh bao, lich su hoat dong va bao cao ROI co ban.',
+    specs: ['Cloud 12 thang', 'Alert', 'Bao cao PDF']
   },
   {
-    id: "cloud-enterprise",
-    name: "EcoCloud Enterprise",
-    category: "cloud",
+    id: 'cloud-enterprise',
+    name: 'EcoCloud Enterprise',
+    category: 'cloud',
     price: 26000000,
-    badge: "Da trang trai",
-    summary: "Bao cao ESG, quan ly nhieu site va phan quyen theo doi nhom van hanh.",
-    specs: ["Multi-site", "ESG", "API"]
+    badge: 'Da trang trai',
+    summary: 'Bao cao ESG, quan ly nhieu site va phan quyen theo doi nhom van hanh.',
+    specs: ['Multi-site', 'ESG', 'API']
   }
 ];
 
 const plannerModels = {
   starter: {
-    label: "EcoSyn Starter Kit",
+    label: 'EcoSyn Starter Kit',
     basePrice: 76000000,
-    items: ["4 SoilSense 4X", "1 AirPulse", "1 FieldHub Mini", "EcoCloud Plus"],
+    items: ['4 SoilSense 4X', '1 AirPulse', '1 FieldHub Mini', 'EcoCloud Plus'],
     payback: 15,
     water: 18,
     labor: 10
   },
   growth: {
-    label: "EcoSyn Growth Kit",
+    label: 'EcoSyn Growth Kit',
     basePrice: 128000000,
-    items: ["8 SoilSense 4X", "2 AirPulse", "1 WaterGuard", "1 Bridge X2", "2 Valve Control Kit", "EcoCloud Plus"],
+    items: ['8 SoilSense 4X', '2 AirPulse', '1 WaterGuard', '1 Bridge X2', '2 Valve Control Kit', 'EcoCloud Plus'],
     payback: 11,
     water: 31,
     labor: 22
   },
   pro: {
-    label: "EcoSyn Pro Automation",
+    label: 'EcoSyn Pro Automation',
     basePrice: 218000000,
-    items: ["12 SoilSense 4X", "2 AirPulse", "2 WaterGuard", "1 Bridge X2", "2 Pump Brain", "4 Valve Control Kit", "EcoCloud Enterprise"],
+    items: ['12 SoilSense 4X', '2 AirPulse', '2 WaterGuard', '1 Bridge X2', '2 Pump Brain', '4 Valve Control Kit', 'EcoCloud Enterprise'],
     payback: 9,
     water: 39,
     labor: 34
@@ -110,27 +110,27 @@ const plannerModels = {
 };
 
 const cropAdjustments = {
-  vegetable: { factor: 1, roi: 1, summary: "Tap trung on dinh vi khi hau va tuoi chinh xac cho nha kinh." },
-  fruit: { factor: 1.14, roi: 1.18, summary: "Uu tien zone tuoi theo cay va theo doi muc nuoc, EC, vi khi hau." },
-  rice: { factor: 1.08, roi: 0.94, summary: "Tap trung giamsat mo rong, canh bao va toi uu van hanh ngoai troi." },
-  herb: { factor: 0.96, roi: 1.08, summary: "Can do chinh xac cao, phu hop canh tac duoc lieu va rau gia vi." }
+  vegetable: { factor: 1, roi: 1, summary: 'Tap trung on dinh vi khi hau va tuoi chinh xac cho nha kinh.' },
+  fruit: { factor: 1.14, roi: 1.18, summary: 'Uu tien zone tuoi theo cay va theo doi muc nuoc, EC, vi khi hau.' },
+  rice: { factor: 1.08, roi: 0.94, summary: 'Tap trung giamsat mo rong, canh bao va toi uu van hanh ngoai troi.' },
+  herb: { factor: 0.96, roi: 1.08, summary: 'Can do chinh xac cao, phu hop canh tac duoc lieu va rau gia vi.' }
 };
 
 const goalAdjustments = {
-  water: { bonus: 0, water: 7, labor: 0, roiText: "Tiet kiem nuoc la thong diep de chot deal." },
-  yield: { bonus: 12000000, water: 1, labor: 2, roiText: "Co the nhan manh tac dong toi nang suat va on dinh chat luong." },
-  labor: { bonus: 8000000, water: 0, labor: 8, roiText: "Phu hop farm dang can cat thao tac thu cong va giam phu thuoc nhan su." },
-  trace: { bonus: 15000000, water: 0, labor: 3, roiText: "De upsell cloud, bao cao ESG va truy xuat sau ban dau." }
+  water: { bonus: 0, water: 7, labor: 0, roiText: 'Tiet kiem nuoc la thong diep de chot deal.' },
+  yield: { bonus: 12000000, water: 1, labor: 2, roiText: 'Co the nhan manh tac dong toi nang suat va on dinh chat luong.' },
+  labor: { bonus: 8000000, water: 0, labor: 8, roiText: 'Phu hop farm dang can cat thao tac thu cong va giam phu thuoc nhan su.' },
+  trace: { bonus: 15000000, water: 0, labor: 3, roiText: 'De upsell cloud, bao cao ESG va truy xuat sau ban dau.' }
 };
 
 const state = {
-  activeFilter: "all",
-  searchQuery: "",
+  activeFilter: 'all',
+  searchQuery: '',
   cart: new Map(),
   plannerBundle: null
 };
 
-const formatter = new Intl.NumberFormat("vi-VN");
+const formatter = new Intl.NumberFormat('vi-VN');
 
 const qs = (selector, scope = document) => scope.querySelector(selector);
 const qsa = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
@@ -140,7 +140,7 @@ function formatVnd(value) {
 }
 
 function createPlannerBundle() {
-  const form = qs("#plannerForm");
+  const form = qs('#plannerForm');
   if (!form) {
     return null;
   }
@@ -159,7 +159,7 @@ function createPlannerBundle() {
   const price = model.basePrice * crop.factor * sizeFactor + goal.bonus;
   const serviceFee = Math.max(8000000, price * 0.09);
   const waterSaving = model.water + goal.water + (farmSize > 8 ? 3 : 0);
-  const laborSaving = model.labor + goal.labor + (automationLevel === "pro" ? 4 : 0);
+  const laborSaving = model.labor + goal.labor + (automationLevel === 'pro' ? 4 : 0);
   const payback = Math.max(7, Math.round(model.payback + (farmSize > 8 ? 1 : 0) - (budgetRange > 180 ? 1 : 0)));
   const annualValue = (price * 1.18 * crop.roi) + (waterSaving * 850000);
 
@@ -172,11 +172,11 @@ function createPlannerBundle() {
     waterSaving,
     laborSaving,
     annualValue,
-    summary: `${crop.summary} Cau hinh nay phu hop quy mo ${farmSize <= 1 ? "nho" : farmSize <= 8 ? "vua" : "lon"} va uu tien ${form.elements.businessGoal.selectedOptions[0].textContent.toLowerCase()}.`,
+    summary: `${crop.summary} Cau hinh nay phu hop quy mo ${farmSize <= 1 ? 'nho' : farmSize <= 8 ? 'vua' : 'lon'} va uu tien ${form.elements.businessGoal.selectedOptions[0].textContent.toLowerCase()}.`,
     narrative: goal.roiText,
     items: [...model.items, `Ngan sach muc tieu: ${budgetRange}M VND`],
-    badge: "Goi de xuat",
-    category: "bundle"
+    badge: 'Goi de xuat',
+    category: 'bundle'
   };
 }
 
@@ -188,26 +188,26 @@ function renderPlanner() {
 
   state.plannerBundle = bundle;
 
-  qs("#bundleName").textContent = bundle.name;
-  qs("#bundleSummary").textContent = bundle.summary;
-  qs("#bundlePrice").textContent = formatVnd(bundle.price);
-  qs("#bundlePayback").textContent = `${bundle.payback} thang`;
-  qs("#bundleWater").textContent = `${bundle.waterSaving}%`;
-  qs("#bundleLabor").textContent = `${bundle.laborSaving}%`;
-  qs("#roiValue").textContent = `+${formatVnd(bundle.annualValue)} / nam`;
-  qs("#roiNarrative").textContent = bundle.narrative;
-  qs("#bundleItems").innerHTML = bundle.items.map((item) => `<li>${item}</li>`).join("");
+  qs('#bundleName').textContent = bundle.name;
+  qs('#bundleSummary').textContent = bundle.summary;
+  qs('#bundlePrice').textContent = formatVnd(bundle.price);
+  qs('#bundlePayback').textContent = `${bundle.payback} thang`;
+  qs('#bundleWater').textContent = `${bundle.waterSaving}%`;
+  qs('#bundleLabor').textContent = `${bundle.laborSaving}%`;
+  qs('#roiValue').textContent = `+${formatVnd(bundle.annualValue)} / nam`;
+  qs('#roiNarrative').textContent = bundle.narrative;
+  qs('#bundleItems').innerHTML = bundle.items.map((item) => `<li>${item}</li>`).join('');
 }
 
 function renderCatalog() {
-  const grid = qs("#catalogGrid");
+  const grid = qs('#catalogGrid');
   if (!grid) {
     return;
   }
 
   const filtered = catalog.filter((item) => {
-    const matchesFilter = state.activeFilter === "all" || item.category === state.activeFilter;
-    const haystack = `${item.name} ${item.summary} ${item.specs.join(" ")}`.toLowerCase();
+    const matchesFilter = state.activeFilter === 'all' || item.category === state.activeFilter;
+    const haystack = `${item.name} ${item.summary} ${item.specs.join(' ')}`.toLowerCase();
     const matchesSearch = haystack.includes(state.searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
@@ -232,13 +232,13 @@ function renderCatalog() {
         <span class="tag">${item.category}</span>
       </header>
       <p>${item.summary}</p>
-      <div class="spec-row">${item.specs.map((spec) => `<span>${spec}</span>`).join("")}</div>
+      <div class="spec-row">${item.specs.map((spec) => `<span>${spec}</span>`).join('')}</div>
       <strong>${formatVnd(item.price)}</strong>
       <div class="card-actions">
         <button class="ghost add-product" type="button" data-id="${item.id}">Them vao bao gia</button>
       </div>
     </article>
-  `).join("");
+  `).join('');
 }
 
 function addToCart(item, serviceFee = 0) {
@@ -275,11 +275,11 @@ function changeQty(id, delta) {
 }
 
 function renderCart() {
-  const cartItems = qs("#cartItems");
-  const subtotalValue = qs("#subtotalValue");
-  const serviceValue = qs("#serviceValue");
-  const totalValue = qs("#totalValue");
-  const countNodes = qsa(".cart-count");
+  const cartItems = qs('#cartItems');
+  const subtotalValue = qs('#subtotalValue');
+  const serviceValue = qs('#serviceValue');
+  const totalValue = qs('#totalValue');
+  const countNodes = qsa('.cart-count');
 
   const items = Array.from(state.cart.values());
   const itemCount = items.reduce((sum, item) => sum + item.qty, 0);
@@ -320,43 +320,43 @@ function renderCart() {
         <strong>${formatVnd(item.price * item.qty + item.serviceFee)}</strong>
       </footer>
     </article>
-  `).join("");
+  `).join('');
 }
 
 function setCartOpen(open) {
-  document.body.classList.toggle("cart-open", open);
-  const drawer = qs(".cart-drawer");
+  document.body.classList.toggle('cart-open', open);
+  const drawer = qs('.cart-drawer');
   if (drawer) {
-    drawer.setAttribute("aria-hidden", String(!open));
+    drawer.setAttribute('aria-hidden', String(!open));
   }
 }
 
 function bindFilters() {
-  const filterRow = qs("#filterRow");
-  const search = qs("#catalogSearch");
+  const filterRow = qs('#filterRow');
+  const search = qs('#catalogSearch');
 
-  filterRow?.addEventListener("click", (event) => {
+  filterRow?.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof HTMLButtonElement)) {
       return;
     }
 
-    state.activeFilter = target.dataset.filter || "all";
-    qsa(".filter-button", filterRow).forEach((button) => {
-      button.classList.toggle("active", button === target);
+    state.activeFilter = target.dataset.filter || 'all';
+    qsa('.filter-button', filterRow).forEach((button) => {
+      button.classList.toggle('active', button === target);
     });
     renderCatalog();
   });
 
-  search?.addEventListener("input", () => {
+  search?.addEventListener('input', () => {
     state.searchQuery = search.value.trim();
     renderCatalog();
   });
 }
 
 function bindCatalogActions() {
-  const grid = qs("#catalogGrid");
-  grid?.addEventListener("click", (event) => {
+  const grid = qs('#catalogGrid');
+  grid?.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof HTMLButtonElement)) {
       return;
@@ -375,23 +375,23 @@ function bindCatalogActions() {
 }
 
 function bindPlanner() {
-  const plannerForm = qs("#plannerForm");
-  const budgetRange = qs("#budgetRange");
-  const budgetValue = qs("#budgetValue");
-  const addBundleButton = qs("#addBundleToCart");
+  const plannerForm = qs('#plannerForm');
+  const budgetRange = qs('#budgetRange');
+  const budgetValue = qs('#budgetValue');
+  const addBundleButton = qs('#addBundleToCart');
 
-  budgetRange?.addEventListener("input", () => {
+  budgetRange?.addEventListener('input', () => {
     budgetValue.textContent = `${budgetRange.value}M VND`;
     renderPlanner();
   });
 
-  plannerForm?.addEventListener("change", renderPlanner);
-  plannerForm?.addEventListener("submit", (event) => {
+  plannerForm?.addEventListener('change', renderPlanner);
+  plannerForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     renderPlanner();
   });
 
-  addBundleButton?.addEventListener("click", () => {
+  addBundleButton?.addEventListener('click', () => {
     if (state.plannerBundle) {
       addToCart(state.plannerBundle, state.plannerBundle.serviceFee);
     }
@@ -399,15 +399,15 @@ function bindPlanner() {
 }
 
 function bindCart() {
-  qsa("[data-open-cart]").forEach((node) => {
-    node.addEventListener("click", () => setCartOpen(true));
+  qsa('[data-open-cart]').forEach((node) => {
+    node.addEventListener('click', () => setCartOpen(true));
   });
 
-  qsa("[data-close-cart]").forEach((node) => {
-    node.addEventListener("click", () => setCartOpen(false));
+  qsa('[data-close-cart]').forEach((node) => {
+    node.addEventListener('click', () => setCartOpen(false));
   });
 
-  qs("#cartItems")?.addEventListener("click", (event) => {
+  qs('#cartItems')?.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof HTMLButtonElement)) {
       return;
@@ -424,23 +424,23 @@ function bindCart() {
 }
 
 function bindForms() {
-  const contactForm = qs("#contactForm");
-  const contactMessage = qs("#contactMessage");
-  const quoteForm = qs("#quoteForm");
-  const quoteMessage = qs("#quoteMessage");
+  const contactForm = qs('#contactForm');
+  const contactMessage = qs('#contactMessage');
+  const quoteForm = qs('#quoteForm');
+  const quoteMessage = qs('#quoteMessage');
 
-  contactForm?.addEventListener("submit", (event) => {
+  contactForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     const company = contactForm.elements.company.value.trim();
-    contactMessage.textContent = `Da ghi nhan yeu cau cua ${company || "doanh nghiep"}. EcoSynTech se lien he trong 48 gio.`;
+    contactMessage.textContent = `Da ghi nhan yeu cau cua ${company || 'doanh nghiep'}. EcoSynTech se lien he trong 48 gio.`;
     contactForm.reset();
   });
 
-  quoteForm?.addEventListener("submit", (event) => {
+  quoteForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     const items = Array.from(state.cart.values());
     if (items.length === 0) {
-      quoteMessage.textContent = "Hay them it nhat mot san pham hoac mot goi de xuat vao bao gia.";
+      quoteMessage.textContent = 'Hay them it nhat mot san pham hoac mot goi de xuat vao bao gia.';
       return;
     }
 
@@ -450,46 +450,46 @@ function bindForms() {
 }
 
 function bindPricing() {
-  qsa("[data-plan]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const plan = button.getAttribute("data-plan");
-      if (plan === "Starter") {
-        addToCart({ id: "plan-starter", name: "Goi Starter", price: 69000000 }, 7000000);
-      } else if (plan === "Growth") {
-        addToCart({ id: "plan-growth", name: "Goi Growth", price: 138000000 }, 12000000);
+  qsa('[data-plan]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const plan = button.getAttribute('data-plan');
+      if (plan === 'Starter') {
+        addToCart({ id: 'plan-starter', name: 'Goi Starter', price: 69000000 }, 7000000);
+      } else if (plan === 'Growth') {
+        addToCart({ id: 'plan-growth', name: 'Goi Growth', price: 138000000 }, 12000000);
       } else {
-        addToCart({ id: "plan-enterprise", name: "Goi Enterprise", price: 240000000 }, 25000000);
+        addToCart({ id: 'plan-enterprise', name: 'Goi Enterprise', price: 240000000 }, 25000000);
       }
     });
   });
 }
 
 function bindNavigation() {
-  const menuButton = qs(".menu-button");
-  const nav = qs(".nav");
+  const menuButton = qs('.menu-button');
+  const nav = qs('.nav');
 
-  menuButton?.addEventListener("click", () => {
-    nav?.classList.toggle("open");
+  menuButton?.addEventListener('click', () => {
+    nav?.classList.toggle('open');
   });
 
-  nav?.addEventListener("click", (event) => {
+  nav?.addEventListener('click', (event) => {
     if (event.target instanceof HTMLAnchorElement) {
-      nav.classList.remove("open");
+      nav.classList.remove('open');
     }
   });
 }
 
 function setupReveal() {
-  const items = qsa(".reveal");
-  if (!("IntersectionObserver" in window)) {
-    items.forEach((item) => item.classList.add("is-visible"));
+  const items = qsa('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    items.forEach((item) => item.classList.add('is-visible'));
     return;
   }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
+        entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       }
     });
@@ -512,4 +512,4 @@ function init() {
   setupReveal();
 }
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener('DOMContentLoaded', init);

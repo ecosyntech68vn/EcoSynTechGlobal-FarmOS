@@ -9,7 +9,7 @@ const http = require('http');
 
 const config = require('./src/config');
 const logger = require('./src/config/logger');
-const { initDatabase, closeDatabase, getAll, getOne, runQuery, saveDatabase } = require('./src/config/database');
+const { initDatabase, closeDatabase, getAll, getOne, runQuery } = require('./src/config/database');
 const { errorHandler, notFoundHandler } = require('./src/middleware/errorHandler');
 const { initWebSocket, broadcast } = require('./src/websocket');
 
@@ -33,17 +33,40 @@ function createApp() {
   
   app.set('webhookSecret', config.webhook.secret);
   
+  // Security headers - enable in production
   app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ['\'self\''],
+        scriptSrc: ['\'self\'', '\'unsafe-inline\''],
+        styleSrc: ['\'self\'', '\'unsafe-inline\''],
+        imgSrc: ['\'self\'', 'data:', 'https:'],
+        connectSrc: ['\'self\''],
+        fontSrc: ['\'self\''],
+        objectSrc: ['\'none\''],
+        mediaSrc: ['\'self\''],
+        frameSrc: ['\'none\'']
+      }
+    },
+    crossOriginEmbedderPolicy: config.nodeEnv === 'production' ? true : false,
+    hsts: config.nodeEnv === 'production' ? {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true
+    } : false
   }));
   
-  app.use(cors({
-    origin: config.cors.origin,
+  // CORS configuration
+  const corsOptions = {
+    origin: config.nodeEnv === 'production' && config.cors.origin !== '*' 
+      ? config.cors.origin 
+      : (config.nodeEnv === 'production' ? false : '*'),
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-EcoSynTech-Signature'],
-    credentials: true
-  }));
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-EcoSynTech-Signature', 'X-API-Key'],
+    exposedHeaders: ['X-Response-Time'],
+    credentials: config.nodeEnv !== 'production'
+  };
+  app.use(cors(corsOptions));
   
   app.use(compression());
   
@@ -81,14 +104,14 @@ function createApp() {
     next();
   });
   
-app.get('/api/health', (req, res) => {
+  app.get('/api/health', (req, res) => {
     // Basic health + envelope/webhook readiness indicators
     res.json({
       status: 'healthy',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       environment: config.nodeEnv,
-      version: '2.0.0',
+      version: '2.3.2',
       envelope_ready: true,
       webhook_ready: true,
       db_ready: true,
@@ -103,10 +126,11 @@ app.get('/api/health', (req, res) => {
   
   app.get('/api/version', (req, res) => {
     res.json({
-      api: '2.0.0',
+      api: '2.3.2',
       server: 'Express',
       websocket: 'enabled',
-      database: 'sql.js'
+      database: 'sql.js (persistent)',
+      persistence: 'enabled'
     });
   });
   
@@ -187,7 +211,7 @@ app.get('/api/health', (req, res) => {
   });
   
   app.post('/api/import', (req, res) => {
-    const { sensors, devices, rules, schedules } = req.body;
+    const { sensors, rules } = req.body;
     
     if (sensors) {
       Object.entries(sensors).forEach(([type, data]) => {
@@ -238,13 +262,13 @@ async function startServer() {
     server.listen(config.port, () => {
       logger.info(`
 ╔══════════════════════════════════════════════════════════════╗
-║           EcoSynTech IoT Backend Server v2.0.0               ║
+║           EcoSynTech IoT Backend Server v2.3.2               ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Status:      Running                                        ║
 ║  Port:        ${String(config.port).padEnd(48)}║
 ║  Environment: ${config.nodeEnv.padEnd(48)}║
 ║  WebSocket:   Enabled (/ws)                                  ║
-║  Database:    sql.js (SQLite in memory)                      ║
+║  Database:    sql.js (SQLite persistent)                    ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  API Endpoints:                                              ║
 ║    GET  /api/health            - Health check                ║
@@ -363,11 +387,11 @@ function checkRules() {
       const threshold = parseFloat(condition.value);
       
       switch (condition.operator) {
-        case '<': triggered = value < threshold; break;
-        case '>': triggered = value > threshold; break;
-        case '<=': triggered = value <= threshold; break;
-        case '>=': triggered = value >= threshold; break;
-        case '==': triggered = value === threshold; break;
+      case '<': triggered = value < threshold; break;
+      case '>': triggered = value > threshold; break;
+      case '<=': triggered = value <= threshold; break;
+      case '>=': triggered = value >= threshold; break;
+      case '==': triggered = value === threshold; break;
       }
       
       if (triggered) {
