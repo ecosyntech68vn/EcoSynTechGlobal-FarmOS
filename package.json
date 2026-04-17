@@ -29,11 +29,6 @@
   ],
   "author": "EcoSynTech",
   "license": "MIT",
-  "jest": {
-    "testTimeout": 30000,
-    "forceExit": true,
-    "detectOpenHandles": true
-  },
   "dependencies": {
     "aedes": "^0.51.3",
     "bcryptjs": "^2.4.3",
