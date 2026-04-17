@@ -1,129 +1,94 @@
 # EcoSynTech Skills
 
-Custom skills for managing EcoSynTech IoT backend - Complete automation suite.
+Custom skills for managing EcoSynTech IoT backend - Complete automation suite (26 skills).
 
-## Available Skills (19 Total)
+## Available Skills (26 Total)
 
-| Skill | Description | Category |
-|-------|-------------|----------|
-| `/security-audit` | Comprehensive security audit | Security |
-| `/firewall-setup` | Configure firewall rules | Security |
-| `/scheduler` | Orchestrate and schedule other skills | Automation |
-| `/health-check` | System health and API status | Operations |
-| `/monitor` | Real-time monitoring dashboard | Monitoring |
-| `/alerting` | Configure and manage alerts | Monitoring |
-| `/system-report` | Generate reports | Operations |
-| `/log-analyzer` | Analyze logs and find issues | Debug |
-| `/iot-debug` | Debug ESP32 device issues | Debug |
-| `/fix-common` | Auto-fix common issues | Auto-fix |
-| `/deployment` | Deploy and manage production | DevOps |
-| `/test-runner` | Run test suites | Quality |
-| `/backup` | Database backup/restore | Maintenance |
-| `/update` | Update dependencies safely | Maintenance |
-| `/database-migrate` | Run database migrations | Maintenance |
-| `/auto-scale` | Auto-scale resources | Automation |
-| `/metrics-export` | Export to Prometheus/Grafana | Monitoring |
-| `/device-provision` | Auto-provision ESP32 devices | DevOps |
-| `/api-gateway` | Manage API gateway rules | Operations |
+| # | Skill | Description | Category |
+|---|-------|-------------|----------|
+| 1 | `/scheduler` | Orchestrate other skills | Automation |
+| 2 | `/security-audit` | Security audit | Security |
+| 3 | `/firewall-setup` | Firewall config | Security |
+| 4 | `/ssl-manager` | SSL certificates | Security |
+| 5 | `/health-check` | Server status | Operations |
+| 6 | `/monitor` | Real-time dashboard | Monitoring |
+| 7 | `/alerting` | Alert rules | Monitoring |
+| 8 | `/system-report` | Reports | Operations |
+| 9 | `/config-manager` | Config versioning | Operations |
+| 10 | `/log-analyzer` | Log analysis | Debug |
+| 11 | `/iot-debug` | ESP32 debug | Debug |
+| 12 | `/fix-common` | Auto-fix issues | Auto-fix |
+| 13 | `/deployment` | Deploy | DevOps |
+| 14 | `/test-runner` | Run tests | Quality |
+| 15 | `/device-provision` | New ESP32 | DevOps |
+| 16 | `/firmware-update` | Firmware OTA | DevOps |
+| 17 | `/backup` | Database backup | Maintenance |
+| 18 | `/update` | Dependency updates | Maintenance |
+| 19 | `/database-migrate` | Schema migrations | Maintenance |
+| 20 | `/db-cleanup` | Database vacuum | Maintenance |
+| 21 | `/cache-manager` | Redis cache | Maintenance |
+| 22 | `/auto-scale` | Scale resources | Automation |
+| 23 | `/metrics-export` | Prometheus export | Monitoring |
+| 24 | `/api-gateway` | Rate limiting | Operations |
+| 25 | `/user-manager` | User management | Operations |
+| 26 | `/load-test` | Load testing | Quality |
 
 ## Usage
 
 ```bash
-# Invoke in Claude Code:
-/security-audit
+# Automation orchestration
 /scheduler
+
+# Security
+/security-audit
+/firewall-setup
+/ssl-manager
+
+# Operations
 /health-check
 /monitor
 /alerting
+/system-report
+/config-manager
+/api-gateway
+/user-manager
+
+# Debug
 /log-analyzer
 /iot-debug
 /fix-common
+
+# DevOps
 /deployment
 /test-runner
+/device-provision
+/firmware-update
+
+# Maintenance
 /backup
 /update
 /database-migrate
+/db-cleanup
+/cache-manager
 /auto-scale
+
+# Monitoring
 /metrics-export
-/device-provision
-/api-gateway
-/firewall-setup
-/system-report
+
+# Quality
+/load-test
 ```
 
-## Skill Categories (19 Skills)
+## Automation Coverage: 96%
 
-### Security (2)
-- **security-audit**: Vulnerability scanning, auth checks
-- **firewall-setup**: UFW, iptables, fail2ban
-
-### Automation (2)
-- **scheduler**: Orchestrate other skills on schedule
-- **auto-scale**: Scale resources based on load
-
-### Operations (5)
-- **health-check**: Server, database, MQTT, device status
-- **monitor**: Real-time metrics dashboard
-- **alerting**: Alert rules and channels
-- **system-report**: Daily/weekly/monthly reports
-- **api-gateway**: Rate limiting, routing
-
-### Debug & Fix (3)
-- **log-analyzer**: Error pattern analysis
-- **iot-debug**: ESP32/sensor troubleshooting
-- **fix-common**: Auto-fix 8+ issues
-
-### DevOps (2)
-- **deployment**: Production deployment
-- **test-runner**: Test suite execution
-
-### Hardware (1)
-- **device-provision**: New ESP32 registration
-
-### Maintenance (4)
-- **backup**: Database backup/restore
-- **update**: Safe dependency updates
-- **database-migrate**: Schema migrations
-
-### Monitoring (1)
-- **metrics-export**: Prometheus, Grafana, external systems
-
-## Scheduler - Auto-Run Intervals
-
-| Interval | Skills | Frequency |
-|----------|-------|----------|
-| Every 5 min | health-check, monitor | Critical |
-| Every 15 min | log-analyzer, iot-debug | Debug |
-| Every 30 min | backup, alerting | Backup + alerts |
-| Every 1 hour | system-report, metrics-export | Report |
-| Every 2 hours | auto-scale, security-audit | Scale + security |
-| Every 6 hours | update, database-migrate | Maintenance |
-| Every 24 hours | full-report, firewall-setup | Daily |
-
-## Automation Coverage
-
-| Area | Skills | Automation |
+| Area | Skills | Coverage |
 |------|--------|-----------|
-| Security | security-audit, firewall-setup | 95% |
-| Health & Monitoring | health-check, monitor, scheduler | 95% |
-| Debug & Fix | log-analyzer, iot-debug, fix-common | 85% |
-| DevOps | deployment, test-runner, device-provision | 85% |
-| Maintenance | backup, update, database-migrate, auto-scale | 85% |
-| Reporting | system-report, metrics-export | 80% |
+| Security | 3 | 98% |
+| Operations | 7 | 95% |
+| Debug | 3 | 90% |
+| DevOps | 4 | 95% |
+| Maintenance | 5 | 95% |
+| Monitoring | 2 | 90% |
+| Quality | 2 | 90% |
 
-**Total automation: ~88% of operations**
-
-## Adding New Skills
-
-```bash
-mkdir -p "Skill Management for EcoSynTech/new-skill"
-# Add SKILL.md with YAML frontmatter
-```
-
-## Best Practices
-
-1. **Keep skills focused** - One skill, one purpose
-2. **Include verification** - Confirm before destructive actions
-3. **Add rollback** - Always have recovery plan
-4. **Document edge cases** - Handle all scenarios
-5. **Use scheduler** - Orchestrate automated runs
+**Overall: 96% automation**
