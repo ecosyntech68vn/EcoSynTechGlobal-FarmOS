@@ -13,6 +13,7 @@
 | [06_device_checklist.md](./06_device_checklist.md) | Section 6: Thiết bị ESP32 |
 | [07_websocket_checklist.md](./07_websocket_checklist.md) | Section 5: WebSocket |
 | [08_remaining_checklist.md](./08_remaining_checklist.md) | Sections 7-11 |
+| [09_FIELD_CHECK.md](./09_FIELD_CHECK.md) | **CHECK HIỆN TRƯỜNG** - Phiên bản đơn giản |
 
 ---
 
@@ -48,6 +49,10 @@ export HMAC_SECRET=<your-secret>
 ---
 
 ## 📊 Bảng tổng kết nhanh
+
+### CHECK HIỆN TRƯỜNG (12 items) - CHO VIỆC DEPLOY TẠI SITE
+→ Xem: [09_FIELD_CHECK.md](./09_FIELD_CHECK.md)
+→ Đơn giản, thực tế, không cần scripts phức tạp
 
 ### Cần cho GO-LIVE PILOT ✅
 - [ ] Section 1: Phiên bản
