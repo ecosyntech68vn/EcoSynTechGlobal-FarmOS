@@ -2,18 +2,22 @@
 
 Custom skills for managing EcoSynTech IoT backend.
 
-## Available Skills
+## Available Skills (12 Total)
 
-| Skill | Description | Usage |
-|-------|-------------|--------|
-| `/security-audit` | Comprehensive security audit | Run security checks |
-| `/health-check` | System health and API status | Check system health |
-| `/log-analyzer` | Analyze logs and find issues | Debug issues |
-| `/iot-debug` | Debug IoT device issues | Troubleshoot ESP32 |
-| `/deployment` | Deploy and manage production | Deploy to production |
-| `/backup` | Database backup/restore | Backup data |
-| `/monitor` | Real-time monitoring dashboard | Live metrics |
-| `/fix-common` | Auto-fix common issues | Fix problems |
+| Skill | Description | Category |
+|-------|-------------|----------|
+| `/security-audit` | Comprehensive security audit | Security |
+| `/health-check` | System health and API status | Operations |
+| `/log-analyzer` | Analyze logs and find issues | Debug |
+| `/iot-debug` | Debug ESP32 device issues | Debug |
+| `/deployment` | Deploy and manage production | DevOps |
+| `/backup` | Database backup/restore | Maintenance |
+| `/monitor` | Real-time monitoring dashboard | Monitoring |
+| `/fix-common` | Auto-fix common issues | Auto-fix |
+| `/auto-scale` | Auto-scale resources | Automation |
+| `/alerting` | Configure and manage alerts | Monitoring |
+| `/update` | Update dependencies safely | Maintenance |
+| `/test-runner` | Run test suites | Quality |
 
 ## Usage
 
@@ -27,11 +31,18 @@ Custom skills for managing EcoSynTech IoT backend.
 /backup
 /monitor
 /fix-common
+/auto-scale
+/alerting
+/update
+/test-runner
 ```
 
 ## Skill Categories
 
-### Core Operations
+### Security
+- **security-audit**: Vulnerability scanning, auth checks, SSL verification
+
+### Operations
 - **health-check**: Server, database, MQTT, device status
 - **monitor**: Real-time metrics dashboard
 
@@ -40,12 +51,17 @@ Custom skills for managing EcoSynTech IoT backend.
 - **iot-debug**: ESP32/sensor troubleshooting
 - **fix-common**: Auto-fix 8+ common issues
 
+### Automation
+- **auto-scale**: Scale workers based on load
+- **alerting**: Configure alert rules and channels
+
 ### Maintenance
 - **backup**: Manual and scheduled backups
-- **deployment**: Production deployment
+- **update**: Safe dependency updates
 
-### Security
-- **security-audit**: Security vulnerability scanning
+### DevOps
+- **deployment**: Production deployment pipeline
+- **test-runner**: Comprehensive test execution
 
 ## Adding New Skills
 
@@ -68,3 +84,15 @@ Structure:
 2. **Include verification** - Confirm before destructive actions
 3. **Add rollback** - Always have recovery plan
 4. **Document edge cases** - Handle all scenarios
+
+## Automation Coverage
+
+| Area | Skills | Automation Level |
+|------|--------|-----------------|
+| Health | health-check, monitor | 80% |
+| Debug | log-analyzer, iot-debug, fix-common | 70% |
+| Security | security-audit | 90% |
+| Deployment | deployment, test-runner | 85% |
+| Maintenance | backup, update, auto-scale, alerting | 75% |
+
+Total automation: **~80% of operations**
