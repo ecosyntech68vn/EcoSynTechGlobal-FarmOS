@@ -1,45 +1,69 @@
-# EcoSynTech IoT Platform v2.3.2
+# 🚀 ECOSYNTECH FARM OS
+## Nền Tảng Nông Nghiệp Thông Minh 4.0
 
-Hệ thống IoT toàn diện cho nông nghiệp thông minh với **55+ skills tự động** và **QR Code Traceability** + **Aptos Blockchain**.
+Hệ thống IoT nông nghiệp thông minh toàn diện với **60 skills tự động hóa**, **QR Code Traceability** và **Aptos Blockchain**.
 
-## Tính năng nổi bật
+---
 
-### 🎯 Core Features
-- **58 Skills tự động** - Quản lý, vận hành, giám sát, sửa lỗi
-- **QR Code Traceability** - Truy xuất nguồn gốc từ gieo trồng đến xuất bán
-- **Aptos Blockchain** - Ghi nhận hash (có thể bật/tắt)
-- **i18n đa ngôn ngữ** - Tiếng Việt, English, 中文
-- **Tối ưu RAM thấp** - Chạy được trên 512MB RAM, Win7 compatible
+## 📋 TỔNG QUAN
 
-### 📡 Connectivity
-- REST API với Swagger documentation
-- WebSocket real-time updates
+### Tính năng cốt lõi
+
+| Tính năng | Mô tả |
+|-----------|-------|
+| **60 Skills tự động** | Quản lý, vận hành, giám sát, tự sửa lỗi |
+| **QR Traceability** | Truy xuất nguồn gốc từ gieo trồng đến xuất bán |
+| **Aptos Blockchain** | Ghi hash (bật/tắt tùy chọn) |
+| **i18n đa ngôn ngữ** | Tiếng Việt, English, 中文 |
+| **Tối ưu RAM thấp** | Chạy được trên 512MB RAM, Windows 7+ |
+
+### Kết nối
+
+- REST API với tài liệu Swagger
+- WebSocket cho cập nhật thời gian thực
 - MQTT integration
 - Webhook support
 
-### 🛡️ Security & Governance
+### Bảo mật & Quản trị
+
 - JWT Authentication
 - RBAC (Role-Based Access Control)
 - Rate Limiting
 - Audit Trail
 - Secrets checking
 
-## Cài đặt nhanh
+---
+
+## 🚀 CÀI ĐẶT
+
+### Yêu cầu
+
+- Node.js 14+
+- 512MB RAM tối thiểu
+
+### Các bước cài đặt
 
 ```bash
-# 1. Clone và cài đặt
+# 1. Clone dự án
+git clone https://github.com/ecosyntech68vn/Ecosyntech-web
+
+# 2. Di chuyển vào thư mục
 cd Ecosyntech-web
+
+# 3. Cài đặt dependencies
 npm install
 
-# 2. Cấu hình (optional)
+# 4. Cấu hình (tùy chọn)
 cp .env.example .env
 # Chỉnh sửa .env nếu cần
 
-# 3. Chạy server
+# 5. Chạy server
 npm start
 ```
 
-## Cấu hình môi trường (.env)
+---
+
+## ⚙️ CẤU HÌNH MÔI TRƯỜNG
 
 ```env
 # Server
@@ -53,7 +77,7 @@ DB_PATH=./data/ecosyntech.db
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
 
-# MQTT (optional)
+# MQTT (tùy chọn)
 MQTT_BROKER_URL=wss://broker.hivemq.com:8884/mqtt
 MQTT_USERNAME=
 MQTT_PASSWORD=
@@ -72,61 +96,82 @@ OPS_SCHEDULER_DISABLED=false
 OPS_SCHEDULER_INTERVAL=600000
 ```
 
-## Scripts
+---
+
+## 📜 SCRIPTS
 
 ```bash
 npm start          # Chạy server production
 npm run dev        # Chạy development với hot reload
-npm run test       # Chạy tests
-npm run lint       # ESLint
+npm run test      # Chạy tests
+npm run lint      # ESLint
 ```
 
-## API Endpoints chính
+---
 
-### Sensors
-- `GET /api/sensors` - Danh sách sensors
-- `GET /api/sensors/:type` - Chi tiết sensor
+## 🔌 API ENDPOINTS
 
-### Devices
-- `GET /api/devices` - Danh sách devices
-- `POST /api/devices` - Thêm device
-- `PUT /api/devices/:id` - Cập nhật device
-- `DELETE /api/devices/:id` - Xóa device
+### Cảm biến (Sensors)
 
-### Rules
-- `GET /api/rules` - Danh sách rules
-- `POST /api/rules` - Tạo rule
-- `PUT /api/rules/:id` - Cập nhật rule
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/sensors` | Danh sách cảm biến |
+| GET | `/api/sensors/:type` | Chi tiết cảm biến |
 
-### Traceability (QR Code + Blockchain)
-- `POST /api/traceability/batch` - Tạo batch + QR code
-- `GET /api/traceability/batch/:code` - Truy xuất batch
-- `POST /api/traceability/batch/:code/stage` - Thêm giai đoạn
-- `POST /api/traceability/batch/:code/harvest` - Thu hoạch
-- `POST /api/traceability/batch/:code/export` - Xuất bán
-- `POST /api/traceability/batch/:code/certify` - Chứng nhận
-- `GET /api/traceability/batch/:code/full` - Timeline đầy đủ
-- `GET /api/traceability/batch/:code/qr` - Lấy QR code
-- `GET /api/traceability/batch/:code/label` - Label in được
-- `POST /api/traceability/scan` - Scan QR check nguồn gốc
-- `GET /api/traceability/verify/:code` - Verify blockchain hash
-- `GET /api/traceability/export/pdf` - Export PDF report
-- `GET /api/traceability/export/excel` - Export Excel report
+### Thiết bị (Devices)
 
-### System
-- `GET /api/stats` - Thống kê hệ thống
-- `GET /api/alerts` - Alerts
-- `GET /api/docs` - Swagger docs
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/devices` | Danh sách thiết bị |
+| POST | `/api/devices` | Thêm thiết bị |
+| PUT | `/api/devices/:id` | Cập nhật thiết bị |
+| DELETE | `/api/devices/:id` | Xóa thiết bị |
 
-## Skills System
+### Quy tắc (Rules)
 
-### Categories
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/rules` | Danh sách quy tắc |
+| POST | `/api/rules` | Tạo quy tắc |
+| PUT | `/api/rules/:id` | Cập nhật quy tắc |
 
-| Category | Skills | Mô tả |
+### Truy xuất nguồn gốc (Traceability)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/api/traceability/batch` | Tạo lô + QR |
+| GET | `/api/traceability/batch/:code` | Truy xuất lô |
+| POST | `/api/traceability/batch/:code/stage` | Thêm giai đoạn |
+| POST | `/api/traceability/batch/:code/harvest` | Thu hoạch |
+| POST | `/api/traceability/batch/:code/export` | Xuất bán |
+| POST | `/api/traceability/batch/:code/certify` | Chứng nhận |
+| GET | `/api/traceability/batch/:code/full` | Timeline đầy đủ |
+| GET | `/api/traceability/batch/:code/qr` | Lấy QR code |
+| GET | `/api/traceability/batch/:code/label` | Nhãn in được |
+| POST | `/api/traceability/scan` | Scan QR kiểm tra |
+| GET | `/api/traceability/verify/:code` | Verify hash |
+| GET | `/api/traceability/export/pdf` | Export PDF |
+| GET | `/api/traceability/export/excel` | Export Excel |
+
+### Hệ thống (System)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/stats` | Thống kê hệ thống |
+| GET | `/api/alerts` | Cảnh báo |
+| GET | `/api/docs` | Tài liệu Swagger |
+
+---
+
+## ⚙️ HỆ THỐNG SKILLS
+
+### Danh mục skills
+
+| Danh mục | Skills | Mô tả |
 |----------|--------|-------|
-| **drift** | version-drift, config-drift | Monitor version/config changes |
-| **network** | ws-heartbeat, mqtt-watch | Network connectivity |
-| **data** | alert-deduper, incident-correlator | Data processing |
+| **drift** | version-drift, config-drift | Giám sát thay đổi version/config |
+| **network** | ws-heartbeat, mqtt-watch | Kết nối mạng |
+| **data** | alert-deduper, incident-correlator | Xử lý dữ liệu |
 | **diagnosis** | route-mapper, webhook-correlator, anomaly-classifier, device-state-diff, kpi-drift, root-cause-hint | Chẩn đoán lỗi |
 | **selfheal** | retry-job, reconnect-bridge, reset-device, clear-cache, rollback-ota, auto-acknowledge | Tự sửa lỗi |
 | **orchestration** | rules-engine, schedules-engine, webhook-dispatch, command-router, ota-orchestrator, report-export | Điều phối |
@@ -135,14 +180,16 @@ npm run lint       # ESLint
 | **recovery** | auto-restore | Khôi phục |
 | **security** | vuln-scanner | Bảo mật |
 | **defense** | intrusion-detector | Phòng thủ |
-| **communication** | telegram-notifier, report-generator, voice-notifier, language-switcher | Giao tiếp |
+| **communication** | telegram-notifier, report-generator, voice-notifier, language-switcher, voice-assistant | Giao tiếp |
 | **agriculture** | weather-decision, water-optimization, crop-growth-tracker, pest-alert, fertilizer-scheduler | Nông nghiệp |
-| **iot** | energy-saver, predictive-maintenance, multi-farm-manager | IoT devices |
+| **iot** | energy-saver, predictive-maintenance, multi-farm-manager | Thiết bị IoT |
 | **maintenance** | cleanup-agent, log-rotator, db-optimizer | Bảo trì |
-| **ai** | ai-predict-weather | AI prediction |
+| **ai** | ai-predict-weather, ai-inference | AI dự đoán & inference |
 | **traceability** | qr-traceability, aptos-blockchain, aptos-integration | QR + Blockchain |
 
-## QR Code Traceability Flow
+---
+
+## 🔄 LUỒNG TRUY XUẤT NGUỒN GỐC
 
 ```
 1. Tạo batch → QR Code tự động
@@ -162,7 +209,11 @@ npm run lint       # ESLint
 8. Chứng nhận → certify event → Blockchain hash
 ```
 
-## Blockchain Configuration
+---
+
+## ⛓️ BLOCKCHAIN
+
+### Cấu hình
 
 ```bash
 # Bật blockchain (Aptos)
@@ -172,20 +223,24 @@ BLOCKCHAIN_ENABLED=true
 BLOCKCHAIN_ENABLED=false
 ```
 
-Khi bật, các events sau sẽ được ghi hash lên blockchain:
+Khi bật, các sự kiện sau sẽ được ghi hash lên blockchain:
 - `traceability.harvest` - Khi thu hoạch
 - `traceability.export` - Khi xuất bán
 - `traceability.certify` - Khi thêm chứng nhận
 
-## i18n - Đa ngôn ngữ
+---
+
+## 🌐 i18n - ĐA NGÔN NGỮ
 
 Hỗ trợ: Tiếng Việt (vi), English (en), 中文 (zh)
 
 Đổi ngôn ngữ qua:
 - Header `Accept-Language`
-- Event `language-change` trigger skill
+- Event trigger `language-change`
 
-## Performance Optimization
+---
+
+## ⚡ TỐI ƯU HIỆU NĂNG
 
 Tự động điều chỉnh theo RAM:
 
@@ -195,7 +250,9 @@ Tự động điều chỉnh theo RAM:
 | 1-2GB | 30 phút | 6 giờ | 120s |
 | < 1GB | 60 phút | 12 giờ | 300s |
 
-## Docker (optional)
+---
+
+## 🐳 DOCKER (TÙY CHỌN)
 
 ```bash
 # Build
@@ -205,16 +262,27 @@ docker build -t ecosyntech .
 docker run -p 3000:3000 -v ./data:/app/data ecosyntech
 ```
 
-## Testing
+---
+
+## 🧪 TESTING
 
 ```bash
-# Test all skills
+# Test tất cả skills
 node scripts/test-skills.js
 
-# Test specific feature
+# Test tính năng cụ thể
 node manage.js status
 ```
 
-## License
+---
+
+## 📄 LICENSE
 
 MIT License - EcoSynTech 2026
+
+---
+
+**ECOSYNTECH FARM OS**  
+*"Nông nghiệp thông minh - Cho nông dân, cho mọi người"*
+
+🌱🚀 **"Cắm là chạy!"** 🚀🌱
