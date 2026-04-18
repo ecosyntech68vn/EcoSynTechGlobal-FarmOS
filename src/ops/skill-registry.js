@@ -81,6 +81,13 @@ var hybridSync = require('../skills/sync/hybrid-sync.skill');
 var mobileDashboard = require('../skills/dashboard/mobile-dashboard.skill');
 var costCalculator = require('../skills/ai/cost-calculator.skill');
 
+var salesLeadClaw = require('../skills/sales/lead-claw');
+var salesProductClaw = require('../skills/sales/product-claw');
+var salesQuoteClaw = require('../skills/sales/quote-claw');
+var salesContractClaw = require('../skills/sales/contract-claw');
+var salesInstallClaw = require('../skills/sales/install-claw');
+var salesSupportClaw = require('../skills/sales/support-claw');
+
 var skills = [
   versionDrift,
   configDrift,
@@ -149,6 +156,12 @@ roiCalculator,
   hybridSync,
   mobileDashboard,
   costCalculator,
+  salesLeadClaw,
+  salesProductClaw,
+  salesQuoteClaw,
+  salesContractClaw,
+  salesInstallClaw,
+  salesSupportClaw,
 ];
 
 function buildRegistry() {
