@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2E7D32">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>EcoSynTech Farm OS</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" href="/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-dark: #1B5E20;
+      --primary-light: #4CAF50;
+      --accent: #81C784;
+      --surface: #1B5E20;
+      --background: #0D3311;
+      --background-card: #153D1A;
+      --text: #FFFFFF;
+      --text-secondary: #A5D6A7;
+      --text-muted: #66BB6A;
+      --danger: #EF5350;
+      --warning: #FFA726;
+      --success: #66BB6A;
+      --radius: 16px;
+      --radius-sm: 12px;
+      --radius-lg: 24px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.5;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, var(--background) 0%, #0A2910 100%);
+    }
+    
+    .header {
+      padding: 16px 20px;
+      padding-top: calc(16px + env(safe-area-inset-top));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, var(--surface) 0%, transparent 100%);
+      position: relative;
+      z-index: 10;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--shadow);
+    }
+    
+    .header-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .header-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--success);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px 100px;
+      scroll-behavior: smooth;
+    }
+    
+    .greeting {
+      padding: 20px 0 24px;
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .greeting-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    
+    .greeting-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .section {
+      margin-bottom: 24px;
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+    
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .section-action {
+      font-size: 13px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    
+    .card {
+      background: var(--background-card);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    .card:active {
+      transform: scale(0.98);
+      background: var(--surface);
+    }
+    
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .card-icon.soil { background: linear-gradient(135deg, #5D4037, #3E2723); }
+    .card-icon.temp { background: linear-gradient(135deg, #EF5350, #C62828); }
+    .card-icon.humidity { background: linear-gradient(135deg, #42A5F5, #1565C0); }
+    .card-icon.light { background: linear-gradient(135deg, #FFCA28, #F9A825); }
+    .card-icon.water { background: linear-gradient(135deg, #26C6DA, #00838F); }
+    .card-icon.alert { background: linear-gradient(135deg, #FFA726, #EF6C00); }
+    
+    .card-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .card-value {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .card-unit {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .quick-actions::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .action-btn {
+      flex-shrink: 0;
+      min-width: 80px;
+      height: 80px;
+      background: var(--background-card);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid rgba(76, 175, 80, 0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .action-btn:active {
+      transform: scale(0.95);
+      background: var(--primary);
+    }
+    
+    .action-btn-icon {
+      font-size: 28px;
+    }
+    
+    .action-btn-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    
+    .chart-card {
+      background: var(--background-card);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .chart-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .chart-period {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .chart-period-btn {
+      padding: 4px 12px;
+      font-size: 12px;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      font-weight: 500;
+    }
+    
+    .chart-period-btn.active {
+      background: var(--primary);
+      color: var(--text);
+    }
+    
+    .chart-area {
+      height: 120px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      padding: 8px 0;
+    }
+    
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+      border-radius: 4px 4px 0 0;
+      min-height: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .chart-bar:hover {
+      background: var(--accent);
+    }
+    
+    .nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      background: var(--background-card);
+      border-top: 1px solid rgba(76, 175, 80, 0.1);
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 11px;
+      transition: all 0.2s ease;
+      min-width: 64px;
+    }
+    
+    .nav-item.active {
+      color: var(--accent);
+      background: rgba(76, 175, 80, 0.1);
+    }
+    
+    .nav-item:active {
+      background: var(--primary);
+    }
+    
+    .nav-icon {
+      font-size: 24px;
+    }
+    
+    .floating-btn {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: var(--shadow-lg);
+      z-index: 99;
+      transition: all 0.3s ease;
+    }
+    
+    .floating-btn:active {
+      transform: scale(0.9);
+    }
+    
+    .alert-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 20px;
+      height: 20px;
+      background: var(--danger);
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+    }
+    
+    .weather-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--background-card);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+    
+    .weather-icon {
+      font-size: 48px;
+    }
+    
+    .weather-info {
+      flex: 1;
+    }
+    
+    .weather-temp {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+    }
+    
+    .weather-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .weather-detail {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    
+    .weather-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    .device-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .device-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--background-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    .device-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .device-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .device-name {
+      font-weight: 500;
+    }
+    
+    .device-status {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .device-toggle {
+      width: 52px;
+      height: 28px;
+      border-radius: 14px;
+      background: var(--surface);
+      position: relative;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    
+    .device-toggle.active {
+      background: var(--primary-light);
+    }
+    
+    .device-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: var(--text);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .device-toggle.active::after {
+      left: 26px;
+    }
+    
+    .fab {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 20px rgba(46, 125, 50, 0.5);
+      border: none;
+      color: white;
+      z-index: 100;
+    }
+    
+    .fab:active {
+      transform: scale(0.9);
+    }
+    
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">🌱</div>
+        <div>
+          <div class="header-title">EcoSynTech</div>
+          <div class="header-subtitle">Farm OS v2.3.2</div>
+        </div>
+      </div>
+      <div class="status-dot" title="Online"></div>
+    </header>
+    
+    <main class="main" id="main">
+      <div class="page active" id="page-dashboard">
+        <div class="greeting">
+          <div class="greeting-title">Xin chào! 👋</div>
+          <div class="greeting-subtitle">Đây là trang trại của bạn hôm nay</div>
+        </div>
+        
+        <div class="weather-header">
+          <div class="weather-icon">☀️</div>
+          <div class="weather-info">
+            <div class="weather-temp">28°C</div>
+            <div class="weather-desc">Nắng nhẹ, khô ráo</div>
+            <div class="weather-detail">
+              <div class="weather-detail-item">💨 12 km/h</div>
+              <div class="weather-detail-item">💧 65%</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Cảm biến</span>
+            <a href="#" class="section-action" onclick="showPage('sensors')">Xem tất cả →</a>
+          </div>
+          <div class="grid">
+            <div class="card" onclick="showPage('sensors')">
+              <div class="card-icon soil">🌱</div>
+              <div class="card-label">Độ ẩm đất</div>
+              <div class="card-value">45<span class="card-unit">%</span></div>
+            </div>
+            <div class="card" onclick="showPage('sensors')">
+              <div class="card-icon temp">🌡️</div>
+              <div class="card-label">Nhiệt độ</div>
+              <div class="card-value">28<span class="card-unit">°C</span></div>
+            </div>
+            <div class="card" onclick="showPage('sensors')">
+              <div class="card-icon humidity">💨</div>
+              <div class="card-label">Độ ẩm</div>
+              <div class="card-value">65<span class="card-unit">%</span></div>
+            </div>
+            <div class="card" onclick="showPage('sensors')">
+              <div class="card-icon light">☀️</div>
+              <div class="card-label">Ánh sáng</div>
+              <div class="card-value">500<span class="card-unit">lux</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Điều khiển nhanh</span>
+          </div>
+          <div class="quick-actions">
+            <div class="action-btn" onclick="toggleDevice('pump')">
+              <div class="action-btn-icon">💦</div>
+              <div class="action-btn-label">Bơm nước</div>
+            </div>
+            <div class="action-btn" onclick="toggleDevice('fan')">
+              <div class="action-btn-icon">🌀</div>
+              <div class="action-btn-label">Quạt</div>
+            </div>
+            <div class="action-btn" onclick="toggleDevice('light')">
+              <div class="action-btn-icon">💡</div>
+              <div class="action-btn-label">Đèn</div>
+            </div>
+            <div class="action-btn" onclick="toggleDevice('fertilizer')">
+              <div class="action-btn-icon">🌱</div>
+              <div class="action-btn-label">Bón phân</div>
+            </div>
+            <div class="action-btn" onclick="showPage('irrigate')">
+              <div class="action-btn-icon">🚿</div>
+              <div class="action-btn-label">Tưới</div>
+            </div>
+            <div class="action-btn" onclick="showPage('cost')">
+              <div class="action-btn-icon">💰</div>
+              <div class="action-btn-label">Chi phí</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Biểu đồ 7 ngày</span>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Độ ẩm đất (%)</span>
+              <div class="chart-period">
+                <button class="chart-period-btn">Ngày</button>
+                <button class="chart-period-btn active">Tuần</button>
+                <button class="chart-period-btn">Tháng</button>
+              </div>
+            </div>
+            <div class="chart-area">
+              <div class="chart-bar" style="height: 40%"></div>
+              <div class="chart-bar" style="height: 55%"></div>
+              <div class="chart-bar" style="height: 45%"></div>
+              <div class="chart-bar" style="height: 70%"></div>
+              <div class="chart-bar" style="height: 60%"></div>
+              <div class="chart-bar" style="height: 50%"></div>
+              <div class="chart-bar" style="height: 45%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="page" id="page-sensors">
+        <div class="greeting">
+          <div class="greeting-title">Cảm biến</div>
+          <div class="greeting-subtitle">5 thiết bị đang hoạt động</div>
+        </div>
+        
+        <div class="section">
+          <div class="device-list">
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">🌱</div>
+                <div>
+                  <div class="device-name">Cảm biến đất #1</div>
+                  <div class="device-status">Online • 45% độ ẩm</div>
+                </div>
+              </div>
+              <button class="device-toggle active"></button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">🌡️</div>
+                <div>
+                  <div class="device-name">Cảm biến nhiệt #1</div>
+                  <div class="device-status">Online • 28°C</div>
+                </div>
+              </div>
+              <button class="device-toggle active"></button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">💨</div>
+                <div>
+                  <div class="device-name">Cảm biến ẩm #1</div>
+                  <div class="device-status">Online • 65%</div>
+                </div>
+              </div>
+              <button class="device-toggle active"></button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">☀️</div>
+                <div>
+                  <div class="device-name">Cảm biến sáng #1</div>
+                  <div class="device-status">Online • 500 lux</div>
+                </div>
+              </div>
+              <button class="device-toggle active"></button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">🔋</div>
+                <div>
+                  <div class="device-name">Nguồn điện #1</div>
+                  <div class="device-status">Online • 12V</div>
+                </div>
+              </div>
+              <button class="device-toggle active"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="page" id="page-devices">
+        <div class="greeting">
+          <div class="greeting-title">Thiết bị</div>
+          <div class="greeting-subtitle">Điều khiển thiết bị</div>
+        </div>
+        
+        <div class="section">
+          <div class="device-list">
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">💦</div>
+                <div>
+                  <div class="device-name">Máy bơm nước</div>
+                  <div class="device-status">Tắt</div>
+                </div>
+              </div>
+              <button class="device-toggle" id="toggle-pump" onclick="toggleDevice('pump')"></button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">🌀</div>
+                <div>
+                  <div class="device-name">Quạt làm mát</div>
+                  <div class="device-status">Tắt</div>
+                </div>
+              </div>
+              <button class="device-toggle" id="toggle-fan" onclick="toggleDevice('fan')"></button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">💡</div>
+                <div>
+                  <div class="device-name">Đèn grow light</div>
+                  <div class="device-status">Tắt</div>
+                </div>
+              </div>
+              <button class="device-toggle" id="toggle-light" onclick="toggleDevice('light')"></button>
+            </div>
+            <div class="device-item">
+              <div class="device-info">
+                <div class="device-icon">🎯</div>
+                <div>
+                  <div class="device-name">Van nước tự động</div>
+                  <div class="device-status">Tắt</div>
+                </div>
+              </div>
+              <button class="device-toggle" id="toggle-valve" onclick="toggleDevice('valve')"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="page" id="page-alerts">
+        <div class="greeting">
+          <div class="greeting-title">Cảnh báo</div>
+          <div class="greeting-subtitle">3 cảnh báo mới</div>
+        </div>
+        
+        <div class="section">
+          <div class="device-list">
+            <div class="device-item" style="border-left: 3px solid var(--warning);">
+              <div class="device-info">
+                <div class="device-icon" style="background: linear-gradient(135deg, #FFA726, #EF6C00);">⚠️</div>
+                <div>
+                  <div class="device-name">Độ ẩm đất thấp</div>
+                  <div class="device-status">Cảm biến đất #1 • 10:30</div>
+                </div>
+              </div>
+            </div>
+            <div class="device-item" style="border-left: 3px solid var(--danger);">
+              <div class="device-info">
+                <div class="device-icon" style="background: linear-gradient(135deg, #EF5350, #C62828);">🌡️</div>
+                <div>
+                  <div class="device-name">Nhiệt độ cao</div>
+                  <div class="device-status">Cảm biến nhiệt #1 • 09:15</div>
+                </div>
+              </div>
+            </div>
+            <div class="device-item" style="border-left: 3px solid var(--accent);">
+              <div class="device-info">
+                <div class="device-icon" style="background: linear-gradient(135deg, #81C784, #2E7D32);">🌱</div>
+                <div>
+                  <div class="device-name">Cần bón phân</div>
+                  <div class="device-status">Hệ thống • 08:00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="page" id="page-cost">
+        <div class="greeting">
+          <div class="greeting-title">Chi phí đầu tư</div>
+          <div class="greeting-subtitle">Tính toán ROI</div>
+        </div>
+        
+        <div class="section">
+          <div class="grid">
+            <div class="card">
+              <div class="card-label">Thiết bị cảm biến</div>
+              <div class="card-value">2.5<span class="card-unit">M</span></div>
+            </div>
+            <div class="card">
+              <div class="card-label">Gateway</div>
+              <div class="card-value">2.0<span class="card-unit">M</span></div>
+            </div>
+            <div class="card">
+              <div class="card-label">Cài ��ặt</div>
+              <div class="card-value">0.8<span class="card-unit">M</span></div>
+            </div>
+            <div class="card">
+              <div class="card-label">Tổng đầu tư</div>
+              <div class="card-value" style="color: var(--accent);">5.3<span class="card-unit">M</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">ROI dự kiến</span>
+            </div>
+            <div style="padding: 16px 0;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span class="card-label">Lợi nhuận năm</span>
+                <span class="card-value" style="color: var(--accent);">90M VNĐ</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span class="card-label">Chi phí vận hành</span>
+                <span class="card-value">3.6M VNĐ</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span class="card-label">ROI</span>
+                <span class="card-value" style="color: var(--accent);">1551%</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="card-label">Thu hồi vốn</span>
+                <span class="card-value" style="color: var(--primary-light);">1 tháng</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <nav class="nav">
+      <a class="nav-item active" href="#" onclick="showPage('dashboard')">
+        <span class="nav-icon">🏠</span>
+        <span>Tổng quan</span>
+      </a>
+      <a class="nav-item" href="#" onclick="showPage('sensors')">
+        <span class="nav-icon">📡</span>
+        <span>Cảm biến</span>
+      </a>
+      <a class="nav-item" href="#" onclick="showPage('devices')">
+        <span class="nav-icon">🔌</span>
+        <span>Thiết bị</span>
+      </a>
+      <a class="nav-item" href="#" onclick="showPage('alerts')">
+        <span class="nav-icon">⚠️</span>
+        <span>Cảnh báo</span>
+      </a>
+      <a class="nav-item" href="#" onclick="showPage('cost')">
+        <span class="nav-icon">💰</span>
+        <span>Chi phí</span>
+      </a>
+    </nav>
+    
+    <button class="fab" onclick="voiceCommand()">🎤</button>
+  </div>
+  
+  <script>
+    let currentPage = 'dashboard';
+    let devices = { pump: false, fan: false, light: false, valve: false };
+    
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      document.getElementById('page-' + pageId).classList.add('active');
+      event.target.closest('.nav-item')?.classList.add('active');
+      
+      currentPage = pageId;
+      return false;
+    }
+    
+    function toggleDevice(device) {
+      devices[device] = !devices[device];
+      const btn = document.getElementById('toggle-' + device);
+      if (btn) {
+        btn.classList.toggle('active', devices[device]);
+      }
+      
+      const icon = device === 'pump' ? '💦' : device === 'fan' ? '🌀' : device === 'light' ? '💡' : '🎯';
+      const name = device === 'pump' ? 'Máy bơm' : device === 'fan' ? 'Quạt' : device === 'light' ? 'Đèn' : 'Van';
+      alert((devices[device] ? 'Bật' : 'Tắt') + ' ' + name + ' thành công!');
+    }
+    
+    function voiceCommand() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'vi-VN';
+        recognition.start();
+        
+        recognition.onresult = function(event) {
+          const query = event.results[0][0].transcript;
+          processVoice(query);
+        };
+        
+        recognition.onerror = function(event) {
+          alert('Không nhận giọng nói. Thử lại!');
+        };
+      } else {
+        alert('Trình duyệt không hỗ trợ giọng nói!');
+      }
+    }
+    
+    function processVoice(query) {
+      query = query.toLowerCase();
+      let response = '';
+      
+      if (query.includes('bật máy bơm') || query.includes('bật bơm')) {
+        toggleDevice('pump');
+        response = 'Đã bật máy bơm!';
+      } else if (query.includes('tắt máy bơm') || query.includes('tắt bơm')) {
+        toggleDevice('pump');
+        response = 'Đã tắt máy bơm!';
+      } else if (query.includes('xem nhiệt độ')) {
+        response = 'Nhiệt độ hiện tại là 28 độ C.';
+      } else if (query.includes('xem độ ẩm')) {
+        response = 'Độ ẩm đất là 45%.';
+      } else if (query.includes('cảnh báo')) {
+        showPage('alerts');
+        response = 'Có 3 cảnh báo mới.';
+      } else if (query.includes('chi phí') || query.includes('tính tiền')) {
+        showPage('cost');
+        response = 'Tổng đầu tư: 5.3 triệu VNĐ. ROI: 1551%.';
+      } else {
+        response = 'Tôi không hiểu. Thử: bật máy bơm, xem nhiệt độ, hoặc xem chi phí.';
+      }
+      
+      alert(response);
+    }
+    
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('SW registered:', reg);
+      });
+    }
+  </script>
+</body>
+</html>
