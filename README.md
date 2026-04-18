@@ -1,6 +1,6 @@
 # EcoSynTech IoT Platform
 
-Hệ thống IoT toàn diện cho nông nghiệp thông minh - **Version 2.2.0**
+Hệ thống IoT toàn diện cho nông nghiệp thông minh - **Version 2.3.2**
 
 ## Tính năng chính
 
