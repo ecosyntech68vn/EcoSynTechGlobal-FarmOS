@@ -72,6 +72,7 @@ var aiPredictWeather = require('../skills/ai/ai-predict-weather.skill');
 var qrTraceability = require('../skills/traceability/qr-traceability.skill');
 var aptosBlockchain = require('../skills/traceability/aptos-blockchain.skill');
 var aptosIntegration = require('../skills/traceability/aptos-integration.skill');
+var aiInference = require('../skills/ai/ai-inference.skill');
 
 var skills = [
   versionDrift,
@@ -133,6 +134,7 @@ var skills = [
   qrTraceability,
   aptosBlockchain,
   aptosIntegration,
+  aiInference,
 ];
 
 function buildRegistry() {
