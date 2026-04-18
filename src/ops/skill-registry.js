@@ -75,6 +75,8 @@ var aptosIntegration = require('../skills/traceability/aptos-integration.skill')
 var aiInference = require('../skills/ai/ai-inference.skill');
 var aiRAG = require('../skills/ai/ai-rag.skill');
 var aiConversation = require('../skills/ai/ai-conversation.skill');
+var roiCalculator = require('../skills/ai/roi-calculator.skill');
+var dbSqliteIot = require('../skills/maintenance/db-sqlite-iot.skill');
 
 var skills = [
   versionDrift,
@@ -139,6 +141,8 @@ var skills = [
   aiInference,
   aiRAG,
   aiConversation,
+  roiCalculator,
+  dbSqliteIot,
 ];
 
 function buildRegistry() {

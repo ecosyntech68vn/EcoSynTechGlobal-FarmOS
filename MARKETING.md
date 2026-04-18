@@ -272,13 +272,62 @@ Khách hàng      →  Truy xuất toàn bộ hành trình
 | Thông số | Giá trị |
 |----------|---------|
 | Nền tảng | Node.js + Express |
-| Cơ sở dữ liệu | SQLite |
-| Số skills | 60 tự động hóa |
+| Cơ sở dữ liệu | **SQLite (WAL optimized)** |
+| Số skills | **64 tự động hóa** |
+| AI Features | RAG + Conversation + ROI Calculator |
 | API | REST + WebSocket |
 | Bảo mật | JWT, RBAC, Rate Limit |
 | Đa ngôn ngữ | Tiếng Việt, English, 中文 |
 | RAM tối thiểu | **512MB** |
 | Tương thích | Windows 7+ |
+
+---
+
+## 💰 ROI & TIẾT KIỆM
+
+### Tính ROI ngay với ECOSYNTECH:
+
+| Thông số | Giá trị |
+|----------|---------|
+| Thiết bị | 300-500K VNĐ |
+| Tháng tiết kiệm được | 500K-1.5M VNĐ/tháng |
+| Thời gian thu hồi | **3-6 tháng** |
+| ROI năm đầu | **100-300%** |
+
+### Tiết kiệm cụ thể:
+
+- **Nhân công**: Giảm 2-3 giờ/ngày kiểm tra thủ công
+- **Nước**: Giảm 20-30% nhờ tưới tự động theo ngưỡng
+- **Phân bón**: Giảm 15-25% nhờ AI khuyến nghị
+- **Thất bại**: Giảm 50% nhờ cảnh báo sớm
+
+---
+
+## 🗄️ TỐI ƯU SQLITE CHO IoT NÔNG NGHIỆP
+
+### Cấu hình hiệu năng:
+
+```sql
+PRAGMA journal_mode=WAL;
+PRAGMA synchronous=NORMAL;
+PRAGMA cache_size=-64000;
+PRAGMA busy_timeout=5000;
+```
+
+### Circular Buffer:
+
+- Giữ tối đa 10,000 readings/sensor
+- Auto-cleanup định kỳ
+- Backup tự động
+
+### Multi-tenant đơn giản:
+
+```
+/data/farms/
+├── farm_001/ecosyntech.db
+├── farm_002/ecosyntech.db
+└── template/ecosyntech_empty.db
+```
 
 ---
 
