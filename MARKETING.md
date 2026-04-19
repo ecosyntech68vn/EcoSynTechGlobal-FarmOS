@@ -74,8 +74,37 @@ Chúng tôi mang đến sự đơn giản trong công nghệ, giúp nông dân V
 
 ## 🤖 CÔNG NGHỆ TỰ ĐỘNG HÓA
 
-### 🎯 60 Skills - Giải phóng sức lao động
+### 🎯 67 Skills - Giải phóng sức lao động
 
+```
+╔══════════════════════════════════════════════════════════════════════╗
+║               67 SKILLS = 95% TỰ ĐỘNG HÓA                              ║
+╠══════════════════════════════════════════════════════════════════════╣
+║                                                                        ║
+║   🔧 VẬN HÀNH         🔒 BẢO MẬT         🧠 GIÁM SÁT       🔄 TỰ SỬA    ║
+║   ───────────       ───────────        ───────────      ─────────         ║
+║   ✓ Rules Engine    ✓ RBAC Guard     ✓ AI Weather    ✓ Auto Retry     ║
+║   ✓ Scheduler      ✓ Audit Trail   ✓ Anomaly      ✓ Reconnect     ║
+║   ✓ Webhook       ✓ Vulnerability✓ Health Score✓ Reset Device  ║
+║   ✓ OTA Update    ✓ Rate Limit   ✓ KPI Drift    ✓ Clear Cache  ║
+║   ✓ Command Router✓ Intrusion  ✓ Root Cause  ✓ Rollback OTA ║
+║   ✓ Report Export✓ Secrets     ✓ Auto Backup✓ Auto Ack     ║
+║                                                                        ║
+║   🌾 NÔNG NGHIỆP      📦 TRACEABILITY   📢 GIAO TIẾP       📡 IoT         ║
+║   ─────────────      ─────────────      ──────────      ──────            ║
+║   ✓ Weather        ✓ QR Generator   ✓ Telegram    ✓ Energy Saver    ║
+║   ✓ Water Opt     ✓ Blockchain    ✓ Voice Notif ✓ Predictive      ║
+║   ✓ Crop Tracker ✓ Aptos          ✓ Report Gen  ✓ Multi-Farm      ║
+║   ✓ Pest Alert   ✓ Integration    ✓ Language   ✓ Voice Guide    ║
+║   ✓ Fertilizer                 ✓ Voice Config✓ User Help      ║
+║                                                                        ║
+║   📊 QUẢN LÝ         💰 TÀI CHÍNH       👥 NHÂN SỰ        📦 KHO           ║
+║   ───────────       ─────────────      ───────────      ──────            ║
+║   ✓ Multi-Farm    ✓ Finance Report ✓ Workers      ✓ Inventory      ║
+║   ✓ Farm Stats   ✓ ROI Calculator✓ Attendance ✓ Low Stock Alert ║
+║                  ✓ Income/Expense✓ Check-in/out✓ Adjust Stock    ║
+║                                                                        ║
+╚══════════════════════════════════════════════════════════════════════╝
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
 ║               60 SKILLS = 95% TỰ ĐỘNG HÓA                              ║
@@ -116,6 +145,39 @@ Chúng tôi mang đến sự đơn giản trong công nghệ, giúp nông dân V
 
 ## 🏗️ KIẾN TRÚC HỆ THỐNG
 
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         ECOSYNTECH FARM OS                                    │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────┐        ┌─────────────┐        ┌─────────────┐        ┌─────────────┐ │
+│  │  THIẾT BỊ  │        │   BACKEND   │        │  DASHBOARD │        │   WEBSOCKET│ │
+│  │   ESP32   │◄──────►│  Node.js   │◄──────►│  Web UI    │◄──────►│  Real-time │ │
+│  │  Firmware │ HTTPS  │   v2.3.2   │  REST  │  Mobile    │        │   Updates │ │
+│  │         │        │ 67 Skills  │        │   PWA     │        │           │ │
+│  └─────────────┘        └─────────────┘        └─────────────┘        └─────────────┘ │
+│                             │                                              │
+│                             ▼                                              │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐│
+│  │                💾 SQL.JS (SQLite In-Memory)                        ││
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ││
+│  │  │Farms  │ │Devices │ │Workers │ │Finance │ │Inventory│ ││
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘ ││
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐┌─────────┐ ││
+│  │  │Supply  │ │ Sensors│ │ Alerts │ │Crops   │ │ Tables │ ││
+│  │  │ Chain  │ │        │ │        │ │        │ │        │ ││
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘└─────────┘ ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                                                                             │
+│                              ▼                                          │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐│
+│  │              🌐 EXTERNAL SERVICES (Optional)                ││
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ││
+│  │  │Open-Meteo │ │  Telegram  │ │   Aptos    │ │ WebLocal   │ ││
+│  │  │ Weather  │ │   Bot     │ │Blockchain │ │Monitor   │ ││
+│  │  └──────���─��────┘ └─────────────┘ └─────────────┘ └─────────────┘ ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 ┌─���─��─────────────────────────────────────────────────────────────────────────────┐
 │                   ECOSYNTECH ECOSYSTEM                    │
@@ -364,10 +426,12 @@ Chúng tôi luôn sẵn sàng hỗ trợ quý khách hàng:
 
 | Kênh | Thông tin |
 |------|----------|
-| 🌐 Website | [Sẽ cập nhật] |
-| 📧 Email | [Sẽ cập nhật] |
-| 📱 Hotline/Zalo | [Sẽ cập nhật] |
-| 💬 Group cộng đồng | [Sẽ cập nhật] |
+| 🌐 Website | https://ecosyntech.com |
+| 📧 Email | kd.ecosyntech@gmail.com |
+| 📱 Hotline/Zalo | 0989516698 |
+| 🏢 Công ty | CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL |
+
+**Người đại diện:** Tạ Quang Thuận - CEO and FOUNDER
 
 ---
 
@@ -380,4 +444,4 @@ Chúng tôi luôn sẵn sàng hỗ trợ quý khách hàng:
 
 ---
 
-*© 2026 EcoSynTech Global. All rights reserved.*
+*© 2026 CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL. All rights reserved.*

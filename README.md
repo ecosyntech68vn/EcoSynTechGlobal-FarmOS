@@ -1,36 +1,45 @@
 # 🚀 ECOSYNTECH FARM OS
-## Nền Tảng Nông Nghiệp Thông Minh 4.0
+## Nền Tảng Nông Nghiệp Thông Minh 4.0 Toàn Diện
 
-Hệ thống IoT nông nghiệp thông minh toàn diện với **67 skills tự động hóa**, **QR Code Traceability**, **AI RAG**, **Hybrid Sync**, **Cost Calculator** và **Voice Assistant tiếng Việt**.
+Hệ thống quản lý nông nghiệp thông minh toàn diện với **quản lý đa farm**, **nhân sự**, **chuỗi cung ứng**, **tồn kho**, **tài chính**, **tưới tiêu thông minh**, **giám sát sức khỏe** và **67 skills tự động hóa**.
 
 ---
 
-## 📋 TỔNG QUAN
+## 🏢 GIỚI THIỆU
+
+### Công ty phát triển
+
+| Thông tin | Chi tiết |
+|----------|----------|
+| **Tên công ty** | CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL |
+| **Người sáng lập** | Tạ Quang Thuận - CEO and FOUNDER |
+| **Điện thoại** | 0989516698 |
+| **Email** | kd.ecosyntech@gmail.com |
+| **Website** | https://ecosyntech.com |
+| **Năm thành lập** | 2026 |
+
+---
+
+## 📋 TỔNG QUAN HỆ THỐNG
 
 ### Tính năng cốt lõi
 
-| Tính năng | Mô tả |
-|-----------|-------|
-| **67 Skills tự động** | Quản lý, vận hành, giám sát, tự sửa lỗi |
-| **QR Traceability** | Truy xuất nguồn gốc từ gieo trồng đến xuất bán |
-| **Aptos Blockchain** | Ghi hash (bật/tắt tùy chọn) |
-| **i18n đa ngôn ngữ** | Tiếng Việt, English, 中文 |
-| **Tối ưu RAM thấp** | Chạy được trên 512MB RAM, Windows 7+ |
-
-### Kết nối
-
-- REST API với tài liệu Swagger
-- WebSocket cho cập nhật thời gian thực
-- MQTT integration
-- Webhook support
-
-### Bảo mật & Quản trị
-
-- JWT Authentication
-- RBAC (Role-Based Access Control)
-- Rate Limiting
-- Audit Trail
-- Secrets checking
+| Module | Mô tả | API Endpoints |
+|--------|-------|-------------|
+| **Quản lý Farm** | Đa nông trại, theo dõi thiết bị theo vùng | `/api/farms` |
+| **Thiết bị IoT** | Cảm biến, actuator, MQTT | `/api/devices`, `/api/sensors` |
+| **Tự động hóa** | Rules, Schedules | `/api/rules`, `/api/schedules` |
+| **Nhân sự** | Quản lý công nhân, chấm công | `/api/workers` |
+| **Chuỗi cung ứng** | Thu hoạch → Vận chuyển → Giao hàng | `/api/supply-chain` |
+| **Kho/Vật tư** | Quản lý tồn kho, cảnh báo | `/api/inventory` |
+| **Tài chính** | Thu/Chi, Báo cáo ROI | `/api/finance` |
+| **Thời tiết** | Dự báo 5 ngày (Open-Meteo) | `/api/dashboard/weather` |
+| **Tưới tiêu thông minh** | ET0, tự động tưới | Water Optimization Service |
+| **Giám sát sức khỏe** | Health report WebLocal | `/api/health-report` |
+| **Truy xuất nguồn gốc** | QR Code, Blockchain (Aptos) | `/api/traceability` |
+| **Bảo mật** | RBAC, Audit Trail, Rate Limit | `/api/security` |
+| **Alerts** | Cảnh báo Telegram | `/api/alerts` |
+| **Dashboard** | Tổng quan nông nghiệp | `/api/dashboard/overview` |
 
 ---
 
@@ -39,7 +48,8 @@ Hệ thống IoT nông nghiệp thông minh toàn diện với **67 skills tự 
 ### Yêu cầu hệ thống
 
 - Node.js 14+
-- 512MB RAM tối thiểu
+- 512MB RAM tối thiểu (khuyến nghị 1GB)
+- Windows 7+ hoặc Linux
 
 ### Các bước cài đặt
 
@@ -53,7 +63,7 @@ cd Ecosyntech-web
 # 3. Cài đặt dependencies
 npm install
 
-# 4. Cấu hình (tùy chọn)
+# 4. Cấu hình
 cp .env.example .env
 # Chỉnh sửa .env nếu cần
 
@@ -61,39 +71,72 @@ cp .env.example .env
 npm start
 ```
 
+Server chạy tại: `http://localhost:3000`
+
 ---
 
 ## ⚙️ CẤU HÌNH MÔI TRƯỜNG
 
 ```env
-# Server
+# ====================
+# SERVER
+# ====================
 PORT=3000
 NODE_ENV=development
-
-# Database
-DB_PATH=./data/ecosyntech.db
-
-# JWT
-JWT_SECRET=your-secret-key
+JWT_SECRET=CHANGE_ME_IN_PRODUCTION
 JWT_EXPIRES_IN=7d
 
-# MQTT (tùy chọn)
-MQTT_BROKER_URL=wss://broker.hivemq.com:8884/mqtt
+# ====================
+# DATABASE
+# ====================
+DB_PATH=./data/ecosyntech.db
+
+# ====================
+# TELEGRAM (Cảnh báo)
+# ====================
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+
+# ====================
+# MQTT (IoT)
+# ====================
+MQTT_BROKER_URL=
 MQTT_USERNAME=
 MQTT_PASSWORD=
 
-# Blockchain (bật/tắt)
+# ====================
+# HEALTH REPORT (WebLocal)
+# ====================
+WEBLOCAL_WEBAPP_URL=
+WEBLOCAL_API_KEY=
+CUSTOMER_ID=
+CLIENT_ID=default_client
+HEALTH_REPORT_INTERVAL_MIN=30
+WEBLOCAL_USE_HTTPS=false
+
+# ====================
+# WATER OPTIMIZATION
+# ====================
+WATER_OPTIMIZATION_ENABLED=false
+WATER_MIN_MOISTURE=30
+WATER_MAX_MOISTURE=70
+
+# ====================
+# WEATHER (Open-Meteo)
+# ====================
+FARM_LAT=10.7769
+FARM_LON=106.7009
+
+# ====================
+# BLOCKCHAIN (Aptos)
+# ====================
 BLOCKCHAIN_ENABLED=false
-BLOCKCHAIN_TYPE=aptos
 APTOS_NETWORK=testnet
 
-# QR Code
-QR_CODE_ENABLED=true
-QR_CODE_BASE_URL=https://ecosyntech.com
-
-# Scheduler
-OPS_SCHEDULER_DISABLED=false
-OPS_SCHEDULER_INTERVAL=600000
+# ====================
+# AI
+# ====================
+DEEPSEEK_API_KEY=
 ```
 
 ---
@@ -102,141 +145,156 @@ OPS_SCHEDULER_INTERVAL=600000
 
 ```bash
 npm start          # Chạy server production
-npm run dev        # Chạy development với hot reload
+npm run dev       # Chạy development với hot reload
 npm run test      # Chạy tests
-npm run lint      # ESLint
+npm run lint     # ESLint
 ```
 
 ---
 
 ## 🔌 API ENDPOINTS
 
-### Cảm biến (Sensors)
+### 🏡 Quản lý Farm
 
 | Method | Endpoint | Mô tả |
 |--------|----------|-------|
-| GET | `/api/sensors` | Danh sách cảm biến |
-| GET | `/api/sensors/:type` | Chi tiết cảm biến |
+| GET | `/api/farms` | Danh sách farm |
+| POST | `/api/farms` | Tạo farm mới |
+| GET | `/api/farms/:id` | Chi tiết farm |
+| PUT | `/api/farms/:id` | Cập nhật farm |
+| DELETE | `/api/farms/:id` | Xóa farm |
+| GET | `/api/farms/:id/stats` | Thống kê farm |
 
-### Thiết bị (Devices)
-
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| GET | `/api/devices` | Danh sách thiết bị |
-| POST | `/api/devices` | Thêm thiết bị |
-| PUT | `/api/devices/:id` | Cập nhật thiết bị |
-| DELETE | `/api/devices/:id` | Xóa thiết bị |
-
-### Quy tắc (Rules)
+### 👥 Nhân sự (Workers)
 
 | Method | Endpoint | Mô tả |
 |--------|----------|-------|
-| GET | `/api/rules` | Danh sách quy tắc |
-| POST | `/api/rules` | Tạo quy tắc |
-| PUT | `/api/rules/:id` | Cập nhật quy tắc |
+| GET | `/api/workers` | Danh sách công nhân |
+| POST | `/api/workers` | Thêm công nhân |
+| POST | `/api/workers/:id/checkin` | Check-in chấm công |
+| POST | `/api/workers/:id/checkout` | Check-out |
+| GET | `/api/workers/:id/stats` | Thống kê công việc |
 
-### Truy xuất nguồn gốc (Traceability)
-
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| POST | `/api/traceability/batch` | Tạo lô + QR |
-| GET | `/api/traceability/batch/:code` | Truy xuất lô |
-| POST | `/api/traceability/batch/:code/stage` | Thêm giai đoạn |
-| POST | `/api/traceability/batch/:code/harvest` | Thu hoạch |
-| POST | `/api/traceability/batch/:code/export` | Xuất bán |
-| POST | `/api/traceability/batch/:code/certify` | Chứng nhận |
-| GET | `/api/traceability/batch/:code/full` | Timeline đầy đủ |
-| GET | `/api/traceability/batch/:code/qr` | Lấy QR code |
-| GET | `/api/traceability/batch/:code/label` | Nhãn in được |
-| POST | `/api/traceability/scan` | Scan QR kiểm tra |
-| GET | `/api/traceability/verify/:code` | Verify hash |
-| GET | `/api/traceability/export/pdf` | Export PDF |
-| GET | `/api/traceability/export/excel` | Export Excel |
-
-### Hệ thống (System)
+### 📦 Chuỗi cung ứng (Supply Chain)
 
 | Method | Endpoint | Mô tả |
 |--------|----------|-------|
-| GET | `/api/stats` | Thống kê hệ thống |
+| GET | `/api/supply-chain` | Danh sách lô hàng |
+| POST | `/api/supply-chain` | Tạo lô hàng |
+| POST | `/api/supply-chain/:id/harvest` | Ghi nhận thu hoạch |
+| POST | `/api/supply-chain/:id/ship` | Ghi nhận vận chuyển |
+| POST | `/api/supply-chain/:id/deliver` | Ghi nhận giao hàng |
+| GET | `/api/supply-chain/stats/summary` | Thống kê |
+
+### 📊 Kho/Vật tư (Inventory)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/inventory` | Danh sách vật tư |
+| POST | `/api/inventory` | Thêm vật tư |
+| PUT | `/api/inventory/:id` | Cập nhật vật tư |
+| POST | `/api/inventory/:id/adjust` | Điều chỉnh tồn kho |
+| GET | `/api/inventory/stats/summary` | Thống kê kho |
+
+### 💰 Tài chính (Finance)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/finance` | Danh sách giao dịch |
+| POST | `/api/finance` | Thêm giao dịch |
+| GET | `/api/finance/report` | Báo cáo tháng |
+| GET | `/api/finance/summary` | Tổng hợp năm |
+
+### 🌤️ Thời tiết (Weather)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/dashboard/weather` | Dự báo 5 ngày |
+| GET | `/api/dashboard/overview` | Tổng quan hệ thống |
+
+### 🏥 Health Report
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/health-report/settings` | Xem cài đặt |
+| PUT | `/api/health-report/settings` | Cập nhật cài đặt |
+| POST | `/api/health-report/test` | Gửi test report |
+| GET | `/api/health-report/queue` | Xem hàng đợi retry |
+
+### 📱 Hệ thống
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/health` | Health check |
+| GET | `/api/version` | Version API |
+| GET | `/api/stats` | Thống kê |
 | GET | `/api/alerts` | Cảnh báo |
-| GET | `/api/docs` | Tài liệu Swagger |
+| GET | `/api/docs` | Swagger docs |
+
+### 🔐 Authentication
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/api/auth/register` | Đăng ký |
+| POST | `/api/auth/login` | Đăng nhập |
 
 ---
 
-## ⚙️ HỆ THỐNG SKILLS
-
-### Danh mục skills
-
-| Danh mục | Skills | Mô tả |
-|----------|--------|-------|
-| **drift** | version-drift, config-drift | Giám sát thay đổi version/config |
-| **network** | ws-heartbeat, mqtt-watch | Kết nối mạng |
-| **data** | alert-deduper, incident-correlator | Xử lý dữ liệu |
-| **diagnosis** | route-mapper, webhook-correlator, anomaly-classifier, device-state-diff, kpi-drift, root-cause-hint | Chẩn đoán lỗi |
-| **selfheal** | retry-job, reconnect-bridge, reset-device, clear-cache, rollback-ota, auto-acknowledge | Tự sửa lỗi |
-| **orchestration** | rules-engine, schedules-engine, webhook-dispatch, command-router, ota-orchestrator, report-export | Điều phối |
-| **governance** | rbac-guard, audit-trail, secrets-check, tenant-isolation, rate-limit-guard, approval-gate-advanced | Quản trị |
-| **analysis** | root-cause-analyzer, auto-backup, anomaly-predictor, system-health-scorer | Phân tích |
-| **recovery** | auto-restore | Khôi phục |
-| **security** | vuln-scanner | Bảo mật |
-| **defense** | intrusion-detector | Phòng thủ |
-| **communication** | telegram-notifier, report-generator, voice-notifier, language-switcher, voice-assistant | Giao tiếp |
-| **agriculture** | weather-decision, water-optimization, crop-growth-tracker, pest-alert, fertilizer-scheduler | Nông nghiệp |
-| **iot** | energy-saver, predictive-maintenance, multi-farm-manager | Thiết bị IoT |
-| **maintenance** | cleanup-agent, log-rotator, db-optimizer | Bảo trì |
-| **ai** | ai-predict-weather, ai-inference | AI dự đoán & inference |
-| **traceability** | qr-traceability, aptos-blockchain, aptos-integration | QR + Blockchain |
-
----
-
-## 🔄 LUỒNG TRUY XUẤT NGUỒN GỐC
+## 🌾 LUỒNG NÔNG NGHIỆP
 
 ```
-1. Tạo batch → QR Code tự động
-       ↓
-2. Gieo trồng → Stage 1 (planting)
-       ↓
-3. Chăm sóc → Stage 2-N (growing)
-       ↓
-4. Thu hoạch → harvest event → Blockchain hash
-       ↓
-5. Đóng gói → Stage (processing, packaging)
-       ↓
-6. Vận chuyển → Stage (transport, storage)
-       ↓
-7. Xuất bán → export event → Blockchain hash
-       ↓
-8. Chứng nhận → certify event → Blockchain hash
+1. Tạo Farm → Thêm thiết bị cảm biến
+         ↓
+2. Gieo trồng → Tạo batch traceability
+         ↓
+3. Giám sát → Rules tự động bật tưới
+         ↓
+4. Thu hoạch → Supply chain harvest
+         ↓
+5. Kiểm tra chất lượng → Quality check
+         ↓
+6. Vận chuyển → Supply chain ship
+         ↓
+7. Giao hàng → Supply chain deliver
+         ↓
+8. Bán hàng → Finance income
+         ↓
+9. Tính ROI → Finance report
 ```
 
 ---
 
-## ⛓️ BLOCKCHAIN
+## 🌊 LUỒNG TƯỚI TIÊU THÔNG MINH
 
-### Cấu hình
+```
+1. Đọc cảm biến độ ẩm đất
+         ↓
+2. Lấy dự báo thời tiết (Open-Meteo)
+         ↓
+3. Tính ET0 (Evapotranspiration)
+         ↓
+4. Khuyến nghị tưới:
+   - Đất khô + không mưa → Tưới
+   - Đất đủ ẩm → Không tưới
+   - Sắp mưa → Bỏ qua
+         ↓
+5. Tự động kích hoạt pump (nếu autoMode=true)
+```
+
+---
+
+## ⛓️ BLOCKCHAIN (TÙY CHỌN)
 
 ```bash
 # Bật blockchain (Aptos)
 BLOCKCHAIN_ENABLED=true
-
-# Tắt (mặc định)
-BLOCKCHAIN_ENABLED=false
+APTOS_NETWORK=testnet
 ```
 
-Khi bật, các sự kiện sau sẽ được ghi hash lên blockchain:
+Khi bật, các sự kiện sau được ghi hash lên blockchain:
 - `traceability.harvest` - Khi thu hoạch
 - `traceability.export` - Khi xuất bán
-- `traceability.certify` - Khi thêm chứng nhận
-
----
-
-## 🌐 i18n - ĐA NGÔN NGỮ
-
-Hỗ trợ: Tiếng Việt (vi), English (en), 中文 (zh)
-
-Đổi ngôn ngữ qua:
-- Header `Accept-Language`
-- Event trigger `language-change`
+- `traceability.certify` - Khi chứng nhận
 
 ---
 
@@ -244,15 +302,20 @@ Hỗ trợ: Tiếng Việt (vi), English (en), 中文 (zh)
 
 Tự động điều chỉnh theo RAM:
 
-| RAM | Scheduler Interval | Backup Interval | Heartbeat |
-|-----|-------------------|-----------------|-----------|
-| >= 2GB | 10 phút | 3 giờ | 60s |
-| 1-2GB | 30 phút | 6 giờ | 120s |
-| < 1GB | 60 phút | 12 giờ | 300s |
+| RAM | Scheduler Interval | Usage |
+|-----|----------------|-------|
+| >= 2GB | 10 phút | Development |
+| 1-2GB | 30 phút | Production nhỏ |
+| < 1GB | 60 phút | Low-end device |
+
+Health Report tự động điều chỉnh:
+- CPU > 80% hoặc RAM > 85% → Interval 60p
+- CPU < 40% và RAM < 60% → Interval 10p
+- Bình thường → Interval 30p
 
 ---
 
-## 🐳 DOCKER (TÙY CHỌN)
+## 🐳 DOCKER
 
 ```bash
 # Build
@@ -267,18 +330,30 @@ docker run -p 3000:3000 -v ./data:/app/data ecosyntech
 ## 🧪 TESTING
 
 ```bash
-# Test tất cả skills
-node scripts/test-skills.js
-
-# Test tính năng cụ thể
+# Test hệ thống
 node manage.js status
+
+# Test API
+curl http://localhost:3000/api/health
 ```
 
 ---
 
 ## 📄 LICENSE
 
-MIT License - EcoSynTech 2026
+MIT License - EcoSynTech Global 2026
+
+---
+
+## 📞 LIÊN HỆ
+
+| | |
+|---|---|
+| **Công ty** | CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL |
+| **Người đại diện** | Tạ Quang Thuận - CEO and FOUNDER |
+| **Điện thoại** | 0989516698 |
+| **Email** | kd.ecosyntech@gmail.com |
+| **Website** | https://ecosyntech.com |
 
 ---
 
