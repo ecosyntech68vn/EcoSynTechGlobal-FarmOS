@@ -1,133 +1,288 @@
-# Claw Code
+# 🚀 ECOSYNTECH FARM OS
+## Nền Tảng Nông Nghiệp Thông Minh 4.0
 
-<p align="center">
-  <a href="https://github.com/ultraworkers/claw-code">ultraworkers/claw-code</a>
-  ·
-  <a href="./USAGE.md">Usage</a>
-  ·
-  <a href="./rust/README.md">Rust workspace</a>
-  ·
-  <a href="./PARITY.md">Parity</a>
-  ·
-  <a href="./ROADMAP.md">Roadmap</a>
-  ·
-  <a href="https://discord.gg/5TUQKqFWd">UltraWorkers Discord</a>
-</p>
+Hệ thống IoT nông nghiệp thông minh toàn diện với **67 skills tự động hóa**, **QR Code Traceability**, **AI RAG**, **Hybrid Sync**, **Cost Calculator** và **Voice Assistant tiếng Việt**.
 
-<p align="center">
-  <a href="https://star-history.com/#ultraworkers/claw-code&Date">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ultraworkers/claw-code&type=Date&theme=dark" />
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ultraworkers/claw-code&type=Date" />
-      <img alt="Star history for ultraworkers/claw-code" src="https://api.star-history.com/svg?repos=ultraworkers/claw-code&type=Date" width="600" />
-    </picture>
-  </a>
-</p>
+---
 
-<p align="center">
-  <img src="assets/claw-hero.jpeg" alt="Claw Code" width="300" />
-</p>
+## 📋 TỔNG QUAN
 
-Claw Code is the public Rust implementation of the `claw` CLI agent harness.
-The canonical implementation lives in [`rust/`](./rust), and the current source of truth for this repository is **ultraworkers/claw-code**.
+### Tính năng cốt lõi
 
-> [!IMPORTANT]
-> Start with [`USAGE.md`](./USAGE.md) for build, auth, CLI, session, and parity-harness workflows. Make `claw doctor` your first health check after building, use [`rust/README.md`](./rust/README.md) for crate-level details, read [`PARITY.md`](./PARITY.md) for the current Rust-port checkpoint, and see [`docs/container.md`](./docs/container.md) for the container-first workflow.
->
-> **ACP / Zed status:** `claw-code` does not ship an ACP/Zed daemon entrypoint yet. Run `claw acp` (or `claw --acp`) for the current status instead of guessing from source layout; `claw acp serve` is currently a discoverability alias only, and real ACP support remains tracked separately in `ROADMAP.md`.
+| Tính năng | Mô tả |
+|-----------|-------|
+| **67 Skills tự động** | Quản lý, vận hành, giám sát, tự sửa lỗi |
+| **QR Traceability** | Truy xuất nguồn gốc từ gieo trồng đến xuất bán |
+| **Aptos Blockchain** | Ghi hash (bật/tắt tùy chọn) |
+| **i18n đa ngôn ngữ** | Tiếng Việt, English, 中文 |
+| **Tối ưu RAM thấp** | Chạy được trên 512MB RAM, Windows 7+ |
 
-## Current repository shape
+### Kết nối
 
-- **`rust/`** — canonical Rust workspace and the `claw` CLI binary
-- **`USAGE.md`** — task-oriented usage guide for the current product surface
-- **`PARITY.md`** — Rust-port parity status and migration notes
-- **`ROADMAP.md`** — active roadmap and cleanup backlog
-- **`PHILOSOPHY.md`** — project intent and system-design framing
-- **`src/` + `tests/`** — companion Python/reference workspace and audit helpers; not the primary runtime surface
+- REST API với tài liệu Swagger
+- WebSocket cho cập nhật thời gian thực
+- MQTT integration
+- Webhook support
 
-## Quick start
+### Bảo mật & Quản trị
 
-> [!NOTE]
-> [!WARNING]
-> **`cargo install claw-code` installs the wrong thing.** The `claw-code` crate on crates.io is a deprecated stub that places `claw-code-deprecated.exe` — not `claw`. Running it only prints `"claw-code has been renamed to agent-code"`. **Do not use `cargo install claw-code`.** Either build from source (this repo) or install the upstream binary:
-> ```bash
-> cargo install agent-code   # upstream binary — installs 'agent.exe' (Windows) / 'agent' (Unix), NOT 'agent-code'
-> ```
-> This repo (`ultraworkers/claw-code`) is **build-from-source only** — follow the steps below.
+- JWT Authentication
+- RBAC (Role-Based Access Control)
+- Rate Limiting
+- Audit Trail
+- Secrets checking
+
+---
+
+## 🚀 CÀI ĐẶT
+
+### Yêu cầu hệ thống
+
+- Node.js 14+
+- 512MB RAM tối thiểu
+
+### Các bước cài đặt
 
 ```bash
-# 1. Clone and build
-git clone https://github.com/ultraworkers/claw-code
-cd claw-code/rust
-cargo build --workspace
+# 1. Clone dự án
+git clone https://github.com/ecosyntech68vn/Ecosyntech-web
 
-# 2. Set your API key (Anthropic API key — not a Claude subscription)
-export ANTHROPIC_API_KEY="sk-ant-..."
+# 2. Di chuyển vào thư mục
+cd Ecosyntech-web
 
-# 3. Verify everything is wired correctly
-./target/debug/claw doctor
+# 3. Cài đặt dependencies
+npm install
 
-# 4. Run a prompt
-./target/debug/claw prompt "say hello"
+# 4. Cấu hình (tùy chọn)
+cp .env.example .env
+# Chỉnh sửa .env nếu cần
+
+# 5. Chạy server
+npm start
 ```
 
-> [!NOTE]
-> **Windows (PowerShell):** the binary is `claw.exe`, not `claw`. Use `.\target\debug\claw.exe` or run `cargo run -- prompt "say hello"` to skip the path lookup.
+---
 
-### Windows setup
+## ⚙️ CẤU HÌNH MÔI TRƯỜNG
 
-**PowerShell is a supported Windows path.** Use whichever shell works for you. The common onboarding issues on Windows are:
+```env
+# Server
+PORT=3000
+NODE_ENV=development
 
-1. **Install Rust first** — download from <https://rustup.rs/> and run the installer. Close and reopen your terminal when it finishes.
-2. **Verify Rust is on PATH:**
-   ```powershell
-   cargo --version
-   ```
-   If this fails, reopen your terminal or run the PATH setup from the Rust installer output, then retry.
-3. **Clone and build** (works in PowerShell, Git Bash, or WSL):
-   ```powershell
-   git clone https://github.com/ultraworkers/claw-code
-   cd claw-code/rust
-   cargo build --workspace
-   ```
-4. **Run** (PowerShell — note `.exe` and backslash):
-   ```powershell
-   $env:ANTHROPIC_API_KEY = "sk-ant-..."
-   .\target\debug\claw.exe prompt "say hello"
-   ```
+# Database
+DB_PATH=./data/ecosyntech.db
 
-**Git Bash / WSL** are optional alternatives, not requirements. If you prefer bash-style paths (`/c/Users/you/...` instead of `C:\Users\you\...`), Git Bash (ships with Git for Windows) works well. In Git Bash, the `MINGW64` prompt is expected and normal — not a broken install.
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
 
-> [!NOTE]
-> **Auth:** claw requires an **API key** (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, etc.) — Claude subscription login is not a supported auth path.
+# MQTT (tùy chọn)
+MQTT_BROKER_URL=wss://broker.hivemq.com:8884/mqtt
+MQTT_USERNAME=
+MQTT_PASSWORD=
 
-Run the workspace test suite:
+# Blockchain (bật/tắt)
+BLOCKCHAIN_ENABLED=false
+BLOCKCHAIN_TYPE=aptos
+APTOS_NETWORK=testnet
+
+# QR Code
+QR_CODE_ENABLED=true
+QR_CODE_BASE_URL=https://ecosyntech.com
+
+# Scheduler
+OPS_SCHEDULER_DISABLED=false
+OPS_SCHEDULER_INTERVAL=600000
+```
+
+---
+
+## 📜 SCRIPTS
 
 ```bash
-cd rust
-cargo test --workspace
+npm start          # Chạy server production
+npm run dev        # Chạy development với hot reload
+npm run test      # Chạy tests
+npm run lint      # ESLint
 ```
 
-## Documentation map
+---
 
-- [`USAGE.md`](./USAGE.md) — quick commands, auth, sessions, config, parity harness
-- [`rust/README.md`](./rust/README.md) — crate map, CLI surface, features, workspace layout
-- [`PARITY.md`](./PARITY.md) — parity status for the Rust port
-- [`rust/MOCK_PARITY_HARNESS.md`](./rust/MOCK_PARITY_HARNESS.md) — deterministic mock-service harness details
-- [`ROADMAP.md`](./ROADMAP.md) — active roadmap and open cleanup work
-- [`PHILOSOPHY.md`](./PHILOSOPHY.md) — why the project exists and how it is operated
+## 🔌 API ENDPOINTS
 
-## Ecosystem
+### Cảm biến (Sensors)
 
-Claw Code is built in the open alongside the broader UltraWorkers toolchain:
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/sensors` | Danh sách cảm biến |
+| GET | `/api/sensors/:type` | Chi tiết cảm biến |
 
-- [clawhip](https://github.com/Yeachan-Heo/clawhip)
-- [oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)
-- [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode)
-- [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex)
-- [UltraWorkers Discord](https://discord.gg/5TUQKqFWd)
+### Thiết bị (Devices)
 
-## Ownership / affiliation disclaimer
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/devices` | Danh sách thiết bị |
+| POST | `/api/devices` | Thêm thiết bị |
+| PUT | `/api/devices/:id` | Cập nhật thiết bị |
+| DELETE | `/api/devices/:id` | Xóa thiết bị |
 
-- This repository does **not** claim ownership of the original Claude Code source material.
-- This repository is **not affiliated with, endorsed by, or maintained by Anthropic**.
+### Quy tắc (Rules)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/rules` | Danh sách quy tắc |
+| POST | `/api/rules` | Tạo quy tắc |
+| PUT | `/api/rules/:id` | Cập nhật quy tắc |
+
+### Truy xuất nguồn gốc (Traceability)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/api/traceability/batch` | Tạo lô + QR |
+| GET | `/api/traceability/batch/:code` | Truy xuất lô |
+| POST | `/api/traceability/batch/:code/stage` | Thêm giai đoạn |
+| POST | `/api/traceability/batch/:code/harvest` | Thu hoạch |
+| POST | `/api/traceability/batch/:code/export` | Xuất bán |
+| POST | `/api/traceability/batch/:code/certify` | Chứng nhận |
+| GET | `/api/traceability/batch/:code/full` | Timeline đầy đủ |
+| GET | `/api/traceability/batch/:code/qr` | Lấy QR code |
+| GET | `/api/traceability/batch/:code/label` | Nhãn in được |
+| POST | `/api/traceability/scan` | Scan QR kiểm tra |
+| GET | `/api/traceability/verify/:code` | Verify hash |
+| GET | `/api/traceability/export/pdf` | Export PDF |
+| GET | `/api/traceability/export/excel` | Export Excel |
+
+### Hệ thống (System)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/stats` | Thống kê hệ thống |
+| GET | `/api/alerts` | Cảnh báo |
+| GET | `/api/docs` | Tài liệu Swagger |
+
+---
+
+## ⚙️ HỆ THỐNG SKILLS
+
+### Danh mục skills
+
+| Danh mục | Skills | Mô tả |
+|----------|--------|-------|
+| **drift** | version-drift, config-drift | Giám sát thay đổi version/config |
+| **network** | ws-heartbeat, mqtt-watch | Kết nối mạng |
+| **data** | alert-deduper, incident-correlator | Xử lý dữ liệu |
+| **diagnosis** | route-mapper, webhook-correlator, anomaly-classifier, device-state-diff, kpi-drift, root-cause-hint | Chẩn đoán lỗi |
+| **selfheal** | retry-job, reconnect-bridge, reset-device, clear-cache, rollback-ota, auto-acknowledge | Tự sửa lỗi |
+| **orchestration** | rules-engine, schedules-engine, webhook-dispatch, command-router, ota-orchestrator, report-export | Điều phối |
+| **governance** | rbac-guard, audit-trail, secrets-check, tenant-isolation, rate-limit-guard, approval-gate-advanced | Quản trị |
+| **analysis** | root-cause-analyzer, auto-backup, anomaly-predictor, system-health-scorer | Phân tích |
+| **recovery** | auto-restore | Khôi phục |
+| **security** | vuln-scanner | Bảo mật |
+| **defense** | intrusion-detector | Phòng thủ |
+| **communication** | telegram-notifier, report-generator, voice-notifier, language-switcher, voice-assistant | Giao tiếp |
+| **agriculture** | weather-decision, water-optimization, crop-growth-tracker, pest-alert, fertilizer-scheduler | Nông nghiệp |
+| **iot** | energy-saver, predictive-maintenance, multi-farm-manager | Thiết bị IoT |
+| **maintenance** | cleanup-agent, log-rotator, db-optimizer | Bảo trì |
+| **ai** | ai-predict-weather, ai-inference | AI dự đoán & inference |
+| **traceability** | qr-traceability, aptos-blockchain, aptos-integration | QR + Blockchain |
+
+---
+
+## 🔄 LUỒNG TRUY XUẤT NGUỒN GỐC
+
+```
+1. Tạo batch → QR Code tự động
+       ↓
+2. Gieo trồng → Stage 1 (planting)
+       ↓
+3. Chăm sóc → Stage 2-N (growing)
+       ↓
+4. Thu hoạch → harvest event → Blockchain hash
+       ↓
+5. Đóng gói → Stage (processing, packaging)
+       ↓
+6. Vận chuyển → Stage (transport, storage)
+       ↓
+7. Xuất bán → export event → Blockchain hash
+       ↓
+8. Chứng nhận → certify event → Blockchain hash
+```
+
+---
+
+## ⛓️ BLOCKCHAIN
+
+### Cấu hình
+
+```bash
+# Bật blockchain (Aptos)
+BLOCKCHAIN_ENABLED=true
+
+# Tắt (mặc định)
+BLOCKCHAIN_ENABLED=false
+```
+
+Khi bật, các sự kiện sau sẽ được ghi hash lên blockchain:
+- `traceability.harvest` - Khi thu hoạch
+- `traceability.export` - Khi xuất bán
+- `traceability.certify` - Khi thêm chứng nhận
+
+---
+
+## 🌐 i18n - ĐA NGÔN NGỮ
+
+Hỗ trợ: Tiếng Việt (vi), English (en), 中文 (zh)
+
+Đổi ngôn ngữ qua:
+- Header `Accept-Language`
+- Event trigger `language-change`
+
+---
+
+## ⚡ TỐI ƯU HIỆU NĂNG
+
+Tự động điều chỉnh theo RAM:
+
+| RAM | Scheduler Interval | Backup Interval | Heartbeat |
+|-----|-------------------|-----------------|-----------|
+| >= 2GB | 10 phút | 3 giờ | 60s |
+| 1-2GB | 30 phút | 6 giờ | 120s |
+| < 1GB | 60 phút | 12 giờ | 300s |
+
+---
+
+## 🐳 DOCKER (TÙY CHỌN)
+
+```bash
+# Build
+docker build -t ecosyntech .
+
+# Run
+docker run -p 3000:3000 -v ./data:/app/data ecosyntech
+```
+
+---
+
+## 🧪 TESTING
+
+```bash
+# Test tất cả skills
+node scripts/test-skills.js
+
+# Test tính năng cụ thể
+node manage.js status
+```
+
+---
+
+## 📄 LICENSE
+
+MIT License - EcoSynTech 2026
+
+---
+
+**ECOSYNTECH FARM OS**  
+*"Nông nghiệp thông minh - Cho nông dân, cho mọi người"*
+
+🌱🚀 **"Cắm là chạy!"** 🚀🌱

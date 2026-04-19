@@ -1,0 +1,127 @@
+2026-04-18 09:07:13 [ERROR]: Error: 13 values for 12 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:07:13 [ERROR]: Error: 13 values for 12 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:09:13 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:09:13 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:11:13 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:189:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:03 [ERROR]: Error: Database not initialized
+    at getAll (/tmp/Ecosyntech-web/src/config/database.js:548:18)
+    at /tmp/Ecosyntech-web/src/routes/products.js:38:20
+    at /tmp/Ecosyntech-web/src/middleware/errorHandler.js:51:21
+    at Layer.handle [as handle_request] (/tmp/Ecosyntech-web/node_modules/express/lib/router/layer.js:95:5)
+    at next (/tmp/Ecosyntech-web/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/tmp/Ecosyntech-web/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/tmp/Ecosyntech-web/node_modules/express/lib/router/layer.js:95:5)
+    at /tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:346:12)
+    at next (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:280:10)
+    at Function.handle (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:175:3)
+    at router (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/tmp/Ecosyntech-web/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:328:13)
+    at /tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:346:12)
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)

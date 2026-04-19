@@ -1,0 +1,305 @@
+2026-04-18 09:07:12 [INFO]: Created new database
+2026-04-18 09:07:12 [INFO]: Database tables created
+2026-04-18 09:07:13 [INFO]: Database initialized successfully
+2026-04-18 09:07:13 [ERROR]: Error: 13 values for 12 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:07:13 [ERROR]: Error: 13 values for 12 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:07:13 [INFO]: WebSocket server initialized
+2026-04-18 09:07:13 [INFO]: [Scheduler] Started with interval 10 minutes
+2026-04-18 09:07:13 [INFO]: [Ops] Scheduler started with 10min interval
+2026-04-18 09:07:13 [INFO]: 
+╔══════════════════════════════════════════════════════════════╗
+║           EcoSynTech IoT Backend Server v2.3.2               ║
+╠══════════════════════════════════════════════════════════════╣
+║  Status:      Running                                        ║
+║  Port:        3000                                            ║
+║  Environment: development                                     ║
+║  WebSocket:   Enabled (/ws)                                  ║
+║  Database:    sql.js (SQLite in memory)                      ║
+╠══════════════════════════════════════════════════════════════╣
+║  API Endpoints:                                              ║
+║    GET  /api/health            - Health check                ║
+║    GET  /api/sensors           - Get all sensors             ║
+║    GET  /api/devices           - Get all devices             ║
+║    POST /api/devices/:id/cmd   - Send device command         ║
+║    GET  /api/rules            - Get automation rules          ║
+║    POST /api/rules            - Create rule                  ║
+║    GET  /api/schedules        - Get schedules                ║
+║    GET  /api/history           - Get activity history         ║
+║    GET  /api/alerts            - Get alerts                  ║
+║    GET  /api/stats             - Get system statistics        ║
+║    POST /api/export            - Export all data              ║
+║    POST /api/import            - Import data                  ║
+║    POST /api/auth/register     - Register new user           ║
+║    POST /api/auth/login        - Login                        ║
+║                                                              ║
+║  Webhooks:                                                    ║
+║    POST /api/webhooks/sensor-alert                           ║
+║    POST /api/webhooks/device-status                          ║
+║    POST /api/webhooks/rule-triggered                        ║
+║    POST /api/webhooks/schedule-run                          ║
+╚══════════════════════════════════════════════════════════════╝
+      
+2026-04-18 09:07:13 [INFO]: SIGTERM received, shutting down gracefully
+2026-04-18 09:09:13 [INFO]: Loaded existing database
+2026-04-18 09:09:13 [WARN]: [Database] Index creation skipped:
+2026-04-18 09:09:13 [INFO]: Database tables created
+2026-04-18 09:09:13 [INFO]: Database initialized successfully
+2026-04-18 09:09:13 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:09:13 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:188:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:187:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:09:13 [INFO]: WebSocket server initialized
+2026-04-18 09:09:13 [INFO]: [Scheduler] Started with interval 10 minutes
+2026-04-18 09:09:13 [INFO]: [Ops] Scheduler started with 10min interval
+2026-04-18 09:09:13 [INFO]: 
+╔══════════════════════════════════════════════════════════════╗
+║           EcoSynTech IoT Backend Server v2.3.2               ║
+╠══════════════════════════════════════════════════════════════╣
+║  Status:      Running                                        ║
+║  Port:        3000                                            ║
+║  Environment: development                                     ║
+║  WebSocket:   Enabled (/ws)                                  ║
+║  Database:    sql.js (SQLite in memory)                      ║
+╠══════════════════════════════════════════════════════════════╣
+║  API Endpoints:                                              ║
+║    GET  /api/health            - Health check                ║
+║    GET  /api/sensors           - Get all sensors             ║
+║    GET  /api/devices           - Get all devices             ║
+║    POST /api/devices/:id/cmd   - Send device command         ║
+║    GET  /api/rules            - Get automation rules          ║
+║    POST /api/rules            - Create rule                  ║
+║    GET  /api/schedules        - Get schedules                ║
+║    GET  /api/history           - Get activity history         ║
+║    GET  /api/alerts            - Get alerts                  ║
+║    GET  /api/stats             - Get system statistics        ║
+║    POST /api/export            - Export all data              ║
+║    POST /api/import            - Import data                  ║
+║    POST /api/auth/register     - Register new user           ║
+║    POST /api/auth/login        - Login                        ║
+║                                                              ║
+║  Webhooks:                                                    ║
+║    POST /api/webhooks/sensor-alert                           ║
+║    POST /api/webhooks/device-status                          ║
+║    POST /api/webhooks/rule-triggered                        ║
+║    POST /api/webhooks/schedule-run                          ║
+╚══════════════════════════════════════════════════════════════╝
+      
+2026-04-18 09:09:29 [INFO]: SIGTERM received, shutting down gracefully
+2026-04-18 09:11:12 [INFO]: Loaded existing database
+2026-04-18 09:11:12 [WARN]: [Database] Index creation skipped:
+2026-04-18 09:11:12 [INFO]: Database tables created
+2026-04-18 09:11:12 [INFO]: Database initialized successfully
+2026-04-18 09:11:13 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:189:7
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:11:13 [WARN]: [Migrations] Product seeding skipped:
+2026-04-18 09:11:13 [INFO]: [Migrations] Seeded 5 categories
+2026-04-18 09:11:13 [INFO]: [Migrations] Database tables created successfully
+2026-04-18 09:11:13 [INFO]: WebSocket server initialized
+2026-04-18 09:11:13 [INFO]: [Scheduler] Started with interval 10 minutes
+2026-04-18 09:11:13 [INFO]: [Ops] Scheduler started with 10min interval
+2026-04-18 09:11:13 [INFO]: 
+╔══════════════════════════════════════════════════════════════╗
+║           EcoSynTech IoT Backend Server v2.3.2               ║
+╠══════════════════════════════════════════════════════════════╣
+║  Status:      Running                                        ║
+║  Port:        3000                                            ║
+║  Environment: development                                     ║
+║  WebSocket:   Enabled (/ws)                                  ║
+║  Database:    sql.js (SQLite in memory)                      ║
+╠══════════════════════════════════════════════════════════════╣
+║  API Endpoints:                                              ║
+║    GET  /api/health            - Health check                ║
+║    GET  /api/sensors           - Get all sensors             ║
+║    GET  /api/devices           - Get all devices             ║
+║    POST /api/devices/:id/cmd   - Send device command         ║
+║    GET  /api/rules            - Get automation rules          ║
+║    POST /api/rules            - Create rule                  ║
+║    GET  /api/schedules        - Get schedules                ║
+║    GET  /api/history           - Get activity history         ║
+║    GET  /api/alerts            - Get alerts                  ║
+║    GET  /api/stats             - Get system statistics        ║
+║    POST /api/export            - Export all data              ║
+║    POST /api/import            - Import data                  ║
+║    POST /api/auth/register     - Register new user           ║
+║    POST /api/auth/login        - Login                        ║
+║                                                              ║
+║  Webhooks:                                                    ║
+║    POST /api/webhooks/sensor-alert                           ║
+║    POST /api/webhooks/device-status                          ║
+║    POST /api/webhooks/rule-triggered                        ║
+║    POST /api/webhooks/schedule-run                          ║
+╚══════════════════════════════════════════════════════════════╝
+      
+2026-04-18 09:11:18 [INFO]: SIGTERM received, shutting down gracefully
+2026-04-18 09:12:03 [INFO]: GET /api/health
+2026-04-18 09:12:03 [INFO]: GET /api/products
+2026-04-18 09:12:03 [ERROR]: Error: Database not initialized
+    at getAll (/tmp/Ecosyntech-web/src/config/database.js:548:18)
+    at /tmp/Ecosyntech-web/src/routes/products.js:38:20
+    at /tmp/Ecosyntech-web/src/middleware/errorHandler.js:51:21
+    at Layer.handle [as handle_request] (/tmp/Ecosyntech-web/node_modules/express/lib/router/layer.js:95:5)
+    at next (/tmp/Ecosyntech-web/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/tmp/Ecosyntech-web/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/tmp/Ecosyntech-web/node_modules/express/lib/router/layer.js:95:5)
+    at /tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:346:12)
+    at next (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:280:10)
+    at Function.handle (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:175:3)
+    at router (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/tmp/Ecosyntech-web/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:328:13)
+    at /tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/tmp/Ecosyntech-web/node_modules/express/lib/router/index.js:346:12)
+2026-04-18 09:12:03 [INFO]: GET /api/sales-claw/statistics
+2026-04-18 09:12:24 [INFO]: Loaded existing database
+2026-04-18 09:12:24 [WARN]: [Database] Index creation skipped:
+2026-04-18 09:12:24 [INFO]: Database tables created
+2026-04-18 09:12:24 [INFO]: Database initialized successfully
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [WARN]: [Migrations] Product insert error:
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [WARN]: [Migrations] Product insert error:
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [WARN]: [Migrations] Product insert error:
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [WARN]: [Migrations] Product insert error:
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [WARN]: [Migrations] Product insert error:
+2026-04-18 09:12:24 [ERROR]: Error: 14 values for 13 columns
+    at e.handleError (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:90:192)
+    at e.tb (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:88:454)
+    at e.run (/tmp/Ecosyntech-web/node_modules/sql.js/dist/sql-wasm.js:87:209)
+    at runQuery (/tmp/Ecosyntech-web/src/config/database.js:520:8)
+    at /tmp/Ecosyntech-web/src/config/migrations.js:190:9
+    at Array.forEach (<anonymous>)
+    at seedProducts (/tmp/Ecosyntech-web/src/config/migrations.js:188:14)
+    at runMigrations (/tmp/Ecosyntech-web/src/config/migrations.js:164:5)
+    at startServer (/tmp/Ecosyntech-web/server.js:280:11)
+2026-04-18 09:12:24 [WARN]: [Migrations] Product insert error:
+2026-04-18 09:12:24 [INFO]: [Migrations] Seeded 6 products
+2026-04-18 09:12:24 [INFO]: [Migrations] Database tables created successfully
+2026-04-18 09:12:24 [INFO]: WebSocket server initialized
+2026-04-18 09:12:24 [INFO]: [Scheduler] Started with interval 10 minutes
+2026-04-18 09:12:24 [INFO]: [Ops] Scheduler started with 10min interval
+2026-04-18 09:12:24 [INFO]: 
+╔══════════════════════════════════════════════════════════════╗
+║           EcoSynTech IoT Backend Server v2.3.2               ║
+╠══════════════════════════════════════════════════════════════╣
+║  Status:      Running                                        ║
+║  Port:        3000                                            ║
+║  Environment: development                                     ║
+║  WebSocket:   Enabled (/ws)                                  ║
+║  Database:    sql.js (SQLite in memory)                      ║
+╠══════════════════════════════════════════════════════════════╣
+║  API Endpoints:                                              ║
+║    GET  /api/health            - Health check                ║
+║    GET  /api/sensors           - Get all sensors             ║
+║    GET  /api/devices           - Get all devices             ║
+║    POST /api/devices/:id/cmd   - Send device command         ║
+║    GET  /api/rules            - Get automation rules          ║
+║    POST /api/rules            - Create rule                  ║
+║    GET  /api/schedules        - Get schedules                ║
+║    GET  /api/history           - Get activity history         ║
+║    GET  /api/alerts            - Get alerts                  ║
+║    GET  /api/stats             - Get system statistics        ║
+║    POST /api/export            - Export all data              ║
+║    POST /api/import            - Import data                  ║
+║    POST /api/auth/register     - Register new user           ║
+║    POST /api/auth/login        - Login                        ║
+║                                                              ║
+║  Webhooks:                                                    ║
+║    POST /api/webhooks/sensor-alert                           ║
+║    POST /api/webhooks/device-status                          ║
+║    POST /api/webhooks/rule-triggered                        ║
+║    POST /api/webhooks/schedule-run                          ║
+╚══════════════════════════════════════════════════════════════╝
+      
+2026-04-18 09:12:24 [INFO]: GET /api/health
+2026-04-18 09:12:25 [INFO]: GET /api/version

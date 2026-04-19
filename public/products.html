@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>San pham - EcoSynTech</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-dark: #1B5E20;
+      --primary-light: #4CAF50;
+      --accent: #81C784;
+      --surface: #1B5E20;
+      --background: #0D3311;
+      --background-card: #153D1A;
+      --text: #FFFFFF;
+      --text-secondary: #A5D6A7;
+      --danger: #EF5350;
+      --warning: #FFA726;
+      --success: #66BB6A;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--background) 0%, #0A2910 100%);
+    }
+    
+    header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    
+    .logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .logo-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .cart-btn {
+      background: var(--primary);
+      color: var(--text);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    main {
+      flex: 1;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+    
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .product-card {
+      background: var(--background-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(76, 175, 80, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .product-card.featured {
+      border: 2px solid var(--primary-light);
+      position: relative;
+    }
+    
+    .product-badge {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: var(--primary-light);
+      color: var(--text);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .product-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    
+    .product-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .product-price {
+      margin-bottom: 16px;
+    }
+    
+    .product-price .price {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .product-price .unit {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    
+    .product-features {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    
+    .product-features li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .buy-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: var(--text);
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .buy-btn:hover {
+      transform: scale(1.02);
+    }
+    
+    .buy-btn:active {
+      transform: scale(0.98);
+    }
+    
+    .cart-summary {
+      background: var(--background-card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+    
+    .cart-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    
+    .checkout-btn {
+      width: 100%;
+      background: var(--accent);
+      color: var(--background);
+      border: none;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--background-card);
+      padding: 12px 20px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 11px;
+    }
+    
+    nav a.active {
+      color: var(--accent);
+    }
+    
+    .chat-fab {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 20px rgba(46, 125, 50, 0.5);
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <a href="/" class="logo">
+        <div class="logo-img">🌱</div>
+        <div>
+          <div class="logo-text">EcoSynTech</div>
+          <div class="logo-sub">Farm OS v2.3.2</div>
+        </div>
+      </a>
+      <button class="cart-btn" onclick="showCart()">Gio hang (0)</button>
+    </header>
+    
+    <main>
+      <h1 class="page-title">San pham</h1>
+      <p class="page-subtitle">Chon goi phu hop voi trang trai cua ban</p>
+      
+      <div class="products-grid" id="productsGrid"></div>
+      
+      <div class="cart-summary" id="cartSummary" style="display:none;">
+        <h3 class="cart-title">Gio hang cua ban</h3>
+        <div id="cartItems"></div>
+        <div class="cart-total">
+          <span>Tong cong:</span>
+          <span id="cartTotal">0 VNĐ</span>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">Dat hang ngay</button>
+      </div>
+    </main>
+    
+    <button class="chat-fab" onclick="startChat()">💬</button>
+    
+    <nav>
+      <a href="/">🏠 Trang chu</a>
+      <a href="/products.html" class="active">📦 San pham</a>
+      <a href="/mobile.html">📱 App</a>
+      <a href="/contact.html">📞 Lien he</a>
+    </nav>
+  </div>
+  
+  <script>
+    const products = {
+      basic: {
+        id: 'basic',
+        name: 'Goi Co Ban',
+        price: 5800000,
+        sensors: 5,
+        features: ['5 cam bien', '1 Gateway', 'App mobile', 'Canh bao SMS', 'Dashboard']
+      },
+      standard: {
+        id: 'standard',
+        name: 'Goi Tieu Chuan',
+        price: 9800000,
+        sensors: 10,
+        features: ['10 cam bien', 'Gateway Pro', 'AI Predictions', 'Tu dong hoa', 'API full']
+      },
+      premium: {
+        id: 'premium',
+        name: 'Goi Nang Cao',
+        price: 18000000,
+        sensors: 20,
+        features: ['20 cam bien', 'Gateway Pro', 'AI RAG', 'Blockchain', 'VIP Support']
+      }
+    };
+    
+    let cart = [];
+    
+    function formatPrice(vnd) {
+      return new Intl.NumberFormat('vi-VN', { 
+        style: 'currency', 
+        currency: 'VND',
+        maximumFractionDigits: 0 
+      }).format(vnd);
+    }
+    
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = Object.values(products).map((p, i) => `
+        <div class="product-card ${p.id === 'standard' ? 'featured' : ''}">
+          ${p.id === 'standard' ? '<div class="product-badge">Lua chon tot nhat</div>' : ''}
+          ${p.id === 'basic' ? '<div class="product-badge">Pho bien</div>' : ''}
+          <h3 class="product-name">${p.name}</h3>
+          <p class="product-desc">${p.sensors} cam bien cho trang trai</p>
+          <div class="product-price">
+            <span class="price">${formatPrice(p.price)}</span>
+          </div>
+          <ul class="product-features">
+            ${p.features.map(f => `<li>${f}</li>`).join('')}
+          </ul>
+          <button class="buy-btn" onclick="addToCart('${p.id}')">Mua ngay</button>
+        </div>
+      `).join('');
+    }
+    
+    function addToCart(productId) {
+      cart.push(productId);
+      updateCart();
+      alert('Da them ' + products[productId].name + ' vao gio hang!');
+    }
+    
+    function updateCart() {
+      document.querySelector('.cart-btn').textContent = 'Gio hang (' + cart.length + ')';
+      
+      if (cart.length > 0) {
+        document.getElementById('cartSummary').style.display = 'block';
+        const itemsHtml = cart.map(id => {
+          const p = products[id];
+          return `<div class="cart-item">
+            <span>${p.name}</span>
+            <span>${formatPrice(p.price)}</span>
+          </div>`;
+        }).join('');
+        document.getElementById('cartItems').innerHTML = itemsHtml;
+        
+        const total = cart.reduce((sum, id) => sum + products[id].price, 0);
+        document.getElementById('cartTotal').textContent = formatPrice(total);
+      } else {
+        document.getElementById('cartSummary').style.display = 'none';
+      }
+    }
+    
+    function showCart() {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+    
+    function checkout() {
+      const total = cart.reduce((sum, id) => sum + products[id].price, 0);
+      const confirmOrder = confirm('Xac nhan dat hang tong: ' + formatPrice(total) + '?');
+      if (confirmOrder) {
+        alert('Cam on quy khach! Dong y tu van se lien he trong 24h.');
+        cart = [];
+        updateCart();
+      }
+    }
+    
+    function startChat() {
+      const query = prompt('Ban can ho tro gi? (VD: Tu van goi, Tinh ROI, Huong dan...)');
+      if (query) {
+        alert('Cam on! AI se tro loi: ' + query);
+      }
+    }
+    
+    renderProducts();
+  </script>
+</body>
+</html>

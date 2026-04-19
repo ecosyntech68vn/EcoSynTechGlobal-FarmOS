@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EcoSynTech Admin - Quản lý sản phẩm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; background: #f5f7fa; color: #1a1a2e; }
+    .admin-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    .sidebar { background: #1a1a2e; color: #fff; padding: 24px 0; }
+    .sidebar-brand { padding: 0 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
+    .sidebar-brand h1 { font-size: 20px; font-weight: 700; }
+    .sidebar-brand span { font-size: 12px; color: #8b8b9e; }
+    .nav-item { display: block; padding: 14px 24px; color: #b8b8c8; text-decoration: none; transition: all 0.2s; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; border-left: 3px solid #00d4aa; }
+    .main { padding: 32px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    .page-header h2 { font-size: 28px; font-weight: 700; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #00d4aa; color: #1a1a2e; }
+    .btn-primary:hover { background: #00e5b8; }
+    .btn-secondary { background: #fff; color: #1a1a2e; border: 1px solid #e0e0e6; }
+    .card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 24px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .card-title { font-size: 18px; font-weight: 600; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group.full { grid-column: span 2; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #5a5a6e; margin-bottom: 8px; }
+    input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid #e0e0e6; border-radius: 8px; font-size: 14px; font-family: inherit; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #00d4aa; }
+    textarea { min-height: 100px; resize: vertical; }
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 16px; text-align: left; border-bottom: 1px solid #f0f0f5; }
+    .table th { font-size: 12px; font-weight: 600; color: #8b8b9e; text-transform: uppercase; }
+    .table tr:hover { background: #fafafc; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-success { background: #e6f9f5; color: #00a67e; }
+    .badge-warning { background: #fff4e6; color: #d97706; }
+    .badge-danger { background: #fee2e2; color: #dc2626; }
+    .actions { display: flex; gap: 8px; }
+    .actions button { padding: 8px 12px; border: none; background: transparent; cursor: pointer; border-radius: 6px; }
+    .actions button:hover { background: #f0f0f5; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; }
+    .modal.open { display: flex; align-items: center; justify-content: center; }
+    .modal-content { background: #fff; border-radius: 16px; width: 100%; max-width: 720px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 24px; border-bottom: 1px solid #f0f0f5; }
+    .modal-body { padding: 24px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 24px; border-top: 1px solid #f0f0f5; }
+    .tab-nav { display: flex; gap: 4px; background: #f5f7fa; padding: 4px; border-radius: 8px; margin-bottom: 24px; }
+    .tab-btn { padding: 10px 20px; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: 600; }
+    .tab-btn.active { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .search-bar { display: flex; gap: 12px; margin-bottom: 24px; }
+    .search-bar input { flex: 1; }
+    .tabs-content:not(.active) { display: none; }
+    .image-upload { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .image-item { aspect-ratio: 1; border: 2px dashed #e0e0e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; }
+    .image-item:hover { border-color: #00d4aa; }
+    .image-item img { width: 100%; height: 100%; object-fit: cover; }
+    .image-item .remove { position: absolute; top: 4px; right: 4px; background: #dc2626; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .empty-state { text-align: center; padding: 48px; color: #8b8b9e; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h1>EcoSynTech</h1>
+        <span>Admin Panel</span>
+      </div>
+      <nav>
+        <a href="#" class="nav-item active" data-tab="products">Sản phẩm</a>
+        <a href="#" class="nav-item" data-tab="orders">Đơn hàng</a>
+        <a href="#" class="nav-item" data-tab="customers">Khách hàng</a>
+        <a href="#" class="nav-item" data-tab="analytics">Thống kê</a>
+        <a href="#" class="nav-item" data-tab="settings">Cài đặt</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-header">
+        <h2>Quản lý sản phẩm</h2>
+        <button class="btn btn-primary" id="addProductBtn">+ Thêm sản phẩm</button>
+      </div>
+
+      <div class="search-bar">
+        <input type="search" id="searchInput" placeholder="Tìm kiếm sản phẩm..." />
+        <select id="categoryFilter">
+          <option value="">Tất cả danh mục</option>
+          <option value="sensor">Cảm biến</option>
+          <option value="gateway">Gateway</option>
+          <option value="automation">Điều khiển</option>
+          <option value="power">Năng lượng</option>
+          <option value="cloud">Cloud & AI</option>
+        </select>
+        <select id="statusFilter">
+          <option value="">Tất cả trạng thái</option>
+          <option value="Còn hàng">Còn hàng</option>
+          <option value="Hết hàng">Hết hàng</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <table class="table" id="productsTable">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Danh mục</th>
+              <th>Giá</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="productsBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Thêm sản phẩm mới</h3>
+        <button class="btn" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-form-tab="basic">Thông tin cơ bản</button>
+          <button class="tab-btn" data-form-tab="specs">Thông số kỹ thuật</button>
+          <button class="tab-btn" data-form-tab="features">Tính năng</button>
+          <button class="tab-btn" data-form-tab="images">Hình ảnh</button>
+        </div>
+
+        <form id="productForm">
+          <input type="hidden" id="productId" />
+
+          <div class="tabs-content active" data-form-content="basic">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Tên sản phẩm *</label>
+                <input type="text" id="productName" required />
+              </div>
+              <div class="form-group">
+                <label>Danh mục *</label>
+                <select id="productCategory" required>
+                  <option value="">Chọn danh mục</option>
+                  <option value="sensor">Cảm biến</option>
+                  <option value="gateway">Gateway</option>
+                  <option value="automation">Điều khiển</option>
+                  <option value="power">Năng lượng</option>
+                  <option value="cloud">Cloud & AI</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Giá (VNĐ) *</label>
+                <input type="number" id="productPrice" required />
+              </div>
+              <div class="form-group">
+                <label>Badge</label>
+                <input type="text" id="productBadge" placeholder="VD: Bán chạy, Mới" />
+              </div>
+              <div class="form-group">
+                <label>Trạng thái</label>
+                <select id="productStatus">
+                  <option value="Còn hàng">Còn hàng</option>
+                  <option value="Hết hàng">Hết hàng</option>
+                  <option value="Sắp ra mắt">Sắp ra mắt</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label>Mô tả ngắn</label>
+                <textarea id="productDescription" placeholder="Mô tả ngắn về sản phẩm..."></textarea>
+              </div>
+              <div class="form-group full">
+                <label>Chi tiết</label>
+                <textarea id="productDetail" placeholder="Thông tin chi tiết hơn về sản phẩm..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs-content" data-form-content="specs">
+            <div class="form-group full">
+              <label>Thông số kỹ thuật (mỗi dòng 1)</label>
+              <textarea id="productSpecs" placeholder="LoRaWAN 15 km&#10;Pin 24 tháng&#10;IP67"></textarea>
+            </div>
+          </div>
+
+          <div class="tabs-content" data-form-content="features">
+            <div class="form-group full">
+              <label>Tính năng (mỗi dòng 1)</label>
+              <textarea id="productFeatures" placeholder="Đo độ ẩm đất&#10;Đo nhiệt độ&#10;Pin trâu"></textarea>
+            </div>
+          </div>
+
+          <div class="tabs-content" data-form-content="images">
+            <div class="form-group full">
+              <label>Hình ảnh sản phẩm</label>
+              <div class="image-upload" id="imageUpload">
+                <div class="image-item" id="addImageBtn">
+                  <span>+ Thêm ảnh</span>
+                </div>
+              </div>
+              <input type="hidden" id="productImages" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelBtn">Hủy</button>
+        <button class="btn btn-primary" id="saveProductBtn">Lưu sản phẩm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let products = [];
+    let currentImages = [];
+
+    const formatVnd = (value) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+
+    async function loadProducts() {
+      const search = document.getElementById('searchInput').value;
+      const category = document.getElementById('categoryFilter').value;
+      const status = document.getElementById('statusFilter').value;
+
+      let url = `${API_BASE}/products?`;
+      if (search) url += `search=${encodeURIComponent(search)}&`;
+      if (category) url += `category=${encodeURIComponent(category)}&`;
+      if (status) url += `status=${encodeURIComponent(status)}&`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+      products = data.products || [];
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const tbody = document.getElementById('productsBody');
+      if (products.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Chưa có sản phẩm nào. Thêm sản phẩm mới!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => `
+        <tr>
+          <td>
+            <strong>${p.name}</strong><br>
+            <small style="color:#8b8b9e">${p.description?.substring(0, 60) || ''}</small>
+          </td>
+          <td><span class="badge badge-success">${p.category}</span></td>
+          <td>${formatVnd(p.price)}</td>
+          <td><span class="badge ${p.status === 'Còn hàng' ? 'badge-success' : 'badge-warning'}">${p.status}</span></td>
+          <td class="actions">
+            <button onclick="editProduct('${p.id}')">Sửa</button>
+            <button onclick="deleteProduct('${p.id}')">Xóa</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function saveProduct() {
+      const id = document.getElementById('productId').value;
+      const payload = {
+        name: document.getElementById('productName').value,
+        category: document.getElementById('productCategory').value,
+        price: parseInt(document.getElementById('productPrice').value),
+        badge: document.getElementById('productBadge').value,
+        status: document.getElementById('productStatus').value,
+        description: document.getElementById('productDescription').value,
+        detail: document.getElementById('productDetail').value,
+        specs: document.getElementById('productSpecs').value.split('\n').filter(s => s.trim()),
+        features: document.getElementById('productFeatures').value.split('\n').filter(f => f.trim()),
+        images: currentImages
+      };
+
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `${API_BASE}/products/${id}` : `${API_BASE}/products`;
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        closeModal();
+        loadProducts();
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) return;
+
+      const res = await fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' });
+      if (res.ok) loadProducts();
+    }
+
+    function editProduct(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+
+      document.getElementById('productId').value = p.id;
+      document.getElementById('modalTitle').textContent = 'Sửa sản phẩm';
+      document.getElementById('productName').value = p.name;
+      document.getElementById('productCategory').value = p.category;
+      document.getElementById('productPrice').value = p.price;
+      document.getElementById('productBadge').value = p.badge || '';
+      document.getElementById('productStatus').value = p.status;
+      document.getElementById('productDescription').value = p.description || '';
+      document.getElementById('productDetail').value = p.detail || '';
+      document.getElementById('productSpecs').value = (JSON.parse(p.specs || '[]')).join('\n');
+      document.getElementById('productFeatures').value = (JSON.parse(p.features || '[]')).join('\n');
+
+      currentImages = JSON.parse(p.images || '[]');
+      renderImages();
+
+      openModal();
+    }
+
+    function openModal() {
+      document.getElementById('productModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('productModal').classList.remove('open');
+      document.getElementById('productId').value = '';
+      document.getElementById('productForm').reset();
+      currentImages = [];
+      renderImages();
+    }
+
+    function renderImages() {
+      const container = document.getElementById('imageUpload');
+      const addBtn = document.getElementById('addImageBtn');
+
+      const items = currentImages.map((url, i) => `
+        <div class="image-item">
+          <img src="${url}" alt="Image ${i + 1}" />
+          <div class="remove" onclick="removeImage(${i})">&times;</div>
+        </div>
+      `).join('');
+
+      container.innerHTML = items + `<div class="image-item" id="addImageBtn"><span>+ Thêm ảnh</span></div>`;
+      document.getElementById('addImageBtn').onclick = addImage;
+    }
+
+    function addImage() {
+      const url = prompt('Nhập URL ảnh:');
+      if (url) {
+        currentImages.push(url);
+        renderImages();
+      }
+    }
+
+    function removeImage(index) {
+      currentImages.splice(index, 1);
+      renderImages();
+    }
+
+    document.getElementById('addProductBtn').onclick = () => {
+      document.getElementById('modalTitle').textContent = 'Thêm sản phẩm mới';
+      openModal();
+    };
+
+    document.getElementById('closeModal').onclick = closeModal;
+    document.getElementById('cancelBtn').onclick = closeModal;
+    document.getElementById('saveProductBtn').onclick = saveProduct;
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.onclick = () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      };
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tabs-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelector(`[data-form-content="${btn.dataset.formTab}"]`).classList.add('active');
+      };
+    });
+
+    document.getElementById('searchInput').oninput = loadProducts;
+    document.getElementById('categoryFilter').onchange = loadProducts;
+    document.getElementById('statusFilter').onchange = loadProducts;
+
+    loadProducts();
+  </script>
+</body>
+</html>

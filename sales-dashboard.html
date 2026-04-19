@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EcoSynTech Sales Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+    
+    .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    .sidebar { background: #1a1a2e; color: #fff; }
+    .brand { padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .brand h1 { font-size: 22px; font-weight: 700; }
+    .brand span { font-size: 12px; color: #8b8b9e; }
+    
+    .nav-item { display: block; padding: 14px 24px; color: #b8b8c8; text-decoration: none; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; border-left: 3px solid #00d4aa; }
+    
+    .main { padding: 24px 32px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .page-header h2 { font-size: 28px; font-weight: 700; }
+    
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+    .metric-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .metric-label { font-size: 13px; color: #8b8b9e; margin-bottom: 8px; }
+    .metric-value { font-size: 32px; font-weight: 700; }
+    .metric-value.success { color: #00a67e; }
+    .metric-value.warning { color: #f59e0b; }
+    .metric-change { font-size: 13px; margin-top: 8px; }
+    .metric-change.up { color: #00a67e; }
+    .metric-change.down { color: #dc2626; }
+    
+    .section { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 24px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .section-title { font-size: 18px; font-weight: 600; }
+    
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 16px; text-align: left; border-bottom: 1px solid #f0f0f5; }
+    .table th { font-size: 12px; font-weight: 600; color: #8b8b9e; text-transform: uppercase; }
+    .table tr:hover { background: #fafafc; }
+    .table td.numeric { text-align: right; }
+    
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-new { background: #e6f9f5; color: #00a67e; }
+    .badge-contacted { background: #e0e7ff; color: #4f46e5; }
+    .badge-qualified { background: #fef3c7; color: #d97706; }
+    .badge-proposal { background: #fce7f3; color: #db2777; }
+    .badge-won { background: #dcfce7; color: #16a34a; }
+    .badge-lost { background: #fee2e2; color: #dc2626; }
+    
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: #00d4aa; color: #1a1a2e; }
+    .btn-primary:hover { background: #00e5b8; }
+    .btn-outline { background: transparent; border: 1px solid #e0e0e6; color: #1a1a2e; }
+    
+    .tabs { display: flex; gap: 4px; background: #f5f7fa; padding: 4px; border-radius: 8px; margin-bottom: 24px; }
+    .tab { padding: 10px 20px; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: 600; }
+    .tab.active { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #5a5a6e; margin-bottom: 8px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #e0e0e6; border-radius: 8px; font-size: 14px; }
+    
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; }
+    .modal-overlay.open { display: flex; align-items: center; justify-content: center; }
+    .modal { background: #fff; border-radius: 16px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { padding: 24px; border-bottom: 1px solid #f0f0f5; display: flex; justify-content: space-between; }
+    .modal-body { padding: 24px; }
+    .modal-footer { padding: 24px; border-top: 1px solid #f0f0f5; display: flex; justify-content: flex-end; gap: 12px; }
+    
+    .progress-bar { height: 8px; background: #f0f0f5; border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #00d4aa, #00e5b8); border-radius: 4px; }
+    
+    .empty-state { text-align: center; padding: 48px; color: #8b8b9e; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>EcoSynTech</h1>
+        <span>Sales Dashboard</span>
+      </div>
+      <nav>
+        <a href="#" class="nav-item active" data-view="overview">Tổng quan</a>
+        <a href="#" class="nav-item" data-view="leads">Leads</a>
+        <a href="#" class="nav-item" data-view="deals"> Deals</a>
+        <a href="#" class="nav-item" data-view="pipeline">Pipeline</a>
+        <a href="#" class="nav-item" data-view="team">Nhóm</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-header">
+        <h2>Tổng quan Sales</h2>
+        <button class="btn btn-primary" onclick="createLeadModal()">+ Tạo Lead Mới</button>
+      </div>
+
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-label">Tổng Leads</div>
+          <div class="metric-value" id="totalLeads">0</div>
+          <div class="metric-change up" id="leadsChange">+0 tuần trước</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Deals Đang Mở</div>
+          <div class="metric-value" id="openDeals">0</div>
+          <div class="metric-change" id="dealsChange">-</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pipeline Value</div>
+          <div class="metric-value" id="pipelineValue">0 VNĐ</div>
+          <div class="metric-change" id="pipelineChange">-</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Đã Chốt Tháng Này</div>
+          <div class="metric-value success" id="wonThisMonth">0 VNĐ</div>
+          <div class="metric-change up" id="wonChange">+0% so với tháng trước</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">Deals Gần Đóng</h3>
+          <button class="btn btn-outline" onclick="showView('deals')">Xem tất cả</button>
+        </div>
+        <table class="table" id="dealsTable">
+          <thead>
+            <tr>
+              <th>Deal</th>
+              <th>Khách hàng</th>
+              <th>Stage</th>
+              <th>Giá trị</th>
+              <th> вероятность</th>
+              <th>Ngày đóng dự kiến</th>
+            </tr>
+          </thead>
+          <tbody id="dealsBody"></tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">Leads Mới Nhất</h3>
+          <button class="btn btn-outline" onclick="showView('leads')">Xem tất cả</button>
+        </div>
+        <table class="table" id="leadsTable">
+          <thead>
+            <tr>
+              <th>Công ty</th>
+              <th>Liên hệ</th>
+              <th>Điện thoại</th>
+              <th>Ngành</th>
+              <th>Score</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="leadsBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="leadModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Tạo Lead Mới</h3>
+        <button onclick="closeLeadModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Tên công ty *</label>
+          <input type="text" id="leadCompany" placeholder="VD: HTX Nông nghiệp Xanh" />
+        </div>
+        <div class="form-group">
+          <label>Người liên hệ *</label>
+          <input type="text" id="leadContact" placeholder="VD: Nguyễn Văn A" />
+        </div>
+        <div class="form-group">
+          <label>Điện thoại</label>
+          <input type="tel" id="leadPhone" placeholder="0901 234 567" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="leadEmail" placeholder="info@company.com" />
+        </div>
+        <div class="form-group">
+          <label>Nguồn</label>
+          <select id="leadSource">
+            <option value="website">Website</option>
+            <option value="referral">Giới thiệu</option>
+            <option value="cold_call">Cold call</option>
+            <option value="tradeshow">Hội chợ</option>
+            <option value="partner">Đối tác</option>
+            <option value="ads">Quảng cáo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ngành nghề</label>
+          <select id="leadIndustry">
+            <option value="vegetable">Rau màu</option>
+            <option value="fruit">Cây ăn trái</option>
+            <option value="rice">Lúa</option>
+            <option value="herb">Dược liệu</option>
+            <option value="flower">Hoa</option>
+            <option value="aquaculture">Thủy sản</option>
+            <option value="livestock">Chăn nuôi</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quy mô farm (ha)</label>
+          <input type="number" id="leadFarmSize" placeholder="VD: 5" />
+        </div>
+        <div class="form-group">
+          <label>Địa chỉ</label>
+          <input type="text" id="leadAddress" placeholder="Xã..., Huyện..., Tỉnh..." />
+        </div>
+        <div class="form-group">
+          <label>Mong muốn</label>
+          <textarea id="leadInterest" placeholder="Khách hàng quan tâm đến..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeLeadModal()">Hủy</button>
+        <button class="btn btn-primary" onclick="saveLead()">Lưu Lead</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api/sales-claw';
+    const formatVnd = (v) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v);
+
+    async function loadOverview() {
+      const [statsRes, leadsRes, dealsRes] = await Promise.all([
+        fetch(`${API}/statistics`),
+        fetch(`${API}/leads?limit=5`),
+        fetch(`${API}/deals?limit=5`)
+      ]);
+
+      const stats = await statsRes.json();
+      const leads = await leadsRes.json();
+      const deals = await dealsRes.json();
+
+      document.getElementById('totalLeads').textContent = stats.leads;
+      document.getElementById('openDeals').textContent = stats.openDeals;
+      document.getElementById('pipelineValue').textContent = formatVnd(stats.pipeline);
+      document.getElementById('wonThisMonth').textContent = formatVnd(stats.wonThisMonth);
+
+      renderLeads(leads.leads);
+      renderDeals(deals.deals);
+    }
+
+    function renderLeads(leads) {
+      const tbody = document.getElementById('leadsBody');
+      if (!leads || leads.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Chưa có lead nào</td></tr>';
+        return;
+      }
+
+      const industryNames = {
+        vegetable: 'Rau màu',
+        fruit: 'Cây ăn trái',
+        rice: 'Lúa',
+        herb: 'Dược liệu',
+        flower: 'Hoa',
+        aquaculture: 'Thủy sản',
+        livestock: 'Chăn nuôi'
+      };
+
+      const statusBadges = {
+        new: 'badge-new',
+        contacted: 'badge-contacted',
+        qualified: 'badge-qualified',
+        proposal: 'badge-proposal',
+        won: 'badge-won',
+        lost: 'badge-lost'
+      };
+
+      tbody.innerHTML = leads.map(l => `
+        <tr>
+          <td><strong>${l.company_name}</strong></td>
+          <td>${l.contact_name}</td>
+          <td>${l.phone || '-'}</td>
+          <td>${industryNames[l.industry] || l.industry}</td>
+          <td><span class="badge badge-${l.score >= 70 ? 'won' : l.score >= 50 ? 'qualified' : 'new'}">${l.score}</span></td>
+          <td><span class="badge ${statusBadges[l.status]}">${l.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderDeals(deals) {
+      const tbody = document.getElementById('dealsBody');
+      if (!deals || deals.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Chưa có deal nào</td></tr>';
+        return;
+      }
+
+      const stageNames = {
+        discovery: 'Khám phá',
+        qualification: 'Qualify',
+        proposal: 'Đề xuất',
+        negotiation: 'Đàm phán',
+        closed_won: 'Đã chốt',
+        closed_lost: 'Thất bại'
+      };
+
+      tbody.innerHTML = deals.map(d => `
+        <tr>
+          <td><strong>${d.name}</strong></td>
+          <td>${d.lead_id}</td>
+          <td><span class="badge badge-${d.stage === 'negotiation' ? 'qualified' : d.stage === 'closed_won' ? 'won' : 'new'}">${stageNames[d.stage] || d.stage}</span></td>
+          <td class="numeric">${formatVnd(d.value)}</td>
+          <td class="numeric">${d.probability}%</td>
+          <td>${d.expected_close ? new Date(d.expected_close).toLocaleDateString('vi-VN') : '-'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function createLeadModal() {
+      document.getElementById('leadModal').classList.add('open');
+    }
+
+    function closeLeadModal() {
+      document.getElementById('leadModal').classList.remove('open');
+    }
+
+    async function saveLead() {
+      const payload = {
+        companyName: document.getElementById('leadCompany').value,
+        contactName: document.getElementById('leadContact').value,
+        phone: document.getElementById('leadPhone').value,
+        email: document.getElementById('leadEmail').value,
+        source: document.getElementById('leadSource').value,
+        industry: document.getElementById('leadIndustry').value,
+        farmSize: parseFloat(document.getElementById('leadFarmSize').value) || 0,
+        address: document.getElementById('leadAddress').value,
+        interest: document.getElementById('leadInterest').value
+      };
+
+      if (!payload.companyName || !payload.contactName) {
+        alert('Vui lòng nhập tên công ty và người liên hệ');
+        return;
+      }
+
+      const res = await fetch(`${API}/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        closeLeadModal();
+        loadOverview();
+        document.getElementById('leadCompany').value = '';
+        document.getElementById('leadContact').value = '';
+        document.getElementById('leadPhone').value = '';
+      }
+    }
+
+    function showView(view) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelector(`[data-view="${view}"]`).classList.add('active');
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => showView(item.dataset.view));
+    });
+
+    loadOverview();
+  </script>
+</body>
+</html>
