@@ -106,6 +106,11 @@ app.use(compression());
     res.sendFile(path.join(__dirname, 'public', 'mobile.html'));
   });
 
+  // Policies page
+  app.get('/policies', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'policies.html'));
+  });
+
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   
