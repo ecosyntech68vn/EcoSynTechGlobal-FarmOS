@@ -536,6 +536,98 @@ function createTables() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS ai_models (
+      id TEXT PRIMARY KEY,
+      farm_id TEXT,
+      name TEXT NOT NULL,
+      type TEXT NOT NULL,
+      version TEXT DEFAULT '1.0',
+      status TEXT DEFAULT 'active',
+      framework TEXT DEFAULT 'rules',
+      input_schema TEXT DEFAULT '{}',
+      output_schema TEXT DEFAULT '{}',
+      metrics TEXT DEFAULT '{}',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS ai_jobs (
+      id TEXT PRIMARY KEY,
+      model_id TEXT,
+      farm_id TEXT,
+      asset_id TEXT,
+      job_type TEXT NOT NULL,
+      status TEXT DEFAULT 'queued',
+      input_data TEXT DEFAULT '{}',
+      output_data TEXT DEFAULT '{}',
+      started_at TEXT,
+      finished_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS predictions (
+      id TEXT PRIMARY KEY,
+      farm_id TEXT,
+      model_id TEXT,
+      asset_id TEXT,
+      target_type TEXT NOT NULL,
+      target_time TEXT,
+      predicted_value TEXT,
+      confidence REAL,
+      explanation TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS recommendations (
+      id TEXT PRIMARY KEY,
+      farm_id TEXT,
+      prediction_id TEXT,
+      category TEXT NOT NULL,
+      title TEXT NOT NULL,
+      detail TEXT,
+      priority TEXT DEFAULT 'medium',
+      status TEXT DEFAULT 'open',
+      suggested_action TEXT DEFAULT '{}',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      resolved_at TEXT
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS anomalies (
+      id TEXT PRIMARY KEY,
+      farm_id TEXT,
+      device_id TEXT,
+      asset_id TEXT,
+      metric TEXT NOT NULL,
+      expected_range TEXT,
+      actual_value REAL,
+      severity TEXT DEFAULT 'low',
+      status TEXT DEFAULT 'open',
+      detected_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      acknowledged_by TEXT
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS ai_feedback (
+      id TEXT PRIMARY KEY,
+      recommendation_id TEXT,
+      prediction_id TEXT,
+      user_id TEXT,
+      feedback_type TEXT NOT NULL,
+      comment TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   logger.info('Database tables created');
 }
 
