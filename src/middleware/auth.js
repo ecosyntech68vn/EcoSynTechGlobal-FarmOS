@@ -13,6 +13,7 @@ if (!JWT_SECRET) {
 
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 const REFRESH_EXPIRES_IN = process.env.REFRESH_EXPIRES_IN || '7d';
+const SESSION_TIMEOUT = parseInt(process.env.SESSION_TIMEOUT || '1800', 10); // 30 minutes default
 
 function generateAccessToken(user) {
   return jwt.sign(
@@ -57,6 +58,14 @@ function auth(req, res, next) {
 
   if (!decoded) {
     return res.status(401).json({ error: 'Invalid or expired access token' });
+  }
+
+  // Check session timeout
+  if (decoded.iat && SESSION_TIMEOUT > 0) {
+    const tokenAge = Math.floor(Date.now() / 1000) - decoded.iat;
+    if (tokenAge > SESSION_TIMEOUT) {
+      return res.status(401).json({ error: 'Session expired. Please login again.' });
+    }
   }
 
   req.user = decoded;
