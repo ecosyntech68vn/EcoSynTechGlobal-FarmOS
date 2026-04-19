@@ -35,6 +35,7 @@ const firmwareRoutes = require('./src/routes/firmware');
 const rbacRoutes = require('./src/routes/rbac');
 const otaRoutes = require('./src/routes/ota');
 const salesRoutes = require('./src/routes/sales');
+const healthReportRoutes = require('./src/routes/health-report');
 const healthReportService = require('./src/services/healthReportService');
 
 function createApp() {
@@ -145,6 +146,7 @@ function createApp() {
   app.use('/api/rbac', rbacRoutes);
   app.use('/api/ota', otaRoutes);
   app.use('/api/sales', salesRoutes);
+  app.use('/api/health-report', healthReportRoutes);
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {
