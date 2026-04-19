@@ -424,6 +424,58 @@ function createTables() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS workers (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      role TEXT,
+      phone TEXT,
+      farm_id TEXT,
+      daily_rate REAL,
+      status TEXT DEFAULT 'active',
+      hire_date TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS worker_attendance (
+      id TEXT PRIMARY KEY,
+      worker_id TEXT NOT NULL,
+      date TEXT NOT NULL,
+      check_in TEXT,
+      check_out TEXT,
+      hours_worked REAL,
+      task TEXT,
+      notes TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (worker_id) REFERENCES workers(id)
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS supply_chain (
+      id TEXT PRIMARY KEY,
+      batch_code TEXT UNIQUE NOT NULL,
+      product_name TEXT NOT NULL,
+      quantity REAL,
+      unit TEXT,
+      source_farm_id TEXT,
+      destination TEXT,
+      status TEXT DEFAULT 'pending',
+      harvest_date TEXT,
+      shipped_date TEXT,
+      delivered_date TEXT,
+      temperature REAL,
+      humidity REAL,
+      quality_check TEXT,
+      notes TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   logger.info('Database tables created');
 }
 

@@ -119,26 +119,23 @@ class WaterOptimizationService {
 
   async getWeatherForecast() {
     try {
-      const apiKey = process.env.OPENWEATHERMAP_API_KEY;
-      if (!apiKey) return null;
-      const lat = process.env.FARM_LAT || '10.8231';
-      const lon = process.env.FARM_LON || '106.6297';
+      const lat = process.env.FARM_LAT || '10.7769';
+      const lon = process.env.FARM_LON || '106.7009';
       
       const axios = require('axios');
       const res = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&cnt=8`
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&forecast_days=2&timezone=auto`
       );
-      const list = res.data.list || [];
-      const temps = list.map(l => l.main.temp);
-      const humidities = list.map(l => l.main.humidity);
-      const rain = list.reduce((sum, l) => sum + (l.rain?.['3h'] || 0), 0);
+      const hourly = res.data.hourly;
+      const now = new Date();
+      const idx = hourly.time.findIndex(t => new Date(t) >= now);
+      const safeIdx = idx >= 0 ? idx : 0;
       
       return {
-        temp: temps.reduce((a, b) => a + b, 0) / temps.length,
-        humidity: humidities.reduce((a, b) => a + b, 0) / humidities.length,
-        rainfall: rain,
-        wind: list[0]?.wind?.speed || 0,
-        solar: list[0]?.clouds?.all || 50
+        temp: hourly.temperature_2m[safeIdx] || 25,
+        humidity: hourly.relative_humidity_2m[safeIdx] || 60,
+        rainfall: hourly.precipitation[safeIdx] || 0,
+        wind: hourly.wind_speed_10m[safeIdx] || 2
       };
     } catch (e) {
       return null;

@@ -78,27 +78,47 @@ router.get('/activity', auth, async (req, res) => {
 
 router.get('/weather', auth, async (req, res) => {
   try {
-    const weatherApiKey = process.env.OPENWEATHERMAP_API_KEY;
-    if (!weatherApiKey) {
-      return res.json({ ok: true, data: { error: 'OpenWeatherMap API not configured' } });
-    }
-    const lat = req.query.lat || process.env.FARM_LAT || '10.8231';
-    const lon = req.query.lon || process.env.FARM_LON || '106.6297';
+    const lat = req.query.lat || process.env.FARM_LAT || '10.7769';
+    const lon = req.query.lon || process.env.FARM_LON || '106.7009';
     
     const axios = require('axios');
     const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m&forecast_days=5&timezone=auto`
     );
     const data = response.data;
+    const hourly = data.hourly;
+    const now = new Date();
+    const currentIdx = hourly.time.findIndex(t => new Date(t) >= now);
+    
+    const current = {
+      temp: hourly.temperature_2m[currentIdx]?.toFixed(1) || 0,
+      humidity: hourly.relative_humidity_2m[currentIdx] || 0,
+      precipitation: hourly.precipitation[currentIdx] || 0,
+      precipProbability: hourly.precipitation_probability[currentIdx] || 0,
+      wind: hourly.wind_speed_10m[currentIdx] || 0,
+      weatherCode: hourly.weather_code[currentIdx] || 0
+    };
+    
+    const forecast = [];
+    for (let i = 0; i < Math.min(24, hourly.time.length); i += 3) {
+      forecast.push({
+        time: hourly.time[i],
+        temp: hourly.temperature_2m[i]?.toFixed(1),
+        humidity: hourly.relative_humidity_2m[i],
+        precipProbability: hourly.precipitation_probability[i],
+        precipitation: hourly.precipitation[i],
+        wind: hourly.wind_speed_10m[i],
+        weatherCode: hourly.weather_code[i]
+      });
+    }
+    
     res.json({
       ok: true,
       data: {
-        temp: data.main.temp,
-        humidity: data.main.humidity,
-        description: data.weather[0].description,
-        icon: data.weather[0].icon,
-        wind: data.wind.speed,
-        location: data.name
+        current,
+        forecast,
+        location: { lat, lon },
+        updatedAt: new Date().toISOString()
       }
     });
   } catch (error) {

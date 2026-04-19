@@ -38,6 +38,8 @@ const salesRoutes = require('./src/routes/sales');
 const healthReportRoutes = require('./src/routes/health-report');
 const farmsRoutes = require('./src/routes/farms');
 const dashboardRoutes = require('./src/routes/dashboard');
+const workersRoutes = require('./src/routes/workers');
+const supplyChainRoutes = require('./src/routes/supply-chain');
 const healthReportService = require('./src/services/healthReportService');
 const waterOptimizationService = require('./src/services/waterOptimizationService');
 
@@ -152,6 +154,8 @@ function createApp() {
   app.use('/api/health-report', healthReportRoutes);
   app.use('/api/farms', farmsRoutes);
   app.use('/api/dashboard', dashboardRoutes);
+  app.use('/api/workers', workersRoutes);
+  app.use('/api/supply-chain', supplyChainRoutes);
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {
