@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSynTech Dashboard | Quản lý trang trại</title>
+  <meta name="theme-color" content="#0D4D2B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --primary: #0D4D2B;
+      --primary-light: #1A7F42;
+      --accent: #22c55e;
+      --accent-glow: #4ade80;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --success: #22c55e;
+      
+      --bg-dark: #050f08;
+      --bg-card: #0a1f14;
+      --bg-card-hover: #112618;
+      --bg-input: #071a10;
+      
+      --text: #f0fdf4;
+      --text-muted: #86efac;
+      --text-dim: #4a7c59;
+      
+      --border: #1a3d28;
+      --border-focus: #22c55e;
+      
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 20px;
+      
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 40px rgba(34,197,94,0.15);
+    }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    
+    /* Background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(34,197,94,0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(34,197,94,0.05) 0%, transparent 40%),
+        linear-gradient(180deg, var(--bg-dark) 0%, #071810 100%);
+      z-index: -1;
+    }
+    
+    /* Grid pattern overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(34,197,94,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    /* Layout */
+    .dashboard_layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+    
+    @media (max-width: 900px) {
+      .dashboard_layout { grid-template-columns: 1fr; }
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    @media (max-width: 900px) {
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        width: 260px;
+        z-index: 100;
+        transition: left 0.3s ease;
+      }
+      .sidebar.open { left: 0; }
+    }
+    
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .logo {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: white;
+    }
+    
+    .brand { font-weight: 600; font-size: 16px; }
+    .brand span { display: block; font-size: 11px; color: var(--text-muted); font-weight: 400; }
+    
+    /* Navigation */
+    .nav { flex: 1; }
+    
+    .nav-section {
+      margin-bottom: 24px;
+    }
+    
+    .nav-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+      padding-left: 12px;
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 4px;
+    }
+    
+    .nav-item:hover {
+      background: var(--bg-card-hover);
+      color: var(--text);
+    }
+    
+    .nav-item.active {
+      background: rgba(34,197,94,0.15);
+      color: var(--accent);
+    }
+    
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 3px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+    
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    
+    .nav-badge {
+      margin-left: auto;
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    
+    /* User card */
+    .user-card {
+      background: var(--bg-input);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+      border: 1px solid var(--border);
+    }
+    
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .user-info { flex: 1; }
+    .user-name { font-weight: 500; font-size: 14px; }
+    .user-role { font-size: 12px; color: var(--text-muted); }
+    
+    /* Main content */
+    .main {
+      padding: 24px 32px;
+    }
+    
+    @media (max-width: 768px) {
+      .main { padding: 16px; }
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg-dark);
+    }
+    
+    .btn-primary:hover {
+      background: var(--accent-glow);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(34,197,94,0.3);
+    }
+    
+    .btn-ghost {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-ghost:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+    }
+    
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      background: rgba(34,197,94,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .stat-change {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    
+    .stat-change.up {
+      background: rgba(34,197,94,0.2);
+      color: var(--accent);
+    }
+    
+    .stat-change.down {
+      background: rgba(239,68,68,0.2);
+      color: var(--danger);
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    
+    /* Main grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+    
+    @media (max-width: 1100px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .card-body {
+      padding: 20px 24px;
+    }
+    
+    /* Sensor grid */
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    
+    .sensor-tile {
+      background: var(--bg-input);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .sensor-tile:hover {
+      background: var(--bg-card-hover);
+    }
+    
+    .sensor-tile.ok {
+      border-left: 3px solid var(--success);
+    }
+    
+    .sensor-tile.warning {
+      border-left: 3px solid var(--warning);
+    }
+    
+    .sensor-tile.danger {
+      border-left: 3px solid var(--danger);
+    }
+    
+    .sensor-name {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .sensor-value {
+      font-size: 24px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .sensor-status {
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    
+    .status-dot.ok { background: var(--success); }
+    .status-dot.warning { background: var(--warning); }
+    .status-dot.danger { background: var(--danger); }
+    
+    /* Alerts list */
+    .alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      background: var(--bg-input);
+      transition: all 0.2s ease;
+    }
+    
+    .alert-item:hover {
+      background: var(--bg-card-hover);
+    }
+    
+    .alert-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .alert-icon.warning {
+      background: rgba(245,158,11,0.2);
+    }
+    
+    .alert-icon.danger {
+      background: rgba(239,68,68,0.2);
+    }
+    
+    .alert-content { flex: 1; }
+    .alert-title { font-weight: 500; font-size: 14px; margin-bottom: 2px; }
+    .alert-time { font-size: 12px; color: var(--text-dim); }
+    
+    /* Device list */
+    .device-list { display: flex; flex-direction: column; gap: 8px; }
+    
+    .device-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--bg-input);
+      border-radius: var(--radius);
+      transition: all 0.2s ease;
+    }
+    
+    .device-item:hover {
+      background: var(--bg-card-hover);
+    }
+    
+    .device-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: rgba(34,197,94,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .device-info { flex: 1; }
+    .device-name { font-weight: 500; font-size: 14px; }
+    .device-meta { font-size: 12px; color: var(--text-dim); }
+    
+    .device-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .device-status.online {
+      background: rgba(34,197,94,0.2);
+      color: var(--accent);
+    }
+    
+    .device-status.offline {
+      background: rgba(239,68,68,0.2);
+      color: var(--danger);
+    }
+    
+    /* Chart placeholder */
+    .chart-container {
+      height: 200px;
+      background: var(--bg-input);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .chart-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60%;
+      background: linear-gradient(180deg, rgba(34,197,94,0.3) 0%, transparent 100%);
+    }
+    
+    .chart-wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+    }
+    
+    .chart-wave span {
+      flex: 1;
+      background: var(--accent);
+      margin: 0 2px;
+      border-radius: 4px 4px 0 0;
+      opacity: 0.6;
+    }
+    
+    /* Mobile menu toggle */
+    .menu-toggle {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+    }
+    
+    /* Toast notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-dim);
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-sm);
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard_layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">E</div>
+        <div class="brand">
+          EcoSynTech
+          <span>Farm Dashboard</span>
+        </div>
+      </div>
+      
+      <nav class="nav">
+        <div class="nav-section">
+          <div class="nav-label">Tổng quan</div>
+          <a class="nav-item active" href="#">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+          <a class="nav-item" href="#">
+            <span class="nav-icon">🌱</span>
+            <span>Cây trồng</span>
+          </a>
+          <a class="nav-item" href="#">
+            <span class="nav-icon">📈</span>
+            <span>Thống kê</span>
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-label">Thiết bị</div>
+          <a class="nav-item" href="#">
+            <span class="nav-icon">📡</span>
+            <span>Cảm biến</span>
+            <span class="nav-badge" id="sensorAlert">3</span>
+          </a>
+          <a class="nav-item" href="#">
+            <span class="nav-icon">🔌</span>
+            <span>Thiết bị</span>
+          </a>
+          <a class="nav-item" href="#">
+            <span class="nav-icon">⚡</span>
+            <span>Điều khiển</span>
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-label">Hệ thống</div>
+          <a class="nav-item" href="#">
+            <span class="nav-icon">🔔</span>
+            <span>Cảnh báo</span>
+            <span class="nav-badge" id="alertCount">2</span>
+          </a>
+          <a class="nav-item" href="#">
+            <span class="nav-icon">⚙️</span>
+            <span>Cài đặt</span>
+          </a>
+        </div>
+      </nav>
+      
+      <div class="user-card">
+        <div class="avatar">NT</div>
+        <div class="user-info">
+          <div class="user-name">Nguyễn Tâm</div>
+          <div class="user-role">Quản lý farm</div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main content -->
+    <main class="main">
+      <header class="header">
+        <div>
+          <button class="menu-toggle" id="menuToggle">☰</button>
+          <h1 class="page-title">Tổng quan trang trại</h1>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-ghost" id="refreshBtn">🔄 Làm mới</button>
+          <button class="btn btn-primary" id="addDeviceBtn">+ Thêm thiết bị</button>
+        </div>
+      </header>
+      
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">💧</div>
+            <span class="stat-change up">+12%</span>
+          </div>
+          <div class="stat-value">42%</div>
+          <div class="stat-label">Độ ẩm đất trung bình</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">🌡️</div>
+            <span class="stat-change down">-2%</span>
+          </div>
+          <div class="stat-value">28°C</div>
+          <div class="stat-label">Nhiệt độ trung bình</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">🔌</div>
+            <span class="stat-change up">Online</span>
+          </div>
+          <div class="stat-value">8/8</div>
+          <div class="stat-label">Thiết bị đang hoạt động</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">⚠️</div>
+          </div>
+          <div class="stat-value">2</div>
+          <div class="stat-label">Cảnh báo chờ xử lý</div>
+        </div>
+      </div>
+      
+      
+      <!-- Content grid -->
+      <div class="content-grid">
+        <!-- Sensors -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Cảm biến theo zone</h2>
+            <button class="btn btn-ghost">Xem tất cả →</button>
+          </div>
+          <div class="card-body">
+            <div class="sensor-grid">
+              <div class="sensor-tile ok">
+                <span class="sensor-name">Zone 1 - Độ ẩm</span>
+                <span class="sensor-value">42%</span>
+                <span class="sensor-status">
+                  <span class="status-dot ok"></span>
+                  Bình thường
+                </span>
+              </div>
+              
+              <div class="sensor-tile ok">
+                <span class="sensor-name">Zone 1 - Nhiệt độ</span>
+                <span class="sensor-value">28°C</span>
+                <span class="sensor-status">
+                  <span class="status-dot ok"></span>
+                  Bình thường
+                </span>
+              </div>
+              
+              <div class="sensor-tile warning">
+                <span class="sensor-name">Zone 2 - Độ ẩm</span>
+                <span class="sensor-value">28%</span>
+                <span class="sensor-status">
+                  <span class="status-dot warning"></span>
+                  Thấp - Cần tưới
+                </span>
+              </div>
+              
+              <div class="sensor-tile ok">
+                <span class="sensor-name">Zone 2 - EC</span>
+                <span class="sensor-value">1.8 mS</span>
+                <span class="sensor-status">
+                  <span class="status-dot ok"></span>
+                  Bình thường
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Alerts -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Cảnh báo gần nhất</h2>
+            <button class="btn btn-ghost">Xem tất cả →</button>
+          </div>
+          <div class="card-body">
+            <div class="alert-item">
+              <div class="alert-icon warning">💧</div>
+              <div class="alert-content">
+                <div class="alert-title">Độ ẩm Zone 2 thấp</div>
+                <div class="alert-time">5 phút trước</div>
+              </div>
+            </div>
+            
+            <div class="alert-item">
+              <div class="alert-icon danger">🔌</div>
+              <div class="alert-content">
+                <div class="alert-title">Mất kết nối Gateway 2</div>
+                <div class="alert-time">23 phút trước</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Devices -->
+      <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+          <h2 class="card-title">Thiết bị</h2>
+          <button class="btn btn-ghost">Quản lý →</button>
+        </div>
+        <div class="card-body">
+          <div class="device-list">
+            <div class="device-item">
+              <div class="device-icon">📡</div>
+              <div class="device-info">
+                <div class="device-name">Gateway chính</div>
+                <div class="device-meta">ID: GW-001 • Zone 1</div>
+              </div>
+              <span class="device-status online">Online</span>
+            </div>
+            
+            <div class="device-item">
+              <div class="device-icon">🌡️</div>
+              <div class="device-info">
+                <div class="device-name">Cảm biến độ ẩm Zone 1</div>
+                <div class="device-meta">ID: S-001 • 5 phút trước</div>
+              </div>
+              <span class="device-status online">Online</span>
+            </div>
+            
+            <div class="device-item">
+              <div class="device-icon">💧</div>
+              <div class="device-info">
+                <div class="device-name">Cảm biến độ ẩm Zone 2</div>
+                <div class="device-meta">ID: S-002 • Cảnh báo</div>
+              </div>
+              <span class="device-status online">Online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+  
+  <script>
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 900 && 
+          !sidebar.contains(e.target) && 
+          !menuToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+    
+    // Show toast notification
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span>${type === 'success' ? '✓' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+    
+    // Refresh button
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      showToast('Đã cập nhật dữ liệu', 'success');
+    });
+    
+    // Add device button
+    document.getElementById('addDeviceBtn').addEventListener('click', () => {
+      showToast('Mở form thêm thiết bị...', 'info');
+    });
+    
+    // Simulate real-time updates
+    setInterval(() => {
+      showToast('Cập nhật cảm biến mới', 'success');
+    }, 30000);
+  </script>
+</body>
+</html>

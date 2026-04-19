@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { auth } = require('../middleware/auth');
 const { getAll, getOne } = require('../config/database');
+const { getDashboardOverview, getSensorDataByZone, getAlertsQuick, getDevicesStatus, invalidateCache } = require('../services/performanceService');
 const si = require('systeminformation');
 const os = require('os');
 
@@ -121,6 +122,55 @@ router.get('/weather', auth, async (req, res) => {
         updatedAt: new Date().toISOString()
       }
     });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.get('/overview-optimized', auth, async (req, res) => {
+  try {
+    const { farmId } = req.query;
+    const data = await getDashboardOverview(farmId);
+    res.json({ ok: true, ...data });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.get('/sensors-zone', auth, async (req, res) => {
+  try {
+    const { zoneId } = req.query;
+    const data = await getSensorDataByZone(zoneId);
+    res.json({ ok: true, sensors: data });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.get('/alerts-quick', auth, async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
+    const alerts = await getAlertsQuick(parseInt(limit));
+    res.json({ ok: true, alerts });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.get('/devices-status', auth, async (req, res) => {
+  try {
+    const devices = await getDevicesStatus();
+    res.json({ ok: true, devices });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post('/cache-invalidate', auth, async (req, res) => {
+  try {
+    const { farmId } = req.body;
+    invalidateCache(farmId);
+    res.json({ ok: true, message: 'Cache invalidated' });
   } catch (error) {
     res.status(500).json({ ok: false, error: error.message });
   }

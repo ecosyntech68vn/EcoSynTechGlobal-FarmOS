@@ -51,6 +51,7 @@ const healthReportService = require('./src/services/healthReportService');
 const waterOptimizationService = require('./src/services/waterOptimizationService');
 const { responseSignatureMiddleware } = require('./src/middleware/response-sign');
 const { getAuditHashMiddleware } = require('./src/middleware/audit-tamper-proof');
+const path = require('path');
 
 function createApp() {
   const app = express();
@@ -69,8 +70,17 @@ function createApp() {
     credentials: true
   }));
   
-  app.use(compression());
-  
+app.use(compression());
+
+  // Static files
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, '.')));
+
+  // Dashboard pages
+  app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  });
+
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   
