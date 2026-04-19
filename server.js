@@ -96,6 +96,11 @@ app.use(compression());
     res.sendFile(path.join(__dirname, 'index.html'));
   });
 
+  // Launcher/quickstart page
+  app.get('/start', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'launcher.html'));
+  });
+
   // Products page
   app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'products.html'));
