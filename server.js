@@ -44,6 +44,7 @@ const inventoryRoutes = require('./src/routes/inventory');
 const financeRoutes = require('./src/routes/finance');
 const systemInfoRoutes = require('./src/routes/system-info');
 const aiRoutes = require('./src/routes/ai');
+const cropsRoutes = require('./src/routes/crops');
 const healthReportService = require('./src/services/healthReportService');
 const waterOptimizationService = require('./src/services/waterOptimizationService');
 
@@ -171,6 +172,7 @@ function createApp() {
   app.use('/api/finance', financeRoutes);
   app.use('/api/system', systemInfoRoutes);
   app.use('/api/ai', aiRoutes);
+  app.use('/api/crops', cropsRoutes);
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {

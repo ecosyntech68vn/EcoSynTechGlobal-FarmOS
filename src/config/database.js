@@ -628,10 +628,128 @@ function createTables() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS crops (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      name_vi TEXT,
+      category TEXT NOT NULL,
+      kc_initial REAL DEFAULT 0.4,
+      kc_mid REAL DEFAULT 1.0,
+      kc_end REAL DEFAULT 0.7,
+      min_temp REAL,
+      max_temp REAL,
+      optimal_temp_min REAL,
+      optimal_temp_max REAL,
+      min_humidity REAL,
+      max_humidity REAL,
+      min_soil_moisture REAL,
+      max_soil_moisture REAL,
+      growth_days INTEGER,
+      seed_depth REAL,
+      row_spacing REAL,
+      plant_spacing REAL,
+      water_requirement REAL,
+      fertilizer_type TEXT,
+      disease_risk TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS aquaculture (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      name_vi TEXT,
+      category TEXT NOT NULL,
+      optimal_temp_min REAL,
+      optimal_temp_max REAL,
+      optimal_ph_min REAL,
+      optimal_ph_max REAL,
+      optimal_do REAL,
+      optimal_salinity REAL,
+      growth_days INTEGER,
+      density_max REAL,
+      feed_conversion_ratio REAL,
+      water_change_rate REAL,
+      disease_risk TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   logger.info('Database tables created');
 }
 
+function seedCropData() {
+  const cropCount = db.exec('SELECT COUNT(*) as count FROM crops')[0]?.values[0][0] || 0;
+  
+  if (cropCount === 0) {
+    const crops = [
+      ['crop-rice', 'Rice', 'Lúa', 'cereal', 0.4, 1.2, 0.9, 20, 35, 25, 30, 60, 90, 20, 80, 120, 2, 25, 15, '3500', 'NPK 46-0-0', 'blast, blight'],
+      ['crop-maize', 'Maize/Bắp', 'Ngô', 'cereal', 0.4, 1.15, 0.6, 18, 35, 24, 30, 60, 90, 18, 80, 100, 3, 30, 20, '5000', 'NPK 46-0-0', 'rust, worms'],
+      ['crop-vegetable-leaf', 'Leaf Vegetables', 'Rau ăn lá', 'vegetable', 0.4, 1.05, 0.85, 15, 30, 20, 25, 70, 95, 15, 75, 45, 1, 20, 10, '2500', 'NPK 30-10-10', 'aphids, mildew'],
+      ['crop-cabbage', 'Cabbage', 'Bắp cải', 'vegetable', 0.35, 0.95, 0.8, 10, 25, 18, 22, 75, 95, 20, 75, 70, 2, 45, 15, '3500', 'NPK 20-20-20', 'loopers, black rot'],
+      ['crop-tomato', 'Tomato', 'Cà chua', 'vegetable', 0.4, 1.05, 0.7, 15, 32, 22, 26, 65, 90, 15, 70, 80, 1.5, 50, 15, '4000', 'NPK 20-20-20', 'blight, wilt'],
+      ['crop-pepper', 'Pepper', 'Ớt', 'vegetable', 0.35, 1.0, 0.7, 20, 35, 25, 30, 70, 90, 15, 70, 90, 1, 60, 15, '2000', 'NPK 10-10-20', 'mosaic, anthracnose'],
+      ['crop-cucumber', 'Cucumber', 'Dưa leo', 'vegetable', 0.4, 0.95, 0.7, 18, 32, 22, 28, 70, 95, 18, 70, 60, 2, 30, 12, '3000', 'NPK 30-10-10', 'powdery mildew'],
+      ['crop-pumpkin', 'Pumpkin', 'Bí đỏ', 'vegetable', 0.35, 0.9, 0.65, 20, 32, 24, 30, 65, 90, 15, 70, 100, 3, 50, 20, '2500', 'NPK 15-15-15', 'powdery mildew'],
+      ['crop-onion', 'Onion', 'Hành tím', 'vegetable', 0.4, 1.0, 0.75, 15, 28, 20, 25, 65, 90, 20, 70, 90, 2, 60, 22, '3500', 'NPK 46-0-0', 'thrips, purple blotch'],
+      ['crop-potato', 'Potato', 'Khoai tầy', 'tuber', 0.4, 1.05, 0.75, 12, 25, 18, 22, 70, 95, 15, 75, 90, 2, 70, 25, '4000', 'NPK 20-20-20', 'late blight'],
+      ['crop-carrot', 'Carrot', 'Cà rốt', 'root', 0.35, 0.9, 0.7, 15, 28, 20, 24, 65, 90, 18, 70, 75, 2, 60, 23, '3000', 'NPK 15-15-15', 'leaf spot'],
+      ['crop-spinach', 'Spinach', 'Rau muống', 'leaf', 0.4, 1.0, 0.8, 15, 28, 20, 25, 75, 95, 20, 80, 35, 2, 15, 8, '1500', 'NPK 30-10-10', 'caterpillars'],
+      ['crop-lettuce', 'Lettuce', 'Xà lách', 'leaf', 0.35, 0.95, 0.8, 10, 24, 15, 22, 75, 95, 20, 75, 45, 1, 30, 10, '2500', 'NPK 20-10-10', 'downy mildew'],
+      ['crop-bean', 'Bean', 'Đậu cove', 'legume', 0.4, 1.1, 0.65, 18, 32, 22, 28, 60, 90, 18, 75, 65, 2, 30, 15, '2500', 'NPK 20-20-20', 'rust, mosaic'],
+      ['crop-peanut', 'Peanut', 'Lạc', 'legume', 0.4, 1.05, 0.65, 20, 32, 24, 30, 60, 85, 15, 70, 110, 3, 60, 22, '3000', 'NPK 0-0-60', 'leaf spot'],
+      ['crop-soybean', 'Soybean', 'Đậu tương', 'legume', 0.4, 1.1, 0.6, 18, 32, 22, 28, 60, 85, 15, 70, 90, 3, 45, 18, '2800', 'NPK 0-46-0', 'rust'],
+      ['crop-sugarcane', 'Sugarcane', 'Mía', 'cereal', 0.4, 1.2, 0.75, 20, 38, 28, 35, 60, 85, 20, 75, 365, 5, 120, 40, '18000', 'NPK 46-0-0', 'smut'],
+      ['crop-banana', 'Banana', 'Chuối', 'fruit', 0.5, 1.1, 0.9, 22, 32, 25, 30, 70, 90, 25, 75, 270, 4, 180, 60, '6000', 'NPK 15-10-20', 'panama disease'],
+      ['crop-mango', 'Mango', 'Xoài', 'fruit', 0.4, 0.85, 0.65, 22, 36, 26, 32, 60, 85, 20, 70, 180, 5, 200, 80, '5000', 'NPK 0-0-60', 'anthracnose'],
+      ['crop-orange', 'Orange', 'Cam', 'fruit', 0.4, 0.85, 0.65, 18, 34, 24, 30, 65, 85, 20, 70, 240, 4, 180, 70, '4000', 'NPK 15-15-15', 'citrus greening'],
+      ['crop-coffee', 'Coffee', 'Cà phê', 'fruit', 0.4, 0.9, 0.7, 18, 28, 22, 26, 70, 90, 20, 70, 180, 4, 120, 50, '2500', 'NPK 20-10-10', 'rust'],
+      ['crop-rubber', 'Rubber', 'Cao su', 'tree', 0.45, 1.0, 0.8, 22, 34, 25, 30, 70, 85, 20, 70, 365, 8, 300, 100, '1800', 'NPK 18-10-10', 'root rot']
+    ];
+
+    const stmt = db.prepare(`INSERT INTO crops (id, name, name_vi, category, kc_initial, kc_mid, kc_end, min_temp, max_temp, optimal_temp_min, optimal_temp_max, min_humidity, max_humidity, min_soil_moisture, max_soil_moisture, growth_days, row_spacing, plant_spacing, water_requirement, fertilizer_type, disease_risk) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    crops.forEach(crop => {
+      stmt.run(crop);
+    });
+    stmt.free();
+    
+    logger.info('Crop data seeded');
+  }
+  
+  const aquaCount = db.exec('SELECT COUNT(*) as count FROM aquaculture')[0]?.values[0][0] || 0;
+  
+  if (aquaCount === 0) {
+    const aquaculture = [
+      ['fish-carp', 'Common Carp', 'Cá chép', 'fish', 20, 30, 6.5, 8.5, 5, 15, 180, 50, 1.5, 20, 'dropsy, parasites'],
+      ['fish-tilapia', 'Tilapia', 'Cá rô phi', 'fish', 22, 32, 6.5, 8.5, 4, 10, 180, 100, 1.2, 15, 'streptococcus'],
+      ['fish-catfish', 'Catfish', 'Cá lóc', 'fish', 22, 32, 6.0, 8.0, 3, 5, 150, 30, 1.3, 20, 'bacterial disease'],
+      ['fish-grouper', 'Grouper', 'Cá mú', 'fish', 25, 32, 7.0, 8.5, 5, 35, 240, 25, 1.5, 25, 'viral'],
+      ['fish-salmon', 'Salmon', 'Cá hồi', 'fish', 10, 18, 6.5, 8.0, 6, 30, 400, 20, 1.0, 30, 'sea lice'],
+      ['fish-catfish-vn', 'Cá basa', 'Cá basa', 'fish', 22, 30, 6.0, 8.0, 3, 8, 180, 60, 1.2, 20, 'fungus'],
+      ['shrimp-fresh', 'Freshwater Shrimp', 'Tôm càng xanh', 'shrimp', 22, 30, 7.0, 8.5, 5, 10, 120, 30, 1.2, 20, 'white spot'],
+      ['shrimp-salt', 'Black Tiger Shrimp', 'Tôm sú', 'shrimp', 25, 32, 7.5, 8.5, 5, 25, 150, 40, 1.3, 25, 'white spot, Taura'],
+      ['shrimp-vannamei', 'Pacific White Shrimp', 'Tôm thẻ chân trắng', 'shrimp', 25, 32, 7.5, 8.5, 5, 20, 120, 50, 1.1, 20, 'EMS, white spot'],
+      ['fish-eel', 'Eel', 'Lươn', 'fish', 22, 30, 6.5, 7.5, 4, 5, 180, 20, 1.3, 30, 'fungus'],
+      ['fish-clarias', 'Clarias Catfish', 'Cá trê', 'fish', 22, 32, 6.0, 8.0, 3, 5, 180, 40, 1.2, 15, 'bacterial infection'],
+      ['fish-mrigal', 'Mrigal', 'Cá rô đầu phụng', 'fish', 22, 30, 6.5, 8.0, 4, 10, 180, 30, 1.4, 15, 'epizootic'],
+      ['fish-rohu', 'Rohu', 'Cá mè', 'fish', 22, 32, 6.5, 8.5, 4, 10, 365, 25, 1.5, 20, 'koi herpes'],
+      ['frog-tiger', 'Tiger Frog', 'Ếch', 'amphibian', 22, 30, 6.5, 7.5, 4, 2, 90, 30, 1.2, 10, 'red leg syndrome']
+    ];
+
+    const stmt = db.prepare(`INSERT INTO aquaculture (id, name, name_vi, category, optimal_temp_min, optimal_temp_max, optimal_ph_min, optimal_ph_max, optimal_do, optimal_salinity, growth_days, density_max, feed_conversion_ratio, water_change_rate, disease_risk) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    aquaculture.forEach(a => {
+      stmt.run(a);
+    });
+    stmt.free();
+    
+    logger.info('Aquaculture data seeded');
+  }
+}
+
 function seedInitialData() {
+  seedCropData();
   const deviceCount = db.exec('SELECT COUNT(*) as count FROM devices')[0]?.values[0][0] || 0;
   
   if (deviceCount === 0) {
