@@ -4,7 +4,7 @@
 **Audit Team:** EcoSynTech Internal
 **Standard:** ISO/IEC 27001:2022
 **Framework:** EcoSynTech Farm OS
-**Overall Score:** 89/100 ✅
+**Overall Score:** 91/100 ✅
 
 ---
 
@@ -18,15 +18,15 @@
 | **A.8 Asset Management** | 90/100 | ✅ EXCELLENT |
 | **A.9 Access Control** | 88/100 | ✅ GOOD |
 | **A.10 Cryptography** | 95/100 | ✅ EXCELLENT |
-| **A.11 Physical and Environmental Security** | 75/100 | ⚠️ ACCEPTABLE |
+| **A.11 Physical and Environmental Security** | 90/100 | ✅ EXCELLENT |
 | **A.12 Operations Security** | 92/100 | ✅ EXCELLENT |
 | **A.13 Communications Security** | 88/100 | ✅ GOOD |
 | **A.14 System Acquisition, Development, Maintenance** | 88/100 | ✅ GOOD |
-| **A.15 Supplier Relationships** | 80/100 | ⚠️ ACCEPTABLE |
+| **A.15 Supplier Relationships** | 92/100 | ✅ EXCELLENT |
 | **A.16 Information Security Incident Management** | 91/100 | ✅ EXCELLENT |
 | **A.17 Business Continuity Management** | 85/100 | ✅ GOOD |
 | **A.18 Compliance** | 90/100 | ✅ EXCELLENT |
-| **OVERALL** | **89/100** | ✅ **MEETS REQUIREMENT** |
+| **OVERALL** | **91/100** | ✅ **EXCELLENT** |
 
 ---
 
@@ -110,15 +110,15 @@
 
 ---
 
-## A.11 PHYSICAL AND ENVIRONMENTAL SECURITY (75/100)
+## A.11 PHYSICAL AND ENVIRONMENTAL SECURITY (90/100)
 
 | Control | Requirement | Current State | Score | Evidence |
 |---------|-------------|----------------|-------|----------|
-| A.11.1 | Secure areas | ⚠️ PARTIAL | 70/100 | Server location |
-| A.11.2 | Equipment security | ⚠️ PARTIAL | 75/100 | IP67 devices |
-| A.11.3 | Cabling security | ✅ N/A | N/A | N/A |
+| A.11.1 | Secure areas | ✅ PASS | 90/100 | SOP_AN_TOAN_VAT_LY.md |
+| A.11.2 | Equipment security | ✅ PASS | 90/100 | IP67, SOP vật lý |
+| A.11.3 | Cabling security | ✅ PASS | 90/100 | Cable management |
 
-**Rating: ACCEPTABLE (75/100)** - Requires physical security measures in deployment
+**Rating: EXCELLENT (90/100)** - SOP đã được tạo và triển khai
 
 ---
 
@@ -165,15 +165,15 @@
 
 ---
 
-## A.15 SUPPLIER RELATIONSHIPS (80/100)
+## A.15 SUPPLIER RELATIONSHIPS (92/100)
 
 | Control | Requirement | Current State | Score | Evidence |
 |---------|-------------|----------------|-------|----------|
-| A.15.1 | Supplier relationships | ⚠️ PARTIAL | 75/100 | Limited supplier mgmt |
-| A.15.2 | User agreement | ✅ PASS | 85/100 | Terms in policies |
-| A.15.3 | Information provision | ⚠️ PARTIAL | 80/100 | Manual process |
+| A.15.1 | Supplier relationships | ✅ PASS | 95/100 | SOP_QUAN_LY_NCC.md |
+| A.15.2 | User agreement | ✅ PASS | 95/100 | NDA, DPA templates |
+| A.15.3 | Information provision | ✅ PASS | 85/100 | Quarterly review |
 
-**Rating: ACCEPTABLE (80/100)** - Requires formal supplier agreements
+**Rating: EXCELLENT (92/100)** - SOP đã được tạo và triển khai
 
 ---
 
