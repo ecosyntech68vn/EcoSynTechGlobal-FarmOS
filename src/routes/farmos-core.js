@@ -235,7 +235,11 @@ router.put('/assets/:id', auth, async (req, res) => {
 router.get('/quantities', auth, async (req, res) => {
   try {
     const { farm_id, area_id, crop_id, type, from_date, to_date } = req.query;
-    let sql = 'SELECT q.*, a.name as area_name, c.name as crop_name FROM quantities q LEFT JOIN areas a ON q.area_id = a.id LEFT JOIN crops c ON q.crop_id = c.id WHERE 1=1';
+    let sql = `SELECT q.*, a.name as area_name, c.name as crop_name, c.name_vi as crop_name_vi 
+              FROM quantities q 
+              LEFT JOIN areas a ON q.area_id = a.id 
+              LEFT JOIN crops c ON q.crop_id = c.id 
+              WHERE 1=1`;
     const params = [];
     if (farm_id) { sql += ' AND q.farm_id = ?'; params.push(farm_id); }
     if (area_id) { sql += ' AND q.area_id = ?'; params.push(area_id); }
@@ -246,6 +250,98 @@ router.get('/quantities', auth, async (req, res) => {
     sql += ' ORDER BY q.record_date DESC';
     const quantities = getAll(sql, params);
     res.json({ ok: true, data: quantities, count: quantities.length });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post('/quantities', auth, async (req, res) => {
+  try {
+    const { farm_id, area_id, crop_id, type, quantity, unit, quality_grade, notes, record_date } = req.body;
+    if (!quantity || !type) return res.status(400).json({ ok: false, error: 'quantity and type are required' });
+    const id = `qty-${uuidv4().slice(0, 8)}`;
+    const { db } = require('../../config/database');
+    db.run(`INSERT INTO quantities (id, farm_id, area_id, crop_id, type, quantity, unit, quality_grade, notes, record_date, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [id, farm_id, area_id, crop_id, type, quantity, unit, quality_grade, notes, record_date]
+    );
+    const qty = getOne('SELECT * FROM quantities WHERE id = ?', [id]);
+    res.status(201).json({ ok: true, data: qty });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// =====================================================
+// COMPLETE CROP DATA AXIS
+// =====================================================
+
+// Get complete crop journey: crop → planting → batch → package → shipment
+router.get('/axis/crop/:cropId', auth, async (req, res) => {
+  try {
+    const cropId = req.params.cropId;
+    
+    // Get crop info
+    const crop = getOne('SELECT * FROM crops WHERE id = ?', [cropId]);
+    if (!crop) return res.status(404).json({ ok: false, error: 'Crop not found' });
+    
+    // Get all plantings for this crop
+    const plantings = getAll(
+      `SELECT p.*, f.name as farm_name, a.name as area_name 
+       FROM crop_plantings p
+       LEFT JOIN farms f ON p.farm_id = f.id
+       LEFT JOIN areas a ON p.area_id = a.id
+       WHERE p.crop_id = ? ORDER BY p.planting_date DESC`,
+      [cropId]
+    );
+    
+    // Get all batches for this crop
+    const batches = getAll(
+      `SELECT b.*, f.name as farm_name, a.name as area_name,
+              (SELECT COUNT(*) FROM tb_packages WHERE batch_id = b.id) as package_count,
+              (SELECT SUM(net_weight) FROM tb_packages WHERE batch_id = b.id) as total_weight
+       FROM tb_batches b
+       LEFT JOIN farms f ON b.farm_id = f.id
+       LEFT JOIN areas a ON b.area_id = a.id
+       WHERE b.crop_id = ? ORDER BY b.harvest_date DESC`,
+      [cropId]
+    );
+    
+    // Get all supply chain entries for this crop
+    const supplyChain = getAll(
+      `SELECT s.*, f.name as farm_name
+       FROM supply_chain s
+       LEFT JOIN farms f ON s.farm_id = f.id
+       WHERE s.crop_id = ? ORDER BY s.harvest_date DESC`,
+      [cropId]
+    );
+    
+    // Get all quantities for this crop
+    const quantities = getAll(
+      `SELECT q.*, a.name as area_name
+       FROM quantities q
+       LEFT JOIN areas a ON q.area_id = a.id
+       WHERE q.crop_id = ? ORDER BY q.record_date DESC`,
+      [cropId]
+    );
+    
+    res.json({
+      ok: true,
+      data: {
+        crop,
+        plantings,
+        batches,
+        supply_chain: supplyChain,
+        quantities,
+        summary: {
+          total_plantings: plantings.length,
+          total_batches: batches.length,
+          total_packages: batches.reduce((sum, b) => sum + (b.package_count || 0), 0),
+          total_supply_chain: supplyChain.length,
+          total_quantities: quantities.length
+        }
+      }
+    });
   } catch (error) {
     res.status(500).json({ ok: false, error: error.message });
   }
