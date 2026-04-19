@@ -36,7 +36,10 @@ const rbacRoutes = require('./src/routes/rbac');
 const otaRoutes = require('./src/routes/ota');
 const salesRoutes = require('./src/routes/sales');
 const healthReportRoutes = require('./src/routes/health-report');
+const farmsRoutes = require('./src/routes/farms');
+const dashboardRoutes = require('./src/routes/dashboard');
 const healthReportService = require('./src/services/healthReportService');
+const waterOptimizationService = require('./src/services/waterOptimizationService');
 
 function createApp() {
   const app = express();
@@ -147,6 +150,8 @@ function createApp() {
   app.use('/api/ota', otaRoutes);
   app.use('/api/sales', salesRoutes);
   app.use('/api/health-report', healthReportRoutes);
+  app.use('/api/farms', farmsRoutes);
+  app.use('/api/dashboard', dashboardRoutes);
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {
@@ -315,6 +320,7 @@ async function startServer() {
     startSensorSimulation();
     
     healthReportService.start();
+    waterOptimizationService.start();
     
     server.listen(config.port, () => {
       logger.info(`

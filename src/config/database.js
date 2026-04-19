@@ -397,6 +397,21 @@ function createTables() {
   `);
 
   db.run(`
+    CREATE TABLE IF NOT EXISTS farms (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      location TEXT,
+      area REAL,
+      area_unit TEXT DEFAULT 'hectare',
+      owner_id TEXT,
+      settings TEXT DEFAULT '{}',
+      active INTEGER DEFAULT 1,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.run(`
     CREATE TABLE IF NOT EXISTS ota_history (
       id TEXT PRIMARY KEY,
       device_id TEXT NOT NULL,
