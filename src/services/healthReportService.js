@@ -1,6 +1,8 @@
 const axios = require('axios');
 const os = require('os');
 const si = require('systeminformation');
+const path = require('path');
+const fs = require('fs');
 const logger = require('../config/logger');
 // Version reference from package.json for accurate reporting
 const pkg = require('../../package.json');
@@ -17,6 +19,9 @@ class HealthReportService {
     const val = parseInt(process.env.HEALTH_REPORT_INTERVAL_MIN || '30', 10);
     this.reportIntervalMs = isNaN(val) ? 30 * 60 * 1000 : val * 60 * 1000;
     this.timer = null;
+    // Persistent retry queue for failed reports (on local/offline)
+    this.queuePath = path.join(__dirname, '..', 'data', 'health_report_queue.json');
+    this.ensureQueueFile();
   }
 
   start() {
@@ -31,6 +36,8 @@ class HealthReportService {
 
   async report() {
     try {
+      // Retry any queued reports first
+      await this.processQueue();
       // Thu thập hệ thống
       const cpu = await si.currentLoad();
       const mem = await si.mem();
@@ -71,7 +78,9 @@ class HealthReportService {
         logger.warn('[HealthReport] WEBLOCAL response error:', response.data);
       }
     } catch (error) {
-      logger.warn('[HealthReport] Health report failed; retry on next cycle:', error?.message);
+      // On failure, enqueue for retry
+      this.enqueueFailedReport(payload, error);
+      logger.warn('[HealthReport] Health report failed; added to retry queue. Error:', error?.message);
     }
   }
 
@@ -109,6 +118,74 @@ class HealthReportService {
 
   stop() {
     if (this.timer) clearInterval(this.timer);
+  }
+
+  // --- Queue management for retry ---
+  ensureQueueFile() {
+    try {
+      const dir = path.dirname(this.queuePath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      if (!fs.existsSync(this.queuePath)) fs.writeFileSync(this.queuePath, '[]');
+    } catch (e) {
+      logger.warn('[HealthReport] Failed to initialize retry queue:', e?.message);
+    }
+  }
+
+  loadQueue() {
+    try {
+      const content = fs.readFileSync(this.queuePath, 'utf8');
+      const data = JSON.parse(content || '[]');
+      if (Array.isArray(data)) return data;
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  saveQueue(queue) {
+    try {
+      fs.writeFileSync(this.queuePath, JSON.stringify(queue, null, 2));
+    } catch (e) {
+      logger.warn('[HealthReport] Failed to save retry queue:', e?.message);
+    }
+  }
+
+  enqueueFailedReport(payload, error) {
+    const queue = this.loadQueue();
+    const item = {
+      id: 'HR-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+      payload,
+      failedAt: new Date().toISOString(),
+      error: error?.message
+    };
+    queue.push(item);
+    this.saveQueue(queue);
+  }
+
+  async processQueue() {
+    const queue = this.loadQueue();
+    if (!queue.length) return;
+    const remaining = [];
+    for (const item of queue) {
+      try {
+        const res = await axios.post(
+          `${this.webLocalUrl}?action=web_health_report`,
+          item.payload,
+          {
+            headers: { 'x-api-key': this.webLocalApiKey },
+            timeout: 10000
+          }
+        );
+        if (res.data && res.data.ok) {
+          // success -> drop from queue
+          continue;
+        }
+        remaining.push(item);
+      } catch (e) {
+        remaining.push(item);
+      }
+    }
+    this.saveQueue(remaining);
   }
 }
 
