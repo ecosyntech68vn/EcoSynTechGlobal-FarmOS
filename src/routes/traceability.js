@@ -1050,4 +1050,368 @@ router.get('/export/excel', auth, async (req, res) => {
   }
 });
 
+// ==================== NEW TRACEABILITY ENGINE (TB) ROUTES ====================
+
+// TB: List batches
+router.get('/tb/batches', auth, async (req, res) => {
+  try {
+    const { farm_id, status, product_type } = req.query;
+    let sql = 'SELECT tb.*, f.name as farm_name FROM tb_batches tb LEFT JOIN farms f ON tb.farm_id = f.id WHERE 1=1';
+    const params = [];
+    if (farm_id) { sql += ' AND tb.farm_id = ?'; params.push(farm_id); }
+    if (status) { sql += ' AND tb.status = ?'; params.push(status); }
+    if (product_type) { sql += ' AND tb.product_type = ?'; params.push(product_type); }
+    sql += ' ORDER BY tb.created_at DESC';
+    const batches = getAll(sql, params);
+    res.json({ ok: true, data: batches, count: batches.length });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Get batch detail
+router.get('/tb/batches/:id', auth, async (req, res) => {
+  try {
+    const batch = getOne('SELECT tb.*, f.name as farm_name, a.name as area_name FROM tb_batches tb LEFT JOIN farms f ON tb.farm_id = f.id LEFT JOIN areas a ON tb.area_id = a.id WHERE tb.id = ?', [req.params.id]);
+    if (!batch) return res.status(404).json({ ok: false, error: 'Batch not found' });
+    const events = getAll('SELECT * FROM tb_batch_events WHERE batch_id = ? ORDER BY event_time DESC', [batch.id]);
+    const inputs = getAll('SELECT * FROM tb_batch_inputs WHERE batch_id = ?', [batch.id]);
+    const qualityChecks = getAll('SELECT * FROM tb_batch_quality_checks WHERE batch_id = ? ORDER BY checked_at DESC', [batch.id]);
+    const packages = getAll('SELECT * FROM tb_packages WHERE batch_id = ?', [batch.id]);
+    res.json({ ok: true, data: { ...batch, events, inputs, quality_checks: qualityChecks, packages } });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Create batch
+router.post('/tb/batches', auth, async (req, res) => {
+  try {
+    const { farm_id, area_id, season_id, asset_id, product_name, product_type, batch_code, harvest_date, produced_quantity, unit, quality_grade } = req.body;
+    if (!product_name) return res.status(400).json({ ok: false, error: 'product_name is required' });
+    const id = `tb-${uuidv4().slice(0, 8)}`;
+    const code = batch_code || `TB-${Date.now().toString(36).toUpperCase()}`;
+    const { db } = require('../config/database');
+    db.run(`INSERT INTO tb_batches (id, org_id, farm_id, area_id, season_id, asset_id, product_name, product_type, batch_code, harvest_date, produced_quantity, unit, quality_grade, status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'created')`,
+      [id, null, farm_id, area_id, season_id, asset_id, product_name, product_type, code, harvest_date, produced_quantity, unit || 'kg', quality_grade]
+    );
+    const batch = getOne('SELECT * FROM tb_batches WHERE id = ?', [id]);
+    db.run(`INSERT INTO tb_batch_events (id, batch_id, event_type, actor_type, note) VALUES (?, ?, ?, ?, ?)`, [`tbe-${uuidv4().slice(0, 8)}`, id, 'created', 'user', 'Batch created']);
+    res.status(201).json({ ok: true, data: batch });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Update batch
+router.patch('/tb/batches/:id', auth, async (req, res) => {
+  try {
+    const { product_name, product_type, batch_code, harvest_date, produced_quantity, unit, quality_grade, status } = req.body;
+    const existing = getOne('SELECT * FROM tb_batches WHERE id = ?', [req.params.id]);
+    if (!existing) return res.status(404).json({ ok: false, error: 'Batch not found' });
+    const { db } = require('../config/database');
+    db.run(`UPDATE tb_batches SET product_name = COALESCE(?, product_name), product_type = COALESCE(?, product_type), batch_code = COALESCE(?, batch_code),
+           harvest_date = COALESCE(?, harvest_date), produced_quantity = COALESCE(?, produced_quantity), unit = COALESCE(?, unit),
+           quality_grade = COALESCE(?, quality_grade), status = COALESCE(?, status), updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+      [product_name, product_type, batch_code, harvest_date, produced_quantity, unit, quality_grade, status, req.params.id]
+    );
+    const batch = getOne('SELECT * FROM tb_batches WHERE id = ?', [req.params.id]);
+    res.json({ ok: true, data: batch });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Add batch event
+router.post('/tb/batches/:id/events', auth, async (req, res) => {
+  try {
+    const { event_type, actor_type, actor_id, related_log_id, related_quantity_id, related_inventory_id, location, note, status } = req.body;
+    if (!event_type) return res.status(400).json({ ok: false, error: 'event_type is required' });
+    const batch = getOne('SELECT * FROM tb_batches WHERE id = ?', [req.params.id]);
+    if (!batch) return res.status(404).json({ ok: false, error: 'Batch not found' });
+    const id = `tbe-${uuidv4().slice(0, 8)}`;
+    const locationJson = location ? JSON.stringify(location) : null;
+    const { db } = require('../config/database');
+    db.run(`INSERT INTO tb_batch_events (id, batch_id, event_type, actor_type, actor_id, related_log_id, related_quantity_id, related_inventory_id, location_json, note)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id, req.params.id, event_type, actor_type || 'user', actor_id, related_log_id, related_quantity_id, related_inventory_id, locationJson, note]
+    );
+    if (status && status !== 'created') {
+      db.run('UPDATE tb_batches SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [status, req.params.id]);
+    }
+    const event = getOne('SELECT * FROM tb_batch_events WHERE id = ?', [id]);
+    res.status(201).json({ ok: true, data: event });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Get batch events
+router.get('/tb/batches/:id/events', auth, async (req, res) => {
+  try {
+    const events = getAll('SELECT * FROM tb_batch_events WHERE batch_id = ? ORDER BY event_time DESC', [req.params.id]);
+    res.json({ ok: true, data: events });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Add batch input
+router.post('/tb/batches/:id/inputs', auth, async (req, res) => {
+  try {
+    const { input_type, input_name, supplier_name, quantity, unit } = req.body;
+    const batch = getOne('SELECT * FROM tb_batches WHERE id = ?', [req.params.id]);
+    if (!batch) return res.status(404).json({ ok: false, error: 'Batch not found' });
+    const id = `tbi-${uuidv4().slice(0, 8)}`;
+    const { db } = require('../config/database');
+    db.run(`INSERT INTO tb_batch_inputs (id, batch_id, input_type, input_name, supplier_name, quantity, unit, used_at) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [id, req.params.id, input_type, input_name, supplier_name, quantity, unit]
+    );
+    const input = getOne('SELECT * FROM tb_batch_inputs WHERE id = ?', [id]);
+    res.status(201).json({ ok: true, data: input });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Add quality check
+router.post('/tb/batches/:id/quality-checks', auth, async (req, res) => {
+  try {
+    const { check_type, result, score, details, checked_by } = req.body;
+    const batch = getOne('SELECT * FROM tb_batches WHERE id = ?', [req.params.id]);
+    if (!batch) return res.status(404).json({ ok: false, error: 'Batch not found' });
+    const id = `tbqc-${uuidv4().slice(0, 8)}`;
+    const detailsJson = details ? JSON.stringify(details) : null;
+    const { db } = require('../config/database');
+    db.run(`INSERT INTO tb_batch_quality_checks (id, batch_id, check_type, result, score, details_json, checked_by, checked_at) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [id, req.params.id, check_type, result, score, detailsJson, checked_by]
+    );
+    res.status(201).json({ ok: true, data: { id, check_type, result, score } });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Packages
+router.get('/tb/packages', auth, async (req, res) => {
+  try {
+    const { batch_id, status } = req.query;
+    let sql = 'SELECT * FROM tb_packages WHERE 1=1';
+    const params = [];
+    if (batch_id) { sql += ' AND batch_id = ?'; params.push(batch_id); }
+    if (status) { sql += ' AND status = ?'; params.push(status); }
+    sql += ' ORDER BY packed_at DESC';
+    const packages = getAll(sql, params);
+    res.json({ ok: true, data: packages, count: packages.length });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post('/tb/packages', auth, async (req, res) => {
+  try {
+    const { batch_id, package_code, barcode, qr_code, net_weight, unit, packaging_type } = req.body;
+    if (!batch_id) return res.status(400).json({ ok: false, error: 'batch_id is required' });
+    const batch = getOne('SELECT * FROM tb_batches WHERE id = ?', [batch_id]);
+    if (!batch) return res.status(404).json({ ok: false, error: 'Batch not found' });
+    const id = `pkg-${uuidv4().slice(0, 8)}`;
+    const code = package_code || `PKG-${Date.now().toString(36).toUpperCase()}`;
+    const { db } = require('../config/database');
+    db.run(`INSERT INTO tb_packages (id, batch_id, package_code, barcode, qr_code, net_weight, unit, packaging_type, status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'created')`,
+      [id, batch_id, code, barcode || code, qr_code || code, net_weight, unit || 'kg', packaging_type || 'carton']
+    );
+    const pkg = getOne('SELECT * FROM tb_packages WHERE id = ?', [id]);
+    res.status(201).json({ ok: true, data: pkg });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.get('/tb/packages/:id', auth, async (req, res) => {
+  try {
+    const pkg = getOne('SELECT * FROM tb_packages WHERE id = ?', [req.params.id]);
+    if (!pkg) return res.status(404).json({ ok: false, error: 'Package not found' });
+    const batch = getOne('SELECT * FROM tb_batches WHERE id = ?', [pkg.batch_id]);
+    res.json({ ok: true, data: { ...pkg, batch } });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.get('/tb/packages/:id/qr', auth, async (req, res) => {
+  try {
+    const pkg = getOne('SELECT * FROM tb_packages WHERE id = ?', [req.params.id]);
+    if (!pkg) return res.status(404).json({ ok: false, error: 'Package not found' });
+    const qrUrl = `${BASE_URL}/public/trace/${pkg.qr_code || pkg.package_code}`;
+    const qrDataUrl = await QRCode.toDataURL(qrUrl, { width: 300, margin: 2 });
+    res.json({ ok: true, data: { qr_code: pkg.qr_code, url: qrUrl, qr_image: qrDataUrl } });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Shipments
+router.get('/tb/shipments', auth, async (req, res) => {
+  try {
+    const { status } = req.query;
+    let sql = 'SELECT * FROM tb_shipments WHERE 1=1';
+    const params = [];
+    if (status) { sql += ' AND status = ?'; params.push(status); }
+    sql += ' ORDER BY created_at DESC';
+    const shipments = getAll(sql, params);
+    res.json({ ok: true, data: shipments, count: shipments.length });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post('/tb/shipments', auth, async (req, res) => {
+  try {
+    const { customer_name, destination, transport_type, items } = req.body;
+    if (!items || !items.length) return res.status(400).json({ ok: false, error: 'items array is required' });
+    const id = `ship-${uuidv4().slice(0, 8)}`;
+    const code = `SHP-${Date.now().toString(36).toUpperCase()}`;
+    const { db } = require('../config/database');
+    db.run(`INSERT INTO tb_shipments (id, shipment_code, customer_name, destination, transport_type, status) VALUES (?, ?, ?, ?, ?, 'preparing')`,
+      [id, code, customer_name, destination, transport_type]
+    );
+    for (const item of items) {
+      db.run(`INSERT INTO tb_shipment_items (id, shipment_id, package_id, quantity, unit) VALUES (?, ?, ?, ?, ?)`,
+        [`shi-${uuidv4().slice(0, 8)}`, id, item.package_id, item.quantity, item.unit || 'kg']
+      );
+    }
+    const shipment = getOne('SELECT * FROM tb_shipments WHERE id = ?', [id]);
+    const shipmentItems = getAll('SELECT * FROM tb_shipment_items WHERE shipment_id = ?', [id]);
+    res.status(201).json({ ok: true, data: { ...shipment, items: shipmentItems } });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.patch('/tb/shipments/:id/status', auth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const shipment = getOne('SELECT * FROM tb_shipments WHERE id = ?', [req.params.id]);
+    if (!shipment) return res.status(404).json({ ok: false, error: 'Shipment not found' });
+    const { db } = require('../config/database');
+    const now = status === 'delivered' ? 'CURRENT_TIMESTAMP' : 'NULL';
+    db.run(`UPDATE tb_shipments SET status = ?, delivered_at = ${status === 'delivered' ? 'CURRENT_TIMESTAMP' : 'NULL'}, shipped_at = ${status === 'shipped' ? 'CURRENT_TIMESTAMP' : 'shipped_at'} WHERE id = ?`,
+      [status, req.params.id]
+    );
+    if (status === 'shipped') {
+      db.run('UPDATE tb_packages SET status = ? WHERE batch_id IN (SELECT batch_id FROM tb_shipment_items WHERE shipment_id = ?)', ['shipped', req.params.id]);
+    }
+    const updated = getOne('SELECT * FROM tb_shipments WHERE id = ?', [req.params.id]);
+    res.json({ ok: true, data: updated });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Incidents / Recall
+router.get('/tb/incidents', auth, async (req, res) => {
+  try {
+    const { status, severity } = req.query;
+    let sql = 'SELECT * FROM tb_recall_incidents WHERE 1=1';
+    const params = [];
+    if (status) { sql += ' AND status = ?'; params.push(status); }
+    if (severity) { sql += ' AND severity = ?'; params.push(severity); }
+    sql += ' ORDER BY created_at DESC';
+    const incidents = getAll(sql, params);
+    res.json({ ok: true, data: incidents, count: incidents.length });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post('/tb/incidents', auth, async (req, res) => {
+  try {
+    const { batch_id, incident_type, severity, description } = req.body;
+    if (!batch_id) return res.status(400).json({ ok: false, error: 'batch_id is required' });
+    const id = `inc-${uuidv4().slice(0, 8)}`;
+    const { db } = require('../config/database');
+    db.run(`INSERT INTO tb_recall_incidents (id, batch_id, incident_type, severity, description, status, created_by) VALUES (?, ?, ?, ?, ?, 'open', ?)`,
+      [id, batch_id, incident_type, severity, description, req.user?.id]
+    );
+    db.run('UPDATE tb_batches SET status = ? WHERE id = ?', ['recalled', batch_id]);
+    const incident = getOne('SELECT * FROM tb_recall_incidents WHERE id = ?', [id]);
+    res.status(201).json({ ok: true, data: incident });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.patch('/tb/incidents/:id', auth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const incident = getOne('SELECT * FROM tb_recall_incidents WHERE id = ?', [req.params.id]);
+    if (!incident) return res.status(404).json({ ok: false, error: 'Incident not found' });
+    const { db } = require('../config/database');
+    const resolvedAt = status === 'resolved' ? 'CURRENT_TIMESTAMP' : 'NULL';
+    db.run(`UPDATE tb_recall_incidents SET status = ?, resolved_at = ${status === 'resolved' ? 'CURRENT_TIMESTAMP' : 'NULL'} WHERE id = ?`,
+      [status, req.params.id]
+    );
+    if (status === 'resolved') {
+      db.run('UPDATE tb_batches SET status = ? WHERE id = ?', ['closed', incident.batch_id]);
+    }
+    const updated = getOne('SELECT * FROM tb_recall_incidents WHERE id = ?', [req.params.id]);
+    res.json({ ok: true, data: updated });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Public verification
+router.get('/public/trace/:code', async (req, res) => {
+  try {
+    const { code } = req.params;
+    let item = getOne('SELECT * FROM tb_batches WHERE batch_code = ?', [code]);
+    let type = 'batch';
+    if (!item) {
+      item = getOne('SELECT * FROM tb_packages WHERE package_code = ? OR barcode = ? OR qr_code = ?', [code, code, code]);
+      type = 'package';
+    }
+    if (!item) {
+      item = getOne('SELECT * FROM tb_shipments WHERE shipment_code = ?', [code]);
+      type = 'shipment';
+    }
+    if (!item) return res.status(404).json({ ok: false, error: 'Not found' });
+    const publicData = {
+      type,
+      code: item.batch_code || item.package_code || item.shipment_code,
+      product_name: item.product_name,
+      status: item.status,
+      created_at: item.created_at,
+      harvest_date: item.harvest_date,
+      farm_name: item.farm_id ? getOne('SELECT name FROM farms WHERE id = ?', [item.farm_id])?.name : null
+    };
+    if (type === 'package') {
+      const batch = getOne('SELECT product_name, harvest_date, batch_code FROM tb_batches WHERE id = ?', [item.batch_id]);
+      publicData.product_name = batch?.product_name;
+      publicData.batch_code = batch?.batch_code;
+      publicData.harvest_date = batch?.harvest_date;
+    }
+    res.json({ ok: true, data: publicData });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// TB: Dashboard stats
+router.get('/tb/stats', auth, async (req, res) => {
+  try {
+    const totalBatches = getOne('SELECT COUNT(*) as count FROM tb_batches')?.count || 0;
+    const activeBatches = getOne('SELECT COUNT(*) as count FROM tb_batches WHERE status IN (?, ?)', ['created', 'processing'])?.count || 0;
+    const shippedPackages = getOne('SELECT COUNT(*) as count FROM tb_packages WHERE status = ?', ['shipped'])?.count || 0;
+    const qualityPass = getOne('SELECT COUNT(*) as count FROM tb_batch_quality_checks WHERE result = ?', ['pass'])?.count || 0;
+    const qualityTotal = getOne('SELECT COUNT(*) as count FROM tb_batch_quality_checks')?.count || 0;
+    const openIncidents = getOne('SELECT COUNT(*) as count FROM tb_recall_incidents WHERE status = ?', ['open'])?.count || 0;
+    res.json({ ok: true, data: { total_batches: totalBatches, active_batches: activeBatches, shipped_packages: shippedPackages, quality_pass_rate: qualityTotal ? Math.round(qualityPass / qualityTotal * 100) : 0, open_incidents: openIncidents } });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
 module.exports = router;
