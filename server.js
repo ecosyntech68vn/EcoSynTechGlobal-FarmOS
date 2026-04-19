@@ -81,6 +81,21 @@ app.use(compression());
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
   });
 
+  // Landing page (sales)
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  });
+
+  // Products page
+  app.get('/products', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'products.html'));
+  });
+
+  // Mobile app
+  app.get('/mobile', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'mobile.html'));
+  });
+
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   
