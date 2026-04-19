@@ -42,6 +42,7 @@ const workersRoutes = require('./src/routes/workers');
 const supplyChainRoutes = require('./src/routes/supply-chain');
 const inventoryRoutes = require('./src/routes/inventory');
 const financeRoutes = require('./src/routes/finance');
+const systemInfoRoutes = require('./src/routes/system-info');
 const healthReportService = require('./src/services/healthReportService');
 const waterOptimizationService = require('./src/services/waterOptimizationService');
 
@@ -88,10 +89,17 @@ function createApp() {
   app.get('/api/health', (req, res) => {
     res.json({
       status: 'healthy',
+      system: 'EcoSynTech Farm OS',
+      version: pkg.version,
+      company: {
+        name: 'CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL',
+        founder: 'Tạ Quang Thuận',
+        phone: '0989516698',
+        email: 'kd.ecosyntech@gmail.com'
+      },
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
-      environment: config.nodeEnv,
-      version: pkg.version
+      environment: config.nodeEnv
     });
   });
 
@@ -160,6 +168,7 @@ function createApp() {
   app.use('/api/supply-chain', supplyChainRoutes);
   app.use('/api/inventory', inventoryRoutes);
   app.use('/api/finance', financeRoutes);
+  app.use('/api/system', systemInfoRoutes);
 
   // Health endpoints for deployment health and readiness
   app.get('/health', (req, res) => {

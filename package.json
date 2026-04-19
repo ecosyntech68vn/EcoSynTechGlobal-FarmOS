@@ -1,6 +1,6 @@
 {
   "name": "ecosyntech-iot-backend",
-  "version": "2.3.2",
+  "version": "5.0.0",
   "description": "EcoSynTech IoT Backend - Optimized for low-memory devices",
   "main": "server.js",
 

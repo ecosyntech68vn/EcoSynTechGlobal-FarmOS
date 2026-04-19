@@ -2,6 +2,16 @@ const express = require('express');
 const router = express.Router();
 const { getAll, getOne } = require('../config/database');
 const { asyncHandler } = require('../middleware/errorHandler');
+const pkg = require('../../package.json');
+
+const COMPANY_INFO = {
+  name: 'CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL',
+  founder: 'Tạ Quang Thuận',
+  position: 'CEO and FOUNDER',
+  phone: '0989516698',
+  email: 'kd.ecosyntech@gmail.com',
+  website: 'https://ecosyntech.com'
+};
 
 const healthReportEnabled = !!(process.env.WEBLOCAL_WEBAPP_URL && process.env.WEBLOCAL_API_KEY);
 
@@ -19,6 +29,11 @@ router.get('/', asyncHandler(async (req, res) => {
   });
   
   res.json({
+    system: {
+      name: 'EcoSynTech Farm OS',
+      version: pkg.version,
+      company: COMPANY_INFO
+    },
     devices: {
       total: devices?.count || 0,
       online: devices?.online || 0,
