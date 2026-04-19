@@ -136,15 +136,32 @@ async function main() {
   if (wantEnv) {
     const rand = (n) => require('crypto').randomBytes(n).toString('hex');
     const content = [
+      `# EcoSynTech - Auto-generated .env`,
+      `# Server`,
       `PORT=${process.env.PORT || 3000}`,
-      `NODE_ENV=${process.env.NODE_ENV || 'development'}`,
+      `NODE_ENV=development`,
+      ``,
+      `# Security - IMPORTANT: Change these for production!`,
       `JWT_SECRET=${rand(32)}`,
-      `JWT_EXPIRES_IN=${process.env.JWT_EXPIRES_IN || 3600}`,
+      `JWT_EXPIRES_IN=7d`,
+      `HMAC_SECRET=${rand(32)}`,
       `WEBHOOK_SECRET=${rand(32)}`,
-      `MQTT_BROKER=${process.env.MQTT_BROKER || ''}`
+      ``,
+      `# Database`,
+      `DB_TYPE=sqlite`,
+      `DB_PATH=./data/ecosyntech.db`,
+      ``,
+      `# MQTT (optional)`,
+      `MQTT_BROKER_URL=`,
+      `MQTT_USERNAME=`,
+      `MQTT_PASSWORD=`,
+      ``,
+      `# Weather`,
+      `FARM_LAT=10.7769`,
+      `FARM_LON=106.7009`
     ].join('\n');
     fs.writeFileSync(envPath, content);
-    console.log('Generated .env with default values.');
+    console.log('✅ Generated .env with secure defaults.');
   }
 
   // 7) Start server option
