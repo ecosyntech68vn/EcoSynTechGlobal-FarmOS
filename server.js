@@ -7,6 +7,15 @@ const rateLimit = require('express-rate-limit');
 const http = require('http');
 const os = require('os');
 
+const nodeEnv = process.env.NODE_ENV || 'development';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET && nodeEnv === 'production') {
+  console.error('FATAL: JWT_SECRET is required in production environment!');
+  console.error('Please set JWT_SECRET environment variable before starting.');
+  process.exit(1);
+}
+
 const config = require('./src/config');
 const logger = require('./src/config/logger');
 const { initDatabase, closeDatabase, getAll, getOne, runQuery, saveDatabase, getDriverType } = require('./src/config/database-adapters');
@@ -30,6 +39,7 @@ const analyticsRoutes = require('./src/routes/analytics');
 const devicemgmtRoutes = require('./src/routes/devicemgmt');
 const agricultureRoutes = require('./src/routes/agriculture');
 const securityRoutes = require('./src/routes/security');
+const securityStatusRoutes = require('./src/routes/security-status');
 const docsRoutes = require('./src/routes/docs');
 const firmwareRoutes = require('./src/routes/firmware');
 const rbacRoutes = require('./src/routes/rbac');
@@ -109,11 +119,22 @@ app.use(compression());
   app.use('/api/', limiter);
   
   app.use((req, res, next) => {
-    res.setHeader('X-Response-Time', Date.now());
+    req.startTime = Date.now();
+    res.setHeader('X-Response-Time', '0');
     logger.info(`${req.method} ${req.path}`, {
       ip: req.ip,
       userAgent: req.get('user-agent')
     });
+    next();
+  });
+
+  app.use((req, res, next) => {
+    const originalSend = res.send.bind(res);
+    res.send = function(body) {
+      const duration = Date.now() - (req.startTime || Date.now());
+      res.setHeader('X-Response-Time', String(duration));
+      return originalSend(body);
+    };
     next();
   });
 
@@ -190,6 +211,7 @@ app.use(compression());
   app.use('/api/device-mgmt', devicemgmtRoutes);
   app.use('/api/agriculture', agricultureRoutes);
   app.use('/api/security', securityRoutes);
+  app.use('/api/security-status', securityStatusRoutes);
   app.use('/api/docs', docsRoutes);
   app.use('/api/firmware', firmwareRoutes);
   app.use('/api/rbac', rbacRoutes);
