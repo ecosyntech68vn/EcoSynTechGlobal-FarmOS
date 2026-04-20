@@ -44,6 +44,10 @@ function initWebSocket(server) {
       clients.delete(ws);
     });
 
+    ws.on('unexpected-response', (req, res) => {
+      logger.warn(`WebSocket unexpected response for ${clientId}: ${res.statusCode}`);
+    });
+
     ws.send(JSON.stringify({
       type: 'connected',
       clientId,

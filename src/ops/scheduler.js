@@ -106,24 +106,38 @@ function SkillScheduler(ops, logger) {
         var skill = item.skill;
         var priority = item.priority;
 
-        try {
-          var result = skill.run({
-            event: { type: 'scheduler.tick', priority: priority },
-            logger: logger,
-            stateStore: ops.stateStore,
-            baseUrl: ops.context.baseUrl,
-            packageVersion: ops.context.packageVersion,
-            config: ops.context.config,
-          });
+        var maxRetries = 3;
+        var retryCount = 0;
+        
+        while (retryCount < maxRetries) {
+          try {
+            var result = skill.run({
+              event: { type: 'scheduler.tick', priority: priority, retry: retryCount },
+              logger: logger,
+              stateStore: ops.stateStore,
+              baseUrl: ops.context.baseUrl,
+              packageVersion: ops.context.packageVersion,
+              config: ops.context.config,
+            });
 
-          if (result && result.ok === false) {
-            failed++;
-          }
-          skillsRun++;
-        } catch (err) {
-          failed++;
-          if (logger && logger.error) {
-            logger.error('[Scheduler] Skill ' + skill.id + ' failed: ' + err.message);
+            if (result && result.ok === false && retryCount < maxRetries - 1) {
+              retryCount++;
+              continue;
+            }
+            
+            if (result && result.ok === false) {
+              failed++;
+            }
+            skillsRun++;
+            break;
+          } catch (err) {
+            retryCount++;
+            if (retryCount >= maxRetries) {
+              failed++;
+              if (logger && logger.error) {
+                logger.error('[Scheduler] Skill ' + skill.id + ' failed after ' + maxRetries + ' retries: ' + err.message);
+              }
+            }
           }
         }
 

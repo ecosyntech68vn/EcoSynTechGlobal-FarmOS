@@ -1,12 +1,26 @@
 const backupService = require('./backupRestoreService');
 const logger = require('../config/logger');
+const fs = require('fs');
+const path = require('path');
 
 const BACKUP_ENABLED = process.env.AUTO_BACKUP_ENABLED === 'true';
 const BACKUP_CRON = process.env.AUTO_BACKUP_CRON || '0 2 * * *';
 const BACKUP_RETENTION_DAYS = parseInt(process.env.BACKUP_RETENTION_DAYS || '7', 10);
 const BACKUP_MAX_COUNT = parseInt(process.env.BACKUP_MAX_COUNT || '7', 10);
+const MIN_DISK_SPACE_MB = 100;
 
 let intervalHandle = null;
+
+function checkDiskSpace(dir) {
+  try {
+    const stat = fs.statfsSync(dir);
+    const freeMB = (stat.bsize * stat.blocks) / 1024 / 1024;
+    return freeMB >= MIN_DISK_SPACE_MB;
+  } catch (e) {
+    logger.warn('[AutoBackup] Cannot check disk space:', e.message);
+    return true;
+  }
+}
 
 function parseCron(cron) {
   const parts = cron.split(' ');
@@ -26,16 +40,26 @@ function shouldRunNow(cron) {
 async function runScheduledBackup() {
   logger.info('[AutoBackup] Running scheduled backup...');
   
-  const result = await backupService.createBackup({ compression: true });
-  if (result.success) {
-    logger.info('[AutoBackup] Backup created:', result.backupPath);
-    
-    await cleanupOldBackups();
-    return result;
+  const backDir = process.env.BACKUP_DIR || './backups';
+  if (!checkDiskSpace(backDir)) {
+    logger.error('[AutoBackup] Low disk space, skipping backup');
+    return { success: false, error: 'Low disk space' };
   }
   
-  logger.error('[AutoBackup] Failed:', result.error);
-  return result;
+  try {
+    const result = await backupService.createBackup({ compression: true });
+    if (result.success) {
+      logger.info('[AutoBackup] Backup created:', result.backupPath);
+      
+      await cleanupOldBackups();
+    } else {
+      logger.error('[AutoBackup] Failed:', result.error);
+    }
+    return result;
+  } catch (err) {
+    logger.error('[AutoBackup] Error:', err.message);
+    return { success: false, error: err.message };
+  }
 }
 
 async function cleanupOldBackups() {

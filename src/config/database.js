@@ -163,6 +163,9 @@ function createTables() {
     )
   `);
 
+  createIndexes();
+  performVacuum();
+
   db.run(`
     CREATE TABLE IF NOT EXISTS api_keys (
       id TEXT PRIMARY KEY,
@@ -192,6 +195,9 @@ function createTables() {
       FOREIGN KEY (device_id) REFERENCES devices(id)
     )
   `);
+
+  createIndexes();
+  performVacuum();
 
   db.run(`
     CREATE TABLE IF NOT EXISTS traceability_batches (
@@ -1115,6 +1121,55 @@ function closeDatabase() {
   }
 }
 
+function createIndexes() {
+  const indexes = [
+    'CREATE INDEX IF NOT EXISTS idx_devices_status ON devices(status)',
+    'CREATE INDEX IF NOT EXISTS idx_devices_zone ON devices(zone)',
+    'CREATE INDEX IF NOT EXISTS idx_sensors_type ON sensors(type)',
+    'CREATE INDEX IF NOT EXISTS idx_sensors_timestamp ON sensors(timestamp)',
+    'CREATE INDEX IF NOT EXISTS idx_history_timestamp ON history(timestamp)',
+    'CREATE INDEX IF NOT EXISTS idx_alerts_timestamp ON alerts(timestamp)',
+    'CREATE INDEX IF NOT EXISTS idx_alerts_severity ON alerts(severity)',
+    'CREATE INDEX IF NOT EXISTS idx_commands_status ON commands(status)',
+    'CREATE INDEX IF NOT EXISTS idx_commands_device ON commands(device_id)'
+  ];
+
+  indexes.forEach(sql => {
+    try {
+      db.run(sql);
+    } catch (e) {
+      logger.debug('Index creation:', e.message);
+    }
+  });
+  logger.info('[DB] Indexes created/verified');
+}
+
+function performVacuum() {
+  if (!db || !db.run) return;
+  try {
+    db.run('ANALYZE');
+    logger.info('[DB] ANALYZE completed');
+  } catch (e) {
+    logger.debug('ANALYZE:', e.message);
+  }
+}
+
+function optimizeDatabase() {
+  try {
+    db.run('PRAGMA optimize');
+    saveDatabase();
+    logger.info('[DB] Optimize completed');
+  } catch (e) {
+    logger.debug('Optimize:', e.message);
+  }
+}
+
+setInterval(() => {
+  if (db) {
+    optimizeDatabase();
+  }
+}, 30 * 60 * 1000);
+
 module.exports = {
   initDatabase,
   getDatabase,
@@ -1122,5 +1177,7 @@ module.exports = {
   runQuery,
   getOne,
   getAll,
-  saveDatabase
+  saveDatabase,
+  createIndexes,
+  optimizeDatabase
 };
