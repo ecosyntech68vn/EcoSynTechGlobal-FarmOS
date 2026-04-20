@@ -5,9 +5,37 @@ const { asyncHandler } = require('../middleware/errorHandler');
 const logger = require('../config/logger');
 
 router.get('/', asyncHandler(async (req, res) => {
-  const limit = parseInt(req.query.limit) || 50;
+  const { from, to, device_id, action, limit: queryLimit } = req.query;
+  const limit = parseInt(queryLimit) || 50;
   
-  const history = getAll(`SELECT * FROM history ORDER BY timestamp DESC LIMIT ${limit}`);
+  let sql = 'SELECT * FROM history';
+  const params = [];
+  const conditions = [];
+  
+  if (from) {
+    conditions.push('timestamp >= ?');
+    params.push(from);
+  }
+  if (to) {
+    conditions.push('timestamp <= ?');
+    params.push(to);
+  }
+  if (device_id) {
+    conditions.push('trigger = ?');
+    params.push(device_id);
+  }
+  if (action) {
+    conditions.push('action = ?');
+    params.push(action);
+  }
+  
+  if (conditions.length > 0) {
+    sql += ' WHERE ' + conditions.join(' AND ');
+  }
+  sql += ' ORDER BY timestamp DESC LIMIT ?';
+  params.push(limit);
+  
+  const history = getAll(sql, params);
   
   const result = history.map(entry => ({
     id: entry.id,

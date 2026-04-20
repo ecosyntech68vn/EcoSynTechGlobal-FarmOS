@@ -16,7 +16,14 @@ const COMPANY_INFO = {
 const healthReportEnabled = !!(process.env.WEBLOCAL_WEBAPP_URL && process.env.WEBLOCAL_API_KEY);
 
 router.get('/', asyncHandler(async (req, res) => {
-  const devices = getOne('SELECT COUNT(*) as count, SUM(CASE WHEN status = "online" THEN 1 ELSE 0 END) as online FROM devices');
+  const { farm_id, date_from, date_to } = req.query;
+  
+  let deviceFilter = farm_id ? `WHERE farm_id = "${farm_id}"` : '';
+  let deviceQuery = deviceFilter 
+    ? `SELECT COUNT(*) as count, SUM(CASE WHEN status = "online" THEN 1 ELSE 0 END) as online FROM devices ${deviceFilter}`
+    : 'SELECT COUNT(*) as count, SUM(CASE WHEN status = "online" THEN 1 ELSE 0 END) as online FROM devices';
+  
+  const devices = getOne(deviceQuery);
   const rules = getOne('SELECT COUNT(*) as count, SUM(CASE WHEN enabled = 1 THEN 1 ELSE 0 END) as active FROM rules');
   const schedules = getOne('SELECT COUNT(*) as count, SUM(CASE WHEN enabled = 1 THEN 1 ELSE 0 END) as active FROM schedules');
   const alerts = getOne('SELECT COUNT(*) as total, SUM(CASE WHEN acknowledged = 0 THEN 1 ELSE 0 END) as unacknowledged FROM alerts');

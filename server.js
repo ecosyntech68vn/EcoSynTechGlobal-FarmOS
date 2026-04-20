@@ -409,6 +409,9 @@ async function startServer() {
       }
     }
 
+    const autoBackupScheduler = require('./src/services/autoBackupScheduler');
+    autoBackupScheduler.startScheduler();
+
     startSensorSimulation();
     
     healthReportService.start();
@@ -468,13 +471,17 @@ async function startServer() {
       });
     });
     
-    process.on('uncaughtException', (err) => {
+    process.on('uncaughtException', async (err) => {
       logger.error('Uncaught Exception:', err);
+      const alertService = require('./src/services/telegramAlertService');
+      await alertService.notifyError(err, { type: 'uncaughtException' });
       process.exit(1);
     });
     
-    process.on('unhandledRejection', (reason, promise) => {
+    process.on('unhandledRejection', async (reason, promise) => {
       logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+      const alertService = require('./src/services/telegramAlertService');
+      await alertService.notifyError(new Error(String(reason)), { type: 'unhandledRejection' });
     });
     
   } catch (err) {

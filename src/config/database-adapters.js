@@ -50,6 +50,12 @@ async function initSqliteDatabase() {
 function createTables() {
   if (!db) return;
   
+  db.run('PRAGMA journal_mode=WAL');
+  db.run('PRAGMA synchronous=NORMAL');
+  db.run('PRAGMA cache_size=-64000');
+  db.run('PRAGMA busy_timeout=5000');
+  db.run('PRAGMA temp_store=MEMORY');
+
   db.run(`CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,

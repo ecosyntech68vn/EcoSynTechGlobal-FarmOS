@@ -1,13 +1,14 @@
-{
-  "testEnvironment": "node",
-  "coverageDirectory": "coverage",
-  "collectCoverageFrom": [
-    "src/**/*.js",
-    "!src/skills/**"
+module.exports = {
+  testEnvironment: 'node',
+  coverageDirectory: 'coverage',
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/skills/**'
   ],
-  "testMatch": [
-    "**/tests/**/*.test.js"
+  testMatch: [
+    '**/__tests__/**/*.test.js'
   ],
-  "verbose": true,
-  "testTimeout": 10000
-}
+  verbose: true,
+  testTimeout: 10000,
+  collectCoverage: false
+};
