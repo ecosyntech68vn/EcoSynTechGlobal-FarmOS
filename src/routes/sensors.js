@@ -3,14 +3,13 @@ const router = express.Router();
 const { getAll, getOne, runQuery } = require('../config/database');
 const { asyncHandler } = require('../middleware/errorHandler');
 const logger = require('../config/logger');
-const cacheService = require('../services/cacheService');
+const telemetryCache = require('../services/cacheRedisOrMemory');
 
 const CACHE_TTL = parseInt(process.env.SENSORS_CACHE_TTL || '30000');
 
 router.get('/', asyncHandler(async (req, res) => {
   const cacheKey = 'sensors:all';
-  
-  const cachedData = cacheService.getCache().get(cacheKey);
+  const cachedData = await telemetryCache.getCache().get(cacheKey);
   if (cachedData) {
     return res.json(cachedData);
   }
@@ -28,7 +27,7 @@ router.get('/', asyncHandler(async (req, res) => {
     };
   });
   
-  cacheService.getCache().set(cacheKey, result, CACHE_TTL);
+  await telemetryCache.getCache().set(cacheKey, result, CACHE_TTL);
   res.json(result);
 }));
 
