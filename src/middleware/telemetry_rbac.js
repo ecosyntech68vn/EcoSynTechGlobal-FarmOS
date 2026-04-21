@@ -4,11 +4,17 @@
 // This is a preparatory hook for stricter access controls following ISO27001.
 
 function telemetryAccess(req, res, next) {
-  // In test environment, bypass RBAC for faster test execution
+  // In test environment, allow mocking a user role via header
   if (process.env.NODE_ENV === 'test') {
-    return next();
+    const mockRole = (req.headers['x-mock-telemetry-role'] || '').toString().toLowerCase();
+    if (mockRole) {
+      req.user = { role: mockRole };
+      return next();
+    }
+    // If no mock role provided, enforce authentication requirement for safety in tests
+    return res.status(401).json({ error: 'Authentication required' });
   }
-  // Enforce RBAC for telemetry endpoints
+  // Production/default behavior
   const user = req.user;
   if (!user) {
     return res.status(401).json({ error: 'Authentication required' });
