@@ -4,6 +4,8 @@ const Joi = require('joi');
 const { v4: uuidv4 } = require('uuid');
 const { runQuery, getOne, getAll } = require('../config/database');
 const logger = require('../config/logger');
+const cacheModule = require('../services/cacheRedisOrMemory');
+const DEVICES_CACHE_TTL = parseInt(process.env.DEVICES_CACHE_TTL || '60000', 10);
 const { auth } = require('../middleware/auth');
 
 // Validation schemas
@@ -27,14 +29,21 @@ const updateDeviceSchema = Joi.object({
 // GET /api/devices - List all devices
 router.get('/', auth, async (req, res) => {
   try {
+    const cacheKey = 'devices:all';
+    const cache = await cacheModule.getCache();
+    const cached = await cache.get(cacheKey);
+    if (cached) {
+      return res.json(cached);
+    }
+
     const devices = getAll(`
       SELECT d.*, 
         (SELECT COUNT(*) FROM rules WHERE enabled = 1) as active_rules
       FROM devices d
       ORDER BY d.last_seen DESC
     `);
-    
-    res.json({
+
+    const response = {
       success: true,
       count: devices.length,
       devices: devices.map(d => ({
@@ -42,7 +51,10 @@ router.get('/', auth, async (req, res) => {
         config: JSON.parse(d.config || '{}'),
         metadata: JSON.parse(d.metadata || '{}')
       }))
-    });
+    };
+
+    await cache.set(cacheKey, response, DEVICES_CACHE_TTL);
+    res.json(response);
   } catch (err) {
     logger.error('[Devices] List error:', err);
     res.status(500).json({ error: 'Failed to fetch devices' });
@@ -107,6 +119,14 @@ router.post('/', auth, async (req, res) => {
 
     logger.info(`[Devices] Created: ${deviceId} - ${name}`);
 
+    // Invalidate devices cache on create
+    try {
+      const cache = await cacheModule.getCache();
+      await cache.invalidate('devices:all');
+    } catch (e) {
+      // ignore cache invalidation errors in production
+    }
+
     res.status(201).json({
       success: true,
       message: 'Device registered successfully',
@@ -169,6 +189,14 @@ router.put('/:id', auth, async (req, res) => {
 
     logger.info(`[Devices] Updated: ${req.params.id}`);
 
+    // Invalidate devices cache on update
+    try {
+      const cache = await cacheModule.getCache();
+      await cache.invalidate('devices:all');
+    } catch (e) {
+      // ignore cache invalidation errors in production
+    }
+
     res.json({
       success: true,
       message: 'Device updated successfully',
@@ -204,6 +232,14 @@ router.put('/:id/config', auth, async (req, res) => {
 
     logger.info(`[Devices] Config updated: ${req.params.id}`);
 
+    // Invalidate devices cache on config update
+    try {
+      const cache = await cacheModule.getCache();
+      await cache.invalidate('devices:all');
+    } catch (e) {
+      // ignore cache invalidation errors in production
+    }
+
     res.json({
       success: true,
       message: 'Device config updated successfully',
@@ -229,6 +265,14 @@ router.delete('/:id', auth, async (req, res) => {
     runQuery('DELETE FROM devices WHERE id = ?', [req.params.id]);
 
     logger.info(`[Devices] Deleted: ${req.params.id}`);
+
+    // Invalidate devices cache on delete
+    try {
+      const cache = await cacheModule.getCache();
+      await cache.invalidate('devices:all');
+    } catch (e) {
+      // ignore cache invalidation errors
+    }
 
     res.status(204).send();
   } catch (err) {
