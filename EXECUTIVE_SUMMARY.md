@@ -30,6 +30,8 @@ Recommended Next Steps / Các bước tiếp theo (high level)
 - Expand addons for Weather and Produce Prices with clear pricing.
 - Prepare customer-facing contracts and service SLAs for commercial go-live.
 - Publish executive summary to stakeholders and investor-facing materials.
+- Phase 2: Observability enhancements (AI Manager, AI-Active optimization) for smarter ops.
+- Phase 3: CI/CD for observability + Canary, DR drills, and training.
 
 Contacts / Liên hệ
 - Engineering Lead: [name]
