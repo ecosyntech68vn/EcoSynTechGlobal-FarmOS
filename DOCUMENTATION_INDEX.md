@@ -37,6 +37,8 @@ Dự án EcoSynTech FarmOS là nền tảng Nông nghiệp Thông minh IoT với
 | `CHANGELOG.md` | Version history | Theo dõi thay đổi |
 | `HARDWARE_SPEC.md` | ESP32 specifications | Hướng dẫn phần cứng |
 | `DISASTER_RECOVERY_PLAN.md` | DRP | Phục hồi thảm họa |
+| `TELEMETRY_POLICY.md` | Telemetry policy | Chính sách telemetry |
+| `LOGGING_POLICY.md` | Logging policy | Chính sách logging |
 
 ### 2.2 Tài liệu SOPs (Vận hành)
 
