@@ -8,6 +8,7 @@ const { auth } = require('../middleware/auth');
 const { SmartControlEngine, AdvisoryEngine } = require('../modules/iot-engine');
 
 const ruleSchema = Joi.object({
+  type: Joi.string().valid('STATIC','ADAPTIVE').optional(),
   name: Joi.string().min(1).max(100).required(),
   description: Joi.string().max(500).optional(),
   enabled: Joi.boolean().default(true),
@@ -153,6 +154,15 @@ router.post('/', auth, async (req, res) => {
     const { error, value } = ruleSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
+    }
+    // Adaptive rule handling: convert strategy to a stored condition for compatibility
+    if (value && value.type === 'ADAPTIVE') {
+      if (!value.strategy) {
+        return res.status(400).json({ error: 'strategy is required for ADAPTIVE rules' });
+      }
+      value.condition = { adaptive: value.strategy };
+      delete value.strategy;
+      value.type = 'ADAPTIVE';
     }
 
     const rule = SmartControlEngine.createRule(value.name, value.condition, value.action, {

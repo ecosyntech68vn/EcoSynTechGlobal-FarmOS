@@ -8,8 +8,13 @@ function telemetryAccess(req, res, next) {
   if (process.env.NODE_ENV === 'test') {
     const mockRole = (req.headers['x-mock-telemetry-role'] || '').toString().toLowerCase();
     if (mockRole) {
-      req.user = { role: mockRole };
-      return next();
+      // Apply the same RBAC logic in tests to ensure correctness
+      const allowed = new Set(['telemetry_admin', 'telemetry_auditor', 'telemetry_user', 'admin']);
+      if (allowed.has(mockRole)) {
+        req.user = { role: mockRole };
+        return next();
+      }
+      return res.status(403).json({ error: 'Insufficient permissions for telemetry' });
     }
     // If no mock role provided, enforce authentication requirement for safety in tests
     return res.status(401).json({ error: 'Authentication required' });

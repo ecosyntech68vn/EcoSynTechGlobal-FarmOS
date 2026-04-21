@@ -1,4 +1,19 @@
 const os = require('os');
+const {AIManager} = (() => {
+  try { return require('./services/AIManager'); } catch (e) { return { AIManager: null }; }
+})();
+
+let __aiManager = null;
+let __aiInit = false;
+function ensureAI() {
+  if (!__aiInit) {
+    if (AIManager && AIManager.AIManager) {
+      __aiManager = new AIManager.AIManager();
+    }
+    __aiInit = true;
+  }
+  return __aiManager;
+}
 
 const totalMem = os.totalmem();
 const freeMem = os.freemem();
@@ -81,10 +96,19 @@ function getRecommendedSettings() {
   return configs[level];
 }
 
-function optimizeForDevice() {
+function aiActiveStep(context = {}) {
+  if ((process.env.AI_ACTIVE || 'false').toLowerCase() !== 'true') return null;
+  const ai = ensureAI();
+  if (!ai || typeof ai.thinkForField !== 'function') return null;
+  const field = context.field || 'default';
+  const decision = ai.thinkForField(field, context);
+  return decision;
+}
+
+function optimizeForDevice(context = {}) {
   const level = getOptimizationLevel();
   const settings = getRecommendedSettings();
-  
+
   if (level !== 'normal') {
     global.__OPTIMIZATION__ = {
       level: level,
@@ -92,12 +116,14 @@ function optimizeForDevice() {
       timestamp: Date.now()
     };
   }
-  
+
+  const aiDecision = aiActiveStep(context);
   return {
     level: level,
     settings: settings,
     systemInfo: getSystemInfo(),
-    memoryStatus: getMemoryStatus()
+    memoryStatus: getMemoryStatus(),
+    aiDecision: aiDecision
   };
 }
 
