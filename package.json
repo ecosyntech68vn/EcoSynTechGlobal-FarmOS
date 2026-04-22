@@ -9,6 +9,7 @@
     "dev": "nodemon server.js",
     "start:lowmem": "node --max-old-space-size=256 server.js",
     "test": "jest --passWithNoTests --forceExit --detectOpenHandles",
+    "test:coverage": "jest --coverage --passWithNoTests --forceExit --detectOpenHandles",
     "lint": "eslint src/",
     "build": "node --check server.js"
   },

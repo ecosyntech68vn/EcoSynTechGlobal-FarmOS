@@ -21,7 +21,11 @@ module.exports = {
   },
   
   cors: {
-    origin: process.env.CORS_ORIGIN || '*'
+    origin: process.env.CORS_ORIGIN || '*',
+    allowedOrigins: (process.env.CORS_ALLOWED_ORIGINS || '')
+      .split(',')
+      .map(o => o.trim())
+      .filter(o => o)
   },
   
   rateLimit: {

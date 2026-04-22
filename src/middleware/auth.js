@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const logger = require('../config/logger');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -14,7 +15,57 @@ if (!JWT_SECRET) {
 
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 const REFRESH_EXPIRES_IN = process.env.REFRESH_EXPIRES_IN || '7d';
-const SESSION_TIMEOUT = parseInt(process.env.SESSION_TIMEOUT || '1800', 10); // 30 minutes default
+const SESSION_TIMEOUT = parseInt(process.env.SESSION_TIMEOUT || '1800', 10);
+
+const refreshTokenStore = new Map();
+const REFRESH_TOKEN_MAX = 1000;
+
+function hashToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+function storeRefreshToken(userId, token) {
+  const hash = hashToken(token);
+  refreshTokenStore.set(userId, {
+    hash,
+    created: Date.now(),
+    rotationCount: 0
+  });
+  
+  if (refreshTokenStore.size > REFRESH_TOKEN_MAX) {
+    const firstKey = refreshTokenStore.keys().next().value;
+    refreshTokenStore.delete(firstKey);
+  }
+}
+
+function verifyRefreshToken(userId, token) {
+  const stored = refreshTokenStore.get(userId);
+  if (!stored) return false;
+  
+  const hash = hashToken(token);
+  return stored.hash === hash;
+}
+
+function rotateRefreshToken(userId, oldToken) {
+  const stored = refreshTokenStore.get(userId);
+  if (!stored) return null;
+  
+  if (stored.rotationCount >= 5) {
+    logger.warn('[Auth] Max refresh token rotation reached for user:', userId);
+    refreshTokenStore.delete(userId);
+    return null;
+  }
+  
+  stored.rotationCount++;
+  const newToken = generateRefreshToken({ id: userId });
+  storeRefreshToken(userId, newToken);
+  return newToken;
+}
+
+function revokeRefreshToken(userId) {
+  refreshTokenStore.delete(userId);
+  logger.info('[Auth] Refresh token revoked for user:', userId);
+}
 
 function generateAccessToken(user) {
   return jwt.sign(
@@ -171,6 +222,10 @@ module.exports = {
   generateAccessToken,
   generateRefreshToken,
   verifyToken,
+  verifyRefreshToken,
+  rotateRefreshToken,
+  revokeRefreshToken,
+  storeRefreshToken,
   auth,
   optionalAuth,
   requireRole,

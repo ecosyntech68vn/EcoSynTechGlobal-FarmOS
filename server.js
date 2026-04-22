@@ -28,6 +28,7 @@ const { initWebSocket, broadcast } = require('./src/websocket');
 const optimization = require('./src/optimization');
 
 const sensorsRoutes = require('./src/routes/sensors');
+const { rateLimitPerDevice } = require('./src/middleware/deviceRateLimit');
 const devicesRoutes = require('./src/routes/devices');
 const rulesRoutes = require('./src/routes/rules');
 const schedulesRoutes = require('./src/routes/schedules');
@@ -243,7 +244,7 @@ app.use(compression());
     res.json(translations);
   });
 
-  app.use('/api/sensors', sensorsRoutes);
+  app.use('/api/sensors', rateLimitPerDevice, sensorsRoutes);
   app.use('/api/devices', devicesRoutes);
   app.use('/api/rules', rulesRoutes);
   app.use('/api/schedules', schedulesRoutes);

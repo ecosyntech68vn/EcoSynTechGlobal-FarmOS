@@ -48,6 +48,29 @@ async function initDatabase() {
 let pendingSave = false;
 let saveTimeout = null;
 const SAVE_DEBOUNCE_MS = 2000;
+const BACKUP_DIR = path.join(__dirname, '../../backups');
+const MAX_BACKUPS = 10;
+
+function ensureBackupDir() {
+  if (!fs.existsSync(BACKUP_DIR)) {
+    fs.mkdirSync(BACKUP_DIR, { recursive: true });
+  }
+}
+
+function getTransactionLogPath() {
+  return path.join(__dirname, '../../data/transactions.log');
+}
+
+function logTransaction(sql, params) {
+  try {
+    const logPath = getTransactionLogPath();
+    const timestamp = new Date().toISOString();
+    const entry = `[${timestamp}] ${sql} | ${JSON.stringify(params)}\n`;
+    fs.appendFileSync(logPath, entry);
+  } catch (e) {
+    logger.warn('Transaction log failed:', e.message);
+  }
+}
 
 function saveDatabase() {
   if (!db) return;
@@ -80,6 +103,46 @@ function saveDatabaseSync() {
     logger.error('Failed to save database:', err);
   }
 }
+
+function createPeriodicBackup() {
+  ensureBackupDir();
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const backupPath = path.join(BACKUP_DIR, `ecosyntech_${timestamp}.db`);
+  
+  try {
+    const data = db.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(backupPath, buffer);
+    logger.info(`[DB] Periodic backup created: ${backupPath}`);
+    
+    const backups = fs.readdirSync(BACKUP_DIR)
+      .filter(f => f.endsWith('.db'))
+      .sort()
+      .reverse();
+    
+    if (backups.length > MAX_BACKUPS) {
+      backups.slice(MAX_BACKUPS).forEach(f => {
+        fs.unlinkSync(path.join(BACKUP_DIR, f));
+        logger.info(`[DB] cleanup: deleted old backup ${f}`);
+      });
+    }
+  } catch (err) {
+    logger.error('[DB] Periodic backup failed:', err);
+  }
+}
+
+setInterval(() => {
+  if (db) {
+    saveDatabaseSync();
+    logger.debug('[DB] Checkpoint written');
+  }
+}, 60000);
+
+setInterval(() => {
+  if (db) {
+    createPeriodicBackup();
+  }
+}, 24 * 60 * 60 * 1000);
 
 function createTables() {
   db.run(`
