@@ -6,6 +6,10 @@
 // gracefully without impacting the app startup.
 
 (async () => {
+  if (process.env.NODE_ENV === 'test') {
+    console.info('[OTEL] Test env: skipping OpenTelemetry setup');
+    return;
+  }
   const enable = (process.env.OTEL_ENABLED || 'true').toLowerCase() === 'true';
   if (!enable) {
     console.info('[OTEL] Telemetry disabled (OTEL_ENABLED=false)');
