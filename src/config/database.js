@@ -45,8 +45,33 @@ async function initDatabase() {
   return db;
 }
 
+let pendingSave = false;
+let saveTimeout = null;
+const SAVE_DEBOUNCE_MS = 2000;
+
 function saveDatabase() {
   if (!db) return;
+  if (pendingSave) return;
+  
+  pendingSave = true;
+  clearTimeout(saveTimeout);
+  
+  saveTimeout = setTimeout(() => {
+    try {
+      const data = db.export();
+      const buffer = Buffer.from(data);
+      fs.writeFileSync(config.database.path, buffer);
+      pendingSave = false;
+    } catch (err) {
+      logger.error('Failed to save database:', err);
+      pendingSave = false;
+    }
+  }, SAVE_DEBOUNCE_MS);
+}
+
+function saveDatabaseSync() {
+  if (!db || pendingSave) return;
+  clearTimeout(saveTimeout);
   try {
     const data = db.export();
     const buffer = Buffer.from(data);
@@ -1065,10 +1090,49 @@ function getDatabase() {
   return db;
 }
 
+const stmtCache = new Map();
+const MAX_STMT_CACHE = 50;
+
+function getPreparedStatement(sql) {
+  const cached = stmtCache.get(sql);
+  if (cached) {
+    cached.lastUsed = Date.now();
+    cached.useCount++;
+    return cached.stmt;
+  }
+  
+  const stmt = db.prepare(sql);
+  if (stmtCache.size >= MAX_STMT_CACHE) {
+    let oldestKey = null;
+    let oldestTime = Date.now();
+    for (const [key, val] of stmtCache) {
+      if (val.lastUsed < oldestTime) {
+        oldestTime = val.lastUsed;
+        oldestKey = key;
+      }
+    }
+    if (oldestKey) {
+      try { stmtCache.get(oldestKey).stmt.free(); } catch (e) {}
+      stmtCache.delete(oldestKey);
+    }
+  }
+  
+  stmtCache.set(sql, { stmt, lastUsed: Date.now(), useCount: 1 });
+  return stmt;
+}
+
 function runQuery(sql, params = []) {
   if (!db) throw new Error('Database not initialized');
   try {
-    db.run(sql, params);
+    if (params.length === 0) {
+      db.run(sql);
+    } else {
+      const stmt = getPreparedStatement(sql);
+      stmt.reset();
+      stmt.bind(params);
+      stmt.step();
+      stmt.reset();
+    }
     saveDatabase();
     return { changes: db.getRowsModified() };
   } catch (err) {
@@ -1080,14 +1144,13 @@ function runQuery(sql, params = []) {
 function getOne(sql, params = []) {
   if (!db) throw new Error('Database not initialized');
   try {
-    const stmt = db.prepare(sql);
+    const stmt = getPreparedStatement(sql);
+    stmt.reset();
     stmt.bind(params);
     if (stmt.step()) {
       const row = stmt.getAsObject();
-      stmt.free();
       return row;
     }
-    stmt.free();
     return null;
   } catch (err) {
     logger.error('Query error:', err);
@@ -1098,13 +1161,13 @@ function getOne(sql, params = []) {
 function getAll(sql, params = []) {
   if (!db) throw new Error('Database not initialized');
   try {
-    const stmt = db.prepare(sql);
+    const stmt = getPreparedStatement(sql);
+    stmt.reset();
     stmt.bind(params);
     const results = [];
     while (stmt.step()) {
       results.push(stmt.getAsObject());
     }
-    stmt.free();
     return results;
   } catch (err) {
     logger.error('Query error:', err);
@@ -1114,9 +1177,13 @@ function getAll(sql, params = []) {
 
 function closeDatabase() {
   if (db) {
-    saveDatabase();
+    saveDatabaseSync();
     db.close();
     db = null;
+    for (const { stmt } of stmtCache.values()) {
+      try { stmt.free(); } catch (e) {}
+    }
+    stmtCache.clear();
     logger.info('Database connection closed');
   }
 }

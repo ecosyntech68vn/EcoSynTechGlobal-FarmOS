@@ -105,6 +105,44 @@ function aiActiveStep(context = {}) {
   return decision;
 }
 
+let lastPressureEvent = 0;
+const PRESSURE_COOLDOWN = 60000;
+
+function handleMemoryPressure() {
+  const now = Date.now();
+  if (now - lastPressureEvent < PRESSURE_COOLDOWN) return;
+  lastPressureEvent = now;
+  
+  const mem = process.memoryUsage();
+  const heapUsedMB = mem.heapUsed / 1024 / 1024;
+  
+  if (heapUsedMB > 400) {
+    try {
+      const cache = require('./services/cacheService');
+      if (cache && cache.getCache) {
+        cache.getCache().cleanup();
+      }
+    } catch (e) {}
+    
+    try {
+      const perfCache = require('./services/performanceService');
+      if (perfCache && perfCache.clearCache) {
+        perfCache.clearCache();
+      }
+    } catch (e) {}
+    
+    global.gc && global.gc();
+  }
+}
+
+setInterval(() => {
+  const mem = process.memoryUsage();
+  const heapUsedMB = mem.heapUsed / 1024 / 1024;
+  if (heapUsedMB > 400) {
+    handleMemoryPressure();
+  }
+}, 30000);
+
 function optimizeForDevice(context = {}) {
   const level = getOptimizationLevel();
   const settings = getRecommendedSettings();

@@ -14,13 +14,21 @@ class MemoryCache {
 
   set(key, value, ttl = this.ttl) {
     if (this.cache.size >= this.maxSize && !this.cache.has(key)) {
-      const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
+      let lruKey = null;
+      let oldestTime = Date.now();
+      for (const [k, v] of this.cache) {
+        if (v.accessed < oldestTime) {
+          oldestTime = v.accessed;
+          lruKey = k;
+        }
+      }
+      if (lruKey) this.cache.delete(lruKey);
     }
 
     this.cache.set(key, {
       value,
-      expires: Date.now() + ttl
+      expires: Date.now() + ttl,
+      accessed: Date.now()
     });
   }
 
@@ -38,6 +46,7 @@ class MemoryCache {
       return null;
     }
     
+    item.accessed = Date.now();
     this.hits++;
     return item.value;
   }

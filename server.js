@@ -68,6 +68,7 @@ const waterOptimizationService = require('./src/services/waterOptimizationServic
 const { responseSignatureMiddleware } = require('./src/middleware/response-sign');
 const { getAuditHashMiddleware } = require('./src/middleware/audit-tamper-proof');
 const { requestDeduplication } = require('./src/middleware/requestDeduplication');
+const { responseOptimizer } = require('./src/middleware/responseOptimizer');
 const path = require('path');
 
 function createApp() {
@@ -148,6 +149,7 @@ app.use(compression());
   });
   app.use('/api/', limiter);
   app.use('/api/', requestDeduplication);
+  app.use(responseOptimizer);
   
   app.use((req, res, next) => {
     req.startTime = Date.now();
