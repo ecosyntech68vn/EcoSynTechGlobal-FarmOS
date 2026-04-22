@@ -1,26 +1,26 @@
 # 🚀 ECOSYNTECH FARM OS
-## Nền Tảng Nông Nghiệp Thông Minh 4.0 Toàn Diện
 
-Hệ thống quản lý nông nghiệp thông minh toàn diện với **quản lý đa farm**, **nhân sự**, **chuỗi cung ứng**, **tồn kho**, **tài chính**, **tưới tiêu thông minh**, **giám sát sức khỏe** và **67 skills tự động hóa**.
+## English | Tiếng Việt
+
+**Smart Agriculture 4.0 Platform** with **multi-farm management**, **workforce**, **supply chain**, **inventory**, **finance**, **smart irrigation**, **health monitoring** and **AI-powered automation**.
 
 ---
 
-## 🏢 GIỚI THIỆU
+## 🏢 COMPANY / CÔNG TY
 
-### Công ty phát triển
-
-| Thông tin | Chi tiết |
-|----------|----------|
-| **Tên công ty** | CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL |
-| **Người sáng lập** | Tạ Quang Thuận - CEO and FOUNDER |
-| **Điện thoại** | 0989516698 |
+| Info | Details |
+|------|----------|
+| **Company Name** | CÔNG TY TNHH CÔNG NGHỆ ECOSYNTECH GLOBAL |
+| **Founder** | Tạ Quang Thuận - CEO and FOUNDER |
+| **Phone** | 0989516698 |
 | **Email** | kd.ecosyntech@gmail.com |
 | **Website** | https://ecosyntechglobal.com |
-| **Năm thành lập** | 2026 |
+| **Founded** | 2026 |
+| **Certification** | ISO 27001:2022 (9.5/10) |
 
 ---
 
-## 📋 TỔNG QUAN HỆ THỐNG
+## 📋 OVERVIEW / TỔNG QUAN HỆ THỐNG
 
 ### Tính năng cốt lõi
 
@@ -43,39 +43,39 @@ Hệ thống quản lý nông nghiệp thông minh toàn diện với **quản l
 
 ---
 
-## 🚀 CÀI ĐẶT
+## 🚀 SETUP / CÀI ĐẶT
 
-### Yêu cầu hệ thống
+### Requirements / Yêu cầu hệ thống
 
-- Node.js 18+ (khuyến nghị) hoặc >=12.0.0 (tối thiểu)
-- 512MB RAM tối thiểu (khuyến nghị 1GB)
-- Windows 7+ hoặc Linux
+- Node.js 18+ (recommended) or >=12.0.0 (minimum)
+- 512MB RAM minimum (recommended 1GB)
+- Windows 7+ or Linux
 
-### Các bước cài đặt
+### Installation / Các bước cài đặt
 
 ```bash
-# 1. Clone dự án
+# 1. Clone the project
 git clone https://github.com/ecosyntech68vn/Ecosyntech-web
 
-# 2. Di chuyển vào thư mục
+# 2. Navigate to directory
 cd Ecosyntech-web
 
-# 3. Cài đặt dependencies
+# 3. Install dependencies
 npm install
 
-# 4. Cấu hình
+# 4. Configure environment
 cp .env.example .env
-# Chỉnh sửa .env nếu cần
+# ⚠️ IMPORTANT: Change JWT_SECRET in .env before production!
 
-# 5. Chạy server
+# 5. Start server
 npm start
 ```
 
-Server chạy tại: `http://localhost:3000`
+Server runs at / Server chạy tại: `http://localhost:3000`
 
 ---
 
-## ⚙️ CẤU HÌNH MÔI TRƯỜNG
+## ⚙️ ENVIRONMENT CONFIGURATION / CẤU HÌNH MÔI TRƯỜNG
 
 ```env
 # ====================
