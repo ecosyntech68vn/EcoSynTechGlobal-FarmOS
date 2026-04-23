@@ -4,6 +4,12 @@ const { auth } = require('../middleware/auth');
 const aiEngine = require('../services/aiEngine');
 const { getAll, getOne, runQuery } = require('../config/database');
 
+const TFLiteDiseasePredictor = require('../services/ai/tfliteDiseasePredictor');
+const LSTMIrrigationPredictor = require('../services/ai/lstmIrrigationPredictor');
+
+const diseasePredictor = new TFLiteDiseasePredictor();
+const irrigationPredictor = new LSTMIrrigationPredictor();
+
 router.get('/predict/irrigation', auth, async (req, res) => {
   try {
     const farmId = req.query.farm_id || 'default';
@@ -202,6 +208,50 @@ router.get('/models', auth, async (req, res) => {
   try {
     const models = getAll('SELECT * FROM ai_models ORDER BY created_at DESC');
     res.json({ ok: true, data: models });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post('/detect-disease', async (req, res) => {
+  try {
+    const { image_url, temperature, humidity, soilMoisture } = req.body;
+
+    let result;
+    if (image_url) {
+      result = await diseasePredictor.predictFromUrl(image_url);
+    } else if (temperature !== undefined && humidity !== undefined) {
+      const conditions = { temperature, humidity, soilMoisture };
+      result = {
+        disease: conditions.soilMoisture < 30 ? 'drought_stress' : conditions.temperature > 35 ? 'heat_stress' : 'healthy',
+        confidence: '75%',
+        rawScore: 0.75,
+        method: 'sensor_fallback'
+      };
+    } else {
+      result = diseasePredictor.fallbackPredict();
+    }
+
+    res.json({ ok: true, data: result });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post('/predict-irrigation-lstm', async (req, res) => {
+  try {
+    const { historicalData, temperature, humidity, rainfall, soilMoisture } = req.body;
+
+    let result;
+    if (historicalData && Array.isArray(historicalData)) {
+      result = await irrigationPredictor.predict(historicalData);
+    } else if (temperature !== undefined) {
+      result = await irrigationPredictor.predictFromSensors({ temperature, humidity, rainfall, soilMoisture });
+    } else {
+      result = irrigationPredictor.fallbackPredict(null);
+    }
+
+    res.json({ ok: true, data: result });
   } catch (error) {
     res.status(500).json({ ok: false, error: error.message });
   }

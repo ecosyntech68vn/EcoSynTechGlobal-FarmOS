@@ -3,8 +3,8 @@
   "version": "5.0.0",
   "description": "EcoSynTech IoT Backend - Optimized for low-memory devices",
   "main": "server.js",
-
   "scripts": {
+    "setup-models": "./scripts/setup-models.sh",
     "start": "node server.js",
     "dev": "nodemon server.js",
     "start:lowmem": "node --max-old-space-size=256 server.js",
@@ -14,7 +14,6 @@
     "lint": "eslint src/",
     "build": "node --check server.js"
   },
-
   "keywords": [
     "iot",
     "agriculture",
@@ -24,16 +23,15 @@
     "rest-api",
     "low-memory"
   ],
-
   "author": "EcoSynTech",
   "license": "MIT",
-
   "engines": {
     "node": ">=18.0.0"
   },
-
   "dependencies": {
+    "@tensorflow/tfjs-node": "^4.22.0",
     "aedes": "^0.51.3",
+    "axios": "^1.6.5",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.1",
     "compression": "^1.7.4",
@@ -46,27 +44,26 @@
     "joi": "^17.12.1",
     "jsonwebtoken": "^9.0.2",
     "mqtt": "^5.3.0",
+    "onnxruntime-node": "^1.24.3",
     "pdfkit": "^0.15.0",
+    "pg": "^8.11.3",
     "qrcode": "^1.5.4",
+    "sharp": "^0.34.5",
     "sql.js": "^1.10.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "systeminformation": "^5.21.20",
     "uuid": "^9.0.1",
     "websocket-stream": "^5.5.2",
     "winston": "^3.11.0",
-    "ws": "^8.16.0",
-    "systeminformation": "^5.21.20",
-    "axios": "^1.6.5",
-    "pg": "^8.11.3"
+    "ws": "^8.16.0"
   },
-
   "devDependencies": {
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.2",
     "supertest": "^6.3.3"
   },
-
   "optimization": {
     "nodeOptions": "--max-old-space-size=384 --optimize-for-size --gc-interval=100",
     "minRAM": "512MB",
