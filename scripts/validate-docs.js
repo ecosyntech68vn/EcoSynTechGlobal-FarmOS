@@ -10,7 +10,14 @@ const FILES = [
   'docs/audit/e2e_evidence.md',
   'DOCS_GUIDE.md',
   'RELEASE_NOTES.md',
-  'CHANGELOG.md'
+  'CHANGELOG.md',
+  'ISMS_POLICY.md',
+  'RISK_REGISTER.md',
+  'ANNEX_A_MAPPING.md',
+  'INCIDENT_RESPONSE_SOP.md',
+  'BUSINESS_CONTINUITY_SOP.md',
+  'SUPPLIER_SECURITY_SOP.md',
+  'ISMS_REVIEW_SCHEDULE.md'
 ]
 
 function readFile(p) {
@@ -48,6 +55,15 @@ function checkFile(name, text) {
     case 'RELEASE_NOTES.md':
     case 'CHANGELOG.md': {
       return { ok: text.length > 0, note: 'present' }
+    }
+    case 'ISMS_POLICY.md':
+    case 'RISK_REGISTER.md':
+    case 'ANNEX_A_MAPPING.md':
+    case 'INCIDENT_RESPONSE_SOP.md':
+    case 'BUSINESS_CONTINUITY_SOP.md':
+    case 'SUPPLIER_SECURITY_SOP.md':
+    case 'ISMS_REVIEW_SCHEDULE.md': {
+      return { ok: text && text.length >= 10, note: 'present' }
     }
     default:
       return { ok: false, note: 'unknown' }

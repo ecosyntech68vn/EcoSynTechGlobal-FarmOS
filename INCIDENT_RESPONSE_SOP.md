@@ -1,0 +1,1 @@
+# INCIDENT_RESPONSE_SOP placeholder
