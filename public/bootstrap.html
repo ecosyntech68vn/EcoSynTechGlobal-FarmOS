@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Bootstrap Manager</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      .card { border: 1px solid #ddd; padding: 16px; border-radius: 8px; max-width: 700px; margin: 0 auto; }
+      h1 { font-size: 1.5rem; margin-bottom: 12px; }
+      label { display: inline-block; margin-right: 12px; }
+      input[type="text"] { width: 60%; }
+      button { margin-right: 8px; padding: 8px 12px; }
+      #status { margin-top: 12px; padding: 8px; background: #f9f9f9; border-radius: 6px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>AI Bootstrap Manager</h1>
+      <div id="status">
+        <div>Small model: <span id="smallStatus">-</span></div>
+        <div>Large model: <span id="largeStatus">-</span></div>
+        <div>Large ONNX URL: <span id="largeUrl">-</span></div>
+      </div>
+      <div style="margin-top:12px;">
+        <label>Enable Small: <input id="toggleSmall" type="checkbox"></label>
+        <label>Enable Large: <input id="toggleLarge" type="checkbox"></label>
+      </div>
+      <div style="margin-top:8px;"> 
+        <label>Large ONNX URL: <input id="onnxUrl" type="text" placeholder="https://.../model.onnx"></label>
+      </div>
+      <div style="margin-top:12px;">
+        <button id="applyBtn">Apply</button>
+        <button id="reloadBtn">Reload</button>
+        <button id="refreshBtn">Refresh Status</button>
+      </div>
+    </div>
+    <script>
+      async function fetchStatus(){
+        const res = await fetch('/api/bootstrap/status');
+        const data = await res.json();
+        const s = data && data.status ? data.status : data;
+        const st = data.status ? data.status : data;
+        document.getElementById('smallStatus').textContent = (st.smallEnabled ? 'enabled' : 'disabled');
+        document.getElementById('largeStatus').textContent = (st.largeEnabled ? 'enabled' : 'disabled');
+        document.getElementById('largeUrl').textContent = st.largeUrl || '-';
+      }
+      async function applyConfig(){
+        const small = document.getElementById('toggleSmall').checked ? 1 : 0;
+        const large = document.getElementById('toggleLarge').checked ? 1 : 0;
+        const largeUrl = document.getElementById('onnxUrl').value;
+        await fetch('/api/bootstrap/configure', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ small, large, largeUrl })
+        });
+      }
+      async function reloadBootstrap(){
+        await fetch('/api/bootstrap/reload', { method: 'POST' });
+      }
+      document.getElementById('applyBtn').onclick = async () => { await applyConfig(); alert('Bootstrap config applied'); };
+      document.getElementById('reloadBtn').onclick = async () => { await reloadBootstrap(); alert('Bootstrap reloaded'); };
+      document.getElementById('refreshBtn').onclick = async () => { await fetchStatus(); };
+      (async () => { await fetchStatus(); })();
+    </script>
+  </body>
+  </html>

@@ -36,12 +36,12 @@ describe('AI bootstrap', () => {
   });
 
   test('does not create large model when AI_LARGE_MODEL=0', () => {
+    // Ensure large model is not present before test
     if (fs.existsSync(largeModel)) {
-      // Remove if accidentally created in prior run
-      // Note: We avoid deleting user data in tests; simply verify absence
+      try { fs.unlinkSync(largeModel); } catch (e) { /* ignore */ }
     }
     runBootstrap({ AI_SMALL_MODEL: '1', AI_LARGE_MODEL: '0' });
-    // Large model should not exist
+    // Large model should not be created by bootstrap
     expect(fs.existsSync(largeModel)).toBe(false);
   });
 });
