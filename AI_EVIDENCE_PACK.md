@@ -34,6 +34,8 @@ This document serves as the primary evidence repository for ISO 27001:2022 A.14 
 | **E-A14.2-03** | Labels file (model class list) | models/labels.txt | 2026-04-23 |
 | **E-A14.2-04** | Bootstrap script with lifecycle hooks | scripts/setup-models.sh | 2026-04-23 |
 | **E-A14.2-05** | SOP-E-04: Bootstrap & Model Management | SOP_AI_GOVERNANCE.md §SOP-E-04 | 2026-04-23 |
+| **E-A14.2-06** | SHA256 checksum verification (R-AI-02) | src/bootstrap/modelLoader.js:verifyChecksum() | 2026-04-23 |
+| **E-A14.2-07** | Checksum registry (pre-computed + vendor) | models/registry.json:checksum | 2026-04-23 |
 
 **Verification**: 
 - List models/registry.json for active models with versions
@@ -206,6 +208,7 @@ Use this checklist during internal or external ISO 27001 audits.
 |---------|------|--------|---------|
 | 6.0.0 | 2026-04-23 | AI Ops Lead | Initial evidence pack for A.14 controls |
 | 6.1.0 | 2026-04-23 | AI Ops Lead | Phase 2: add IoT telemetry governance (E-A14.3-06 to 12, E-A14.4-08 to 09), 22 telemetry tests, aiEngine and aiTelemetry service artifacts |
+| 6.2.0 | 2026-04-23 | AI Ops Lead | Phase 3: add SHA256 checksum verification (E-A14.2-06 to 07), audit self-assessment (AUDIT_CHECKLIST.md), executive summary (AUDIT_EXECUTIVE_SUMMARY.md), 41 evidence collection tests |
 
 ---
 
