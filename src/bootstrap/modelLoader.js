@@ -15,7 +15,6 @@ function historyPush(entry) {
   if (historyRing.length > HISTORY_MAX) historyRing.shift();
 }
 function historyGet(n = 20) { return historyRing.slice(-n); }
-function historyClear() { historyRing.length = 0; }
 
 // ── Bootstrap State ────────────────────────────────────────────────────────────
 const state = {

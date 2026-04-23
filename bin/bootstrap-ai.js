@@ -1,19 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-const { execSync } = require('child_process');
 const http = require('http');
 
 const API = process.env.API_URL || 'http://localhost:3000/api/bootstrap';
-
-const cmds = {
-  status: 'Get bootstrap status',
-  health: 'Get health check',
-  history: 'Get bootstrap history (limit N)',
-  apply: 'Apply config (small=0|1, large=0|1, largeUrl=URL)',
-  reload: 'Reload bootstrap',
-  help: 'Show this help'
-};
 
 function usage() {
   console.log(`
