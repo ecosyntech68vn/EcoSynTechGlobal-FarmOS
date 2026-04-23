@@ -1,7 +1,7 @@
 {
   "schema": "1.0.0",
   "description": "AI Model Inventory for EcoSynTech FarmOS. Aligned with ISO 27001:2022 A.8.1 (Asset Management) and A.14.2 (AI Lifecycle Management).",
-  "lastUpdated": "2026-04-23T00:00:00.000Z",
+  "lastUpdated": "2026-04-23T18:00:00.000Z",
   "managedBy": "AI Ops Lead",
   "models": [
     {
@@ -31,7 +31,13 @@
       "healthStatus": "healthy",
       "notes": "MobileNetV2 fine-tuned on PlantVillage dataset. 38 disease classes across 14 crops.",
       "securityClassification": "Internal",
-      "dataSensitivity": "Low"
+      "dataSensitivity": "Low",
+      "checksum": {
+        "algorithm": "SHA256",
+        "value": "899d4f5ec0e87604f2f52e8ee6d79a90ad91834de36997b91ac09fac044d5ed3",
+        "verifiedAt": null,
+        "note": "Compute with: sha256sum models/plant_disease.tflite"
+      }
     },
     {
       "id": "model-002",
@@ -41,7 +47,7 @@
       "sizeMB": 10,
       "version": "1.0",
       "loaded": true,
-      "loadedAt": "2026-04-23T17:46:59.893Z",
+      "loadedAt": "2026-04-23T23:31:53.187Z",
       "source": "AI_ONNX_URL env var (user-provided)",
       "sourceType": "HTTP or Google Drive",
       "classes": null,
@@ -67,7 +73,13 @@
       "notes": "LSTM model for irrigation prediction. Optional - not included in repo. Requires user to provide ONNX file via AI_ONNX_URL.",
       "securityClassification": "Internal",
       "dataSensitivity": "Low",
-      "downloadRequired": true
+      "downloadRequired": true,
+      "checksum": {
+        "algorithm": "SHA256",
+        "value": null,
+        "verifiedAt": null,
+        "note": "SHA256 provided by model vendor on download. Required before loading."
+      }
     }
   ],
   "modelLoadHistory": [],

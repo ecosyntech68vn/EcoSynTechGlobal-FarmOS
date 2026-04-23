@@ -112,6 +112,43 @@ async function downloadDrive(url, dest) {
   } catch (e) { return false; }
 }
 
+// ── SHA256 Checksum Verification ───────────────────────────────────────────────
+function computeSha256(filePath) {
+  try {
+    const crypto = require('crypto');
+    const hash = crypto.createHash('sha256');
+    const data = fs.readFileSync(filePath);
+    hash.update(data);
+    return hash.digest('hex');
+  } catch (e) {
+    logger.warn('[Bootstrap] SHA256 compute failed:', e.message);
+    return null;
+  }
+}
+
+function verifyChecksum(filePath, expectedSha256) {
+  if (!expectedSha256 || expectedSha256 === 'placeholder_for_model_001_sha256') {
+    historyPush({ action: 'checksum_skip', reason: 'no_checksum_defined' });
+    return true;
+  }
+  const actual = computeSha256(filePath);
+  if (!actual) return false;
+  const match = actual === expectedSha256;
+  if (match) {
+    historyPush({ action: 'checksum_verified', file: filePath });
+  } else {
+    historyPush({ action: 'checksum_mismatch', file: filePath, expected: expectedSha256, actual });
+  }
+  return match;
+}
+
+function getExpectedChecksum(modelId) {
+  const reg = readRegistry();
+  if (!reg || !reg.models) return null;
+  const model = reg.models.find(m => m.id === modelId);
+  return model?.checksum?.value || null;
+}
+
 // ── Model Loading ──────────────────────────────────────────────────────────────
 async function loadLight() {
   if (light) return light;
@@ -121,6 +158,16 @@ async function loadLight() {
     historyPush({ action: 'load_small', status: 'skip', reason: 'file_not_found' });
     return null;
   }
+
+  const expectedSha256 = getExpectedChecksum('model-001');
+  if (expectedSha256 && verifyChecksum(smallPath, expectedSha256) === false) {
+    historyPush({ action: 'checksum_failed', modelId: 'model-001' });
+    updateRegistryModel('model-001', { healthStatus: 'checksum_failed' });
+    logger.warn('[Bootstrap] Small model checksum mismatch - rejecting model');
+    light = null;
+    return null;
+  }
+
   try {
     const Cls = require('../services/ai/tfliteDiseasePredictor');
     light = new Cls();
@@ -128,6 +175,7 @@ async function loadLight() {
     await light.loadModel(smallPath, labelsPath);
     historyPush({ action: 'load_small', status: 'loaded', ms: Date.now() - t0 });
     updateRegistryModel('model-001', { loaded: true, loadedAt: new Date().toISOString(), healthStatus: 'healthy' });
+    updateRegistryModel('model-001', { checksum: { algorithm: 'SHA256', value: expectedSha256, verifiedAt: new Date().toISOString() } });
     logger.info('[Bootstrap] Small model loaded');
     return light;
   } catch (e) {
@@ -152,8 +200,45 @@ async function loadLarge() {
     if (!ok) {
       historyPush({ action: 'download_large', status: 'error', url: state.largeUrl });
       updateRegistryModel('model-002', { healthStatus: 'download_failed' });
+      return null;
+    }
+    historyPush({ action: 'download_large', status: 'ok', url: state.largeUrl });
+
+    const expectedSha256 = getExpectedChecksum('model-002');
+    if (expectedSha256 && expectedSha256 !== 'placeholder') {
+      if (!verifyChecksum(onnxPath, expectedSha256)) {
+        historyPush({ action: 'checksum_failed', modelId: 'model-002' });
+        updateRegistryModel('model-002', { healthStatus: 'checksum_failed' });
+        logger.warn('[Bootstrap] Large model checksum mismatch - rejecting model');
+        return null;
+      }
+    }
+  }
+
+  if (!fs.existsSync(onnxPath)) {
+    historyPush({ action: 'load_large', status: 'skip', reason: 'file_not_found' });
+    return null;
+  }
+
+  const expectedSha256 = getExpectedChecksum('model-002');
+  if (expectedSha256 && expectedSha256 !== 'placeholder') {
+    if (downloadNeeded) {
+      if (!verifyChecksum(onnxPath, expectedSha256)) {
+        historyPush({ action: 'checksum_failed', modelId: 'model-002', reason: 'post_download' });
+        updateRegistryModel('model-002', { healthStatus: 'checksum_failed' });
+        logger.warn('[Bootstrap] Large model checksum mismatch - rejecting model');
+        return null;
+      }
+    } else if (!fs.existsSync(onnxPath)) {
+      historyPush({ action: 'load_large', status: 'skip', reason: 'file_not_found' });
+      return null;
     } else {
-      historyPush({ action: 'download_large', status: 'ok', url: state.largeUrl });
+      if (!verifyChecksum(onnxPath, expectedSha256)) {
+        historyPush({ action: 'checksum_failed', modelId: 'model-002', reason: 'existing_file' });
+        updateRegistryModel('model-002', { healthStatus: 'checksum_failed' });
+        logger.warn('[Bootstrap] Large model existing file checksum mismatch');
+        return null;
+      }
     }
   }
 
