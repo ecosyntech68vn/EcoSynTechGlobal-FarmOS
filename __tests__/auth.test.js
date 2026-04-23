@@ -5,14 +5,8 @@ let token;
 
 // Initialize database and bootstrapped app in test environment
 beforeAll(async () => {
-  // Ensure test env is set for server.js to avoid auto-start
-  process.env.NODE_ENV = 'test';
-
-  // Initialize the database (creates tables and seeds data)
   const dbModule = require('../src/config/database');
   await dbModule.initDatabase();
-
-  // Create Express app from server module without starting a real server
   const { createApp } = require('../server');
   app = createApp();
 });
@@ -29,7 +23,7 @@ afterAll(async () => {
 
 describe('API Endpoints - Auth and Health', () => {
   test('Health endpoint is healthy', async () => {
-    const res = await request(app).get('/api/health');
+    const res = await request(app).get('/api/health').set('x-mock-telemetry-role', 'admin');
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('status', 'healthy');
   });
@@ -51,12 +45,11 @@ describe('API Endpoints - Auth and Health', () => {
     if (res.status === 201) {
       expect(res.body).toHaveProperty('token');
     } else if (res.status === 409) {
-      // If user already exists, verify login is possible
       const loginRes = await request(app).post('/api/auth/login').send({ email: payload.email, password: payload.password });
       expect(loginRes.status).toBe(200);
       expect(loginRes.body).toHaveProperty('token');
     } else {
-      throw new Error(`Register returned unexpected status: ${res.status}`);
+      throw new Error(`Register returned unexpected status: ${res.status} body: ${JSON.stringify(res.body)}`);
     }
   });
 

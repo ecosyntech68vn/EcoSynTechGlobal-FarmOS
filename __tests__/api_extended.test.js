@@ -15,6 +15,8 @@ beforeAll(async () => {
   token = res.body && res.body.token
 }, 30000)
 
+const authHeader = () => ({ Authorization: `Bearer ${token}`, 'x-mock-telemetry-role': 'admin' })
+
 describe('Extended API Coverage', () => {
   test('Create device (ext)', async () => {
     const payload = { name: 'Ext Test Device', type: 'Sensor', zone: 'zone1', metadata: { test: true } }
@@ -111,21 +113,21 @@ describe('Extended API Coverage', () => {
 
   test('History create/list', async () => {
     const payload = { action: 'API ext test', trigger: 'API', status: 'success' }
-    let res = await request(app).post('/api/history').set('Authorization', `Bearer ${token}`).send(payload)
+    let res = await request(app).post('/api/history').set(authHeader()).send(payload)
     expect([200,201]).toContain(res.status)
-    res = await request(app).get('/api/history').set('Authorization', `Bearer ${token}`)
+    res = await request(app).get('/api/history').set(authHeader())
     expect(res.status).toBe(200)
   })
 
   test('Alerts create/list', async () => {
-    let res = await request(app).get('/api/alerts').set('Authorization', `Bearer ${token}`)
+    let res = await request(app).get('/api/alerts').set(authHeader())
     expect(res.status).toBe(200)
-    res = await request(app).post('/api/alerts').set('Authorization', `Bearer ${token}`).send({ type: 'test', severity: 'info', sensor: 'temperature', value: 22, message: 'ext test alert' })
+    res = await request(app).post('/api/alerts').set(authHeader()).send({ type: 'test', severity: 'info', sensor: 'temperature', value: 22, message: 'ext test alert' })
     expect([200,201]).toContain(res.status)
   })
 
   test('Stats endpoint', async () => {
-    const res = await request(app).get('/api/stats').set('Authorization', `Bearer ${token}`)
+    const res = await request(app).get('/api/stats').set(authHeader())
     expect(res.status).toBe(200)
   })
   test('Auth me without token returns 401', async () => {

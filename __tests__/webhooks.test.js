@@ -28,13 +28,14 @@ function signatureFor(payload, secret) {
 }
 
 describe('Webhooks - Signed endpoints', () => {
+  const mockHeaders = { 'Content-Type': 'application/json', 'x-mock-telemetry-role': 'admin' };
+
   test('sensor-alert with valid signature', async () => {
     const payload = { sensor: 'temperature', value: 25.5, severity: 'warning', message: 'test webhook' };
     const sig = signatureFor(payload, 'webhook-secret');
     const res = await request(app)
       .post('/api/webhooks/sensor-alert')
-      .set('Content-Type', 'application/json')
-      .set('x-ecosyntech-signature', sig)
+      .set({ ...mockHeaders, 'x-ecosyntech-signature': sig })
       .send(payload);
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('success', true);
@@ -44,8 +45,7 @@ describe('Webhooks - Signed endpoints', () => {
     const payload = { sensor: 'temperature', value: 26 };
     const res = await request(app)
       .post('/api/webhooks/sensor-alert')
-      .set('Content-Type', 'application/json')
-      .set('x-ecosyntech-signature', 'invalid')
+      .set({ ...mockHeaders, 'x-ecosyntech-signature': 'invalid' })
       .send(payload);
     expect(res.status).toBe(401);
   });
@@ -55,8 +55,7 @@ describe('Webhooks - Signed endpoints', () => {
     const sig = signatureFor(payload, 'webhook-secret');
     const res = await request(app)
       .post('/api/webhooks/device-status')
-      .set('Content-Type', 'application/json')
-      .set('x-ecosyntech-signature', sig)
+      .set({ ...mockHeaders, 'x-ecosyntech-signature': sig })
       .send(payload);
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('success', true);
@@ -67,8 +66,7 @@ describe('Webhooks - Signed endpoints', () => {
     const sig = signatureFor(payload, 'webhook-secret');
     const res = await request(app)
       .post('/api/webhooks/rule-triggered')
-      .set('Content-Type', 'application/json')
-      .set('x-ecosyntech-signature', sig)
+      .set({ ...mockHeaders, 'x-ecosyntech-signature': sig })
       .send(payload);
     expect(res.status).toBe(200);
   });
@@ -78,8 +76,7 @@ describe('Webhooks - Signed endpoints', () => {
     const sig = signatureFor(payload, 'webhook-secret');
     const res = await request(app)
       .post('/api/webhooks/schedule-run')
-      .set('Content-Type', 'application/json')
-      .set('x-ecosyntech-signature', sig)
+      .set({ ...mockHeaders, 'x-ecosyntech-signature': sig })
       .send(payload);
     expect(res.status).toBe(200);
   });

@@ -320,7 +320,6 @@ app.use(compression());
     }
   });
   
-  // In test environment, bypass telemetryAccess to simplify end-to-end testing
   const exportMiddleware = (process.env.NODE_ENV === 'test') ? ((req, res, next) => next()) : telemetryAccess;
   app.post('/api/export', exportMiddleware, (req, res) => {
     const exportData = {

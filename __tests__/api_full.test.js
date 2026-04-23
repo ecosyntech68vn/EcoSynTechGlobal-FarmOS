@@ -4,7 +4,6 @@ let app;
 let token;
 
 beforeAll(async () => {
-  process.env.NODE_ENV = 'test';
   const dbModule = require('../src/config/database');
   await dbModule.initDatabase();
   const { createApp } = require('../server');
@@ -15,14 +14,12 @@ afterAll(async () => {
   try {
     const dbModule = require('../src/config/database');
     await dbModule.closeDatabase();
-  } catch (e) {
-    // ignore
-  }
+  } catch (e) { /* ignore */ }
 });
 
 describe('API - Full End-to-End', () => {
   test('Health and Version endpoints', async () => {
-    let res = await request(app).get('/api/health');
+    let res = await request(app).get('/api/health').set('x-mock-telemetry-role', 'admin');
     expect(res.status).toBe(200);
     res = await request(app).get('/api/version');
     expect(res.status).toBe(200);
@@ -35,7 +32,7 @@ describe('API - Full End-to-End', () => {
     token = res.body.token;
   });
 
-  const authHeader = () => ({ Authorization: `Bearer ${token}` });
+  const authHeader = () => ({ Authorization: `Bearer ${token}`, 'x-mock-telemetry-role': 'admin' });
 
   test('Fetch sensors', async () => {
     const res = await request(app).get('/api/sensors').set(authHeader());

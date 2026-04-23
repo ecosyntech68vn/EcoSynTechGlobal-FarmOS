@@ -1163,9 +1163,15 @@ const MAX_STMT_CACHE = 50;
 function getPreparedStatement(sql) {
   const cached = stmtCache.get(sql);
   if (cached) {
-    cached.lastUsed = Date.now();
-    cached.useCount++;
-    return cached.stmt;
+    try {
+      cached.stmt.step();
+      cached.stmt.reset();
+      cached.lastUsed = Date.now();
+      cached.useCount++;
+      return cached.stmt;
+    } catch (e) {
+      stmtCache.delete(sql);
+    }
   }
   
   const stmt = db.prepare(sql);

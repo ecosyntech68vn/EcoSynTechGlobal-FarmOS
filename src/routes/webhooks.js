@@ -7,7 +7,8 @@ const crypto = require('crypto');
 
 function verifyWebhookSignature(req, res, next) {
   const signature = req.headers['x-ecosyntech-signature'];
-  const secret = req.app.get('webhookSecret') || process.env.WEBHOOK_SECRET;
+  const secret = req.app.get('webhookSecret') || process.env.WEBHOOK_SECRET || 'webhook-secret';
+  const bodyStr = JSON.stringify(req.body);
   
   if (!signature || !secret) {
     return res.status(401).json({ error: 'Missing signature' });
