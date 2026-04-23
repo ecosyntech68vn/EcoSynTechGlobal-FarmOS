@@ -59,6 +59,9 @@ Patch: Use the DOCS_GUIDE.md template for future SOP updates; ensure alignment a
 | **SOP-E-01** | Quản lý SmartAutomationEngine | AI Ops | 1 tháng |
 | **SOP-E-02** | Giám sát AI Agents | AI Ops | 1 giờ |
 | **SOP-E-03** | Xử lý Predictive Alerts | AI Ops | 15 phút |
+| **SOP-E-04** | AI Bootstrap & Model Management | AI Ops | 1 tuần |
+| **SOP-E-05** | AI Decision Logging & Audit Trail | AI Ops | 1 tháng |
+| **SOP-E-06** | AI Incident Response | SOC | 15 phút |
 
 ---
 
@@ -102,6 +105,7 @@ Patch: Use the DOCS_GUIDE.md template for future SOP updates; ensure alignment a
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 5.0.0 | 2026-04-20 | EcoSynTech | Initial release |
+| 6.0.0 | 2026-04-23 | EcoSynTech | Added SOP-E-04/05/06 (AI Bootstrap, Logging, Incident) |
 
 | Role | Name | Date | Signature |
 |------|------|------|----------|
