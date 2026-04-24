@@ -48,6 +48,7 @@
 | **Tưới tiêu thông minh** | ET0, tự động tưới | Water Optimization Service |
 | **Giám sát sức khỏe** | Health report WebLocal | `/api/health-report` |
 | **Truy xuất nguồn gốc** | QR Code, Blockchain (Aptos) | `/api/traceability` |
+| **AI Agents** | Phát hiện bệnh cây (TFLite, 91%), Dự báo tưới (ONNX) | `/api/ai/disease/predict`, `/api/ai/irrigation/predict` |
 | **Bảo mật** | RBAC, Audit Trail, Rate Limit | `/api/security` |
 | **Alerts** | Cảnh báo Telegram | `/api/alerts` |
 | **Dashboard** | Tổng quan nông nghiệp | `/api/dashboard/overview` |
@@ -161,8 +162,11 @@ BLOCKCHAIN_ENABLED=false
 APTOS_NETWORK=testnet
 
 # ====================
-# AI
+# AI (Machine Learning / AI Agents)
 # ====================
+AI_SMALL_MODEL=1       # Enable TFLite disease detection (default: 1)
+AI_LARGE_MODEL=0       # Enable ONNX irrigation prediction (default: 0, requires ~2GB RAM)
+AI_ONNX_URL=           # URL to ONNX model (optional, supports Google Drive URLs)
 DEEPSEEK_API_KEY=
 ```
 
@@ -307,6 +311,54 @@ npm run lint     # ESLint
          ↓
 5. Tự động kích hoạt pump (nếu autoMode=true)
 ```
+
+---
+
+## 🤖 AI AGENTS (Machine Learning)
+
+### Plant Disease Detection (TFLite - 4MB)
+- **Model**: MobileNetV2 fine-tuned on PlantVillage (38 classes)
+- **Accuracy**: 91% on test set
+- **Size**: 4MB (lightweight, runs on CPU)
+- **Endpoint**: `POST /api/ai/disease/predict`
+
+```bash
+# Enable (default ON)
+AI_SMALL_MODEL=1
+
+# Test API
+curl -X POST -F "image=@leaf.jpg" http://localhost:3000/api/ai/disease/predict
+```
+
+### Irrigation Prediction (ONNX LSTM - Optional)
+- **Model**: LSTM for time-series prediction
+- **Input**: 3-day weather sequence (temp, humidity, rainfall, soilMoisture)
+- **Size**: ~10MB (requires AI_LARGE_MODEL=1)
+- **Endpoint**: `POST /api/ai/irrigation/predict`
+
+```bash
+# Enable (requires ~2GB RAM)
+AI_LARGE_MODEL=1
+AI_ONNX_URL=https://path/to/irrigation_lstm.onnx
+
+# Test API
+curl -X POST http://localhost:3000/api/ai/irrigation/predict \
+  -H "Content-Type: application/json" \
+  -d '{"historicalData": [
+    {"temp": 28, "humidity": 70, "rainfall": 5, "soilMoisture": 45},
+    {"temp": 29, "humidity": 65, "rainfall": 0, "soilMoisture": 40},
+    {"temp": 30, "humidity": 60, "rainfall": 0, "soilMoisture": 35}
+  ]}'
+```
+
+### Bootstrap CLI
+```bash
+node bin/bootstrap-ai.js --status    # Check model status
+node bin/bootstrap-ai.js --load-small # Load TFLite only
+node bin/bootstrap-ai.js --reload     # Reload all models
+```
+
+Xem chi tiết: [AI_SETUP.md](./AI_SETUP.md)
 
 ---
 
