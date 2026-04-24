@@ -6,6 +6,7 @@ let dbModule;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
+  process.env.WEBHOOK_SECRET = 'webhook-secret';
   const { initDatabase, closeDatabase } = require('../src/config/database');
   dbModule = { initDatabase, closeDatabase };
   await dbModule.initDatabase();

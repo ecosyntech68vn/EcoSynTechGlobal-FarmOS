@@ -259,12 +259,18 @@ class SkillOrchestrator {
   }
 
   async executeWithTimeout(skillName, context, timeout) {
-    return Promise.race([
-      this.registry.executeSkill(skillName, context),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Skill execution timeout')), timeout)
-      )
-    ]);
+    let timeoutHandle;
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutHandle = setTimeout(() => reject(new Error('Skill execution timeout')), timeout);
+    });
+
+    const executionPromise = this.registry.executeSkill(skillName, context);
+
+    try {
+      return await Promise.race([executionPromise, timeoutPromise]);
+    } finally {
+      clearTimeout(timeoutHandle);
+    }
   }
 
   generateRecommendations(results) {
