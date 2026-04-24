@@ -194,6 +194,16 @@ if [ "$DRY_RUN" = false ]; then
     echo -e "  ${GREEN}✓${NC} Committed changes"
 fi
 
+# Step 9: Node-based validation (optional)
+if [ "$DRY_RUN" = false ]; then
+  if command -v node >/dev/null 2>&1; then
+    echo -e "${YELLOW}🔎 Running Node-based validation...${NC}"
+    node "$(dirname "$0")/validate-demo-branch.js" || { echo -e "${RED}Demo validation failed. Aborting share.${NC}"; exit 1; }
+  else
+    echo -e "${YELLOW}⚠️ Node not available; skipping Node-based validation${NC}"
+  fi
+fi
+
 # Step 9: Push to remote
 if [ "$AUTO_PUSH" = true ] && [ "$DRY_RUN" = false ]; then
     echo -e "${YELLOW}🔄 Step 6: Pushing to remote...${NC}"
