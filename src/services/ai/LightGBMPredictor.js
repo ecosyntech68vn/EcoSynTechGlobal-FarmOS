@@ -14,7 +14,7 @@ const fs = require('fs');
 const logger = require('../../config/logger');
 const { getBreaker } = require('../circuitBreaker');
 
-const DEFAULT_MODEL_PATH = path.join(__dirname, '../../models/lightgbm_yield.onnx');
+const DEFAULT_MODEL_PATH = path.join(__dirname, '../../../models/lightgbm_yield.onnx');
 
 const FEATURE_NAMES = [
   'temperature_avg',

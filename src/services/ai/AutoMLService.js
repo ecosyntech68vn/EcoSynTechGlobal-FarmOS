@@ -15,9 +15,9 @@ const logger = require('../../config/logger');
 const { getBreaker } = require('../circuitBreaker');
 const LightGBMPredictor = require('./LightGBMPredictor');
 
-const AUTOML_CONFIG_PATH = path.join(__dirname, '../../ml/train_config.json');
-const MODEL_OUTPUT_PATH = path.join(__dirname, '../../models/lightgbm_yield.onnx');
-const ML_SCRIPT_PATH = path.join(__dirname, '../../ml/train_lightgbm.py');
+const AUTOML_CONFIG_PATH = path.join(__dirname, '../../../ml/train_config.json');
+const MODEL_OUTPUT_PATH = path.join(__dirname, '../../../models/lightgbm_yield.onnx');
+const ML_SCRIPT_PATH = path.join(__dirname, '../../../ml/train_sklearn.py');
 
 const automlBreaker = getBreaker('automl-service', {
   failureThreshold: 3,
@@ -38,7 +38,7 @@ class AutoMLService extends EventEmitter {
 
   _getDefaultConfig() {
     return {
-      db_path: path.join(__dirname, '../../data/ecosyntech.db'),
+      db_path: path.join(__dirname, '../../../data/ecosyntech.db'),
       output_model_path: MODEL_OUTPUT_PATH,
       feature_cols: [
         'temperature_avg',
