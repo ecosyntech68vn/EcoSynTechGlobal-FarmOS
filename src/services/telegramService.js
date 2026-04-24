@@ -1,8 +1,13 @@
 const axios = require('axios');
 const logger = require('../config/logger');
+const { getBreaker } = require('./circuitBreaker');
+const fs = require('fs');
+const path = require('path');
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
+const MESSAGE_QUEUE_PATH = path.join(__dirname, '..', 'data', 'telegram_queue.json');
 
 const ALERT_TEMPLATE = {
   critical: '🔴 CRITICAL',
@@ -12,9 +17,71 @@ const ALERT_TEMPLATE = {
   info: 'ℹ️ INFO'
 };
 
-async function sendTelegramMessage(message, parseMode = 'Markdown') {
+const telegramBreaker = getBreaker('telegram', { 
+  failureThreshold: 5, 
+  timeout: 60000 
+});
+
+function ensureQueueFile() {
+  try {
+    const dir = path.dirname(MESSAGE_QUEUE_PATH);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    if (!fs.existsSync(MESSAGE_QUEUE_PATH)) {
+      fs.writeFileSync(MESSAGE_QUEUE_PATH, '[]');
+    }
+  } catch (e) {
+    logger.warn('[Telegram] Queue init error:', e.message);
+  }
+}
+
+function loadQueue() {
+  try {
+    ensureQueueFile();
+    return JSON.parse(fs.readFileSync(MESSAGE_QUEUE_PATH, 'utf8') || '[]');
+  } catch (e) { return []; }
+}
+
+function saveQueue(queue) {
+  try {
+    fs.writeFileSync(MESSAGE_QUEUE_PATH, JSON.stringify(queue, null, 2));
+  } catch (e) {
+    logger.warn('[Telegram] Queue save error:', e.message);
+  }
+}
+
+function enqueueMessage(message) {
+  const queue = loadQueue();
+  queue.push({
+    id: 'TG-' + Date.now(),
+    message,
+    enqueuedAt: new Date().toISOString()
+  });
+  saveQueue(queue);
+  logger.info('[Telegram] Message queued for later delivery');
+}
+
+async function processQueue() {
+  const queue = loadQueue();
+  if (!queue.length) return;
+  
+  const remaining = [];
+  for (const item of queue) {
+    const result = await sendTelegramMessageDirect(item.message);
+    if (result.success) {
+      logger.debug('[Telegram] Queued message sent');
+    } else {
+      remaining.push(item);
+    }
+  }
+  saveQueue(remaining);
+  
+  if (remaining.length < queue.length) {
+    logger.info(`[Telegram] Sent ${queue.length - remaining.length} queued messages`);
+  }
+}
+
+async function sendTelegramMessageDirect(message, parseMode = 'Markdown') {
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    logger.warn('[Telegram] Bot not configured');
     return { success: false, error: 'Telegram not configured' };
   }
 
@@ -34,6 +101,24 @@ async function sendTelegramMessage(message, parseMode = 'Markdown') {
   } catch (error) {
     logger.error('[Telegram] Send error:', error.message);
     return { success: false, error: error.message };
+  }
+}
+
+async function sendTelegramMessage(message, parseMode = 'Markdown') {
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    logger.warn('[Telegram] Bot not configured - queuing message');
+    enqueueMessage(message);
+    return { success: false, error: 'Telegram not configured', queued: true };
+  }
+
+  try {
+    return await telegramBreaker.execute(async () => {
+      return await sendTelegramMessageDirect(message, parseMode);
+    });
+  } catch (error) {
+    logger.warn(`[Telegram] Circuit open - queuing message: ${error.message}`);
+    enqueueMessage(message);
+    return { success: false, error: error.message, queued: true };
   }
 }
 
@@ -98,81 +183,42 @@ async function sendSystemIssue(issue) {
 }
 
 async function sendDailyReport(report) {
-  const message = [
-    '📊 *EcoSynTech Daily Report*',
+  const lines = [
+    '📊 *Daily Report*',
     '',
-    `*Devices:* ${report.devices?.total || 0} online / ${report.devices?.total || 0} total`,
-    `*Sensors:* ${report.sensors?.active || 0} active`,
-    `*Alerts:* ${report.alerts?.pending || 0} pending`,
-    `*Status:* ${report.status || 'OK'}`,
+    `*Farms:* ${report.farms || 0}`,
+    `*Devices:* ${report.devices || 0}`,
+    `*Alerts:* ${report.alerts || 0}`,
+    `*Water Usage:* ${report.waterUsage || 0}L`,
     ''
   ].join('\n');
-
-  return sendTelegramMessage(message);
-}
-
-async function sendBackupStatus(success, details) {
-  const emoji = success ? '✅' : '❌';
   
-  return sendTelegramMessage(
-    `${emoji} *Backup ${success ? 'Completed' : 'Failed'}*`,
-    'Markdown',
-    success ? 'Backup completed successfully' : `Backup failed: ${details.error}`
-  );
+  return sendTelegramMessage(lines);
 }
 
-async function sendIncidentCreated(incident) {
-  return sendAlert(
-    incident.severity,
-    'New Incident Created',
-    incident.description,
-    {
-      ID: incident.id,
-      'Reported by': incident.reportedBy,
-      Time: incident.createdAt
-    }
-  );
+async function sendIrrigationSummary(farmId, summary) {
+  const lines = [
+    '💧 *Irrigation Summary*',
+    '',
+    `*Farm:* ${farmId}`,
+    `*Total Duration:* ${summary.totalMinutes || 0} min`,
+    `*Water Used:* ${summary.waterUsed || 0}L`,
+    `*Sessions:* ${summary.sessions || 0}`,
+    ''
+  ].join('\n');
+  
+  return sendTelegramMessage(lines);
 }
 
-async function sendCommandReply(commandId, response) {
-  return sendTelegramMessage(
-    `⚡ *Command Response*\n\`${commandId}\`\n\n${response}`,
-    'Markdown'
-  );
+function getCircuitBreakerStatus() {
+  return telegramBreaker.getState();
 }
 
-function formatKeyboard(buttons, cols = 2) {
-  return buttons.map((btn, i) => ({
-    text: btn.text,
-    callback_data: btn.data
-  }));
-}
-
-async function sendKeyboard(mainButtons, extraButtons = []) {
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    return { success: false, error: 'Not configured' };
-  }
-
-  const allButtons = [...mainButtons, ...extraButtons];
-  const keyboard = {
-    inline_keyboard: allButtons.map(btn => [{ text: btn.text, callback_data: btn.data }])
+function getQueueStatus() {
+  return {
+    queued: loadQueue().length,
+    path: MESSAGE_QUEUE_PATH
   };
-
-  try {
-    const response = await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        chat_id: TELEGRAM_CHAT_ID,
-        text: 'Select option:',
-        reply_markup: JSON.stringify(keyboard)
-      },
-      { timeout: 10000 }
-    );
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
 }
 
 module.exports = {
@@ -182,8 +228,8 @@ module.exports = {
   sendSensorAlert,
   sendSystemIssue,
   sendDailyReport,
-  sendBackupStatus,
-  sendIncidentCreated,
-  sendCommandReply,
-  sendKeyboard
+  sendIrrigationSummary,
+  processQueue,
+  getCircuitBreakerStatus,
+  getQueueStatus
 };

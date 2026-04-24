@@ -2,11 +2,18 @@ const sharp = require('sharp');
 const fs = require('fs').promises;
 const path = require('path');
 const logger = require('../../config/logger');
+const { getBreaker } = require('../circuitBreaker');
+const { retry } = require('../retryService');
 
 let tf = null;
 
 const DEFAULT_MODEL_PATH = path.join(__dirname, '../../models/plant_disease.tflite');
 const DEFAULT_LABELS_PATH = path.join(__dirname, '../../models/labels.txt');
+
+const imageBreaker = getBreaker('disease-image-fetch', {
+  failureThreshold: 3,
+  timeout: 30000
+});
 
 const DEFAULT_LABELS = [
   'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
@@ -153,11 +160,24 @@ class TFLiteDiseasePredictor {
   }
 
   async predictFromUrl(imageUrl) {
-    const axios = require('axios');
     try {
-      const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-      return this.predict(Buffer.from(response.data));
+      return await imageBreaker.execute(async () => {
+        return await retry(async () => {
+          const axios = require('axios');
+          const response = await axios.get(imageUrl, { 
+            responseType: 'arraybuffer',
+            timeout: 15000 
+          });
+          return this.predict(Buffer.from(response.data));
+        }, {
+          maxRetries: 2,
+          initialDelay: 1000,
+          backoffFactor: 2,
+          onRetry: (info) => logger.warn(`[DiseasePredictor] Image fetch retry ${info.attempt}: ${info.error}`)
+        });
+      });
     } catch (e) {
+      logger.error(`[DiseasePredictor] Failed to fetch from URL: ${e.message}`);
       throw new Error(`Failed to fetch image: ${e.message}`);
     }
   }

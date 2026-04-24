@@ -1,8 +1,5 @@
-const axios = require('axios');
 const logger = require('../config/logger');
-
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const telegramService = require('./telegramService');
 
 const ALERT_LEVELS = {
   CRITICAL: 'critical',
@@ -10,29 +7,6 @@ const ALERT_LEVELS = {
   WARNING: 'warning',
   INFO: 'info'
 };
-
-async function sendTelegramMessage(message, parseMode = 'Markdown') {
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    logger.debug('[Telegram] Bot token or chat ID not configured');
-    return false;
-  }
-
-  try {
-    const response = await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: parseMode
-      },
-      { timeout: 10000 }
-    );
-    return response.data.ok;
-  } catch (error) {
-    logger.error('[Telegram] Failed to send message:', error.message);
-    return false;
-  }
-}
 
 function formatAlertMessage(level, title, details) {
   const icons = {
@@ -64,8 +38,10 @@ async function alert(level, title, details) {
   logger.warn(`${title}: ${JSON.stringify(details)}`);
 
   if (level === ALERT_LEVELS.CRITICAL || level === ALERT_LEVELS.ERROR) {
-    return await sendTelegramMessage(message);
+    return await telegramService.sendTelegramMessage(message);
   }
+  
+  return { success: false, error: 'Below threshold' };
 }
 
 async function notifyError(error, context = {}) {
@@ -80,39 +56,56 @@ async function notifyError(error, context = {}) {
     ...context
   };
 
-  return await alert(level, 'System Error', details);
+  return alert(level, error.name || 'Error', details);
 }
 
-async function notifyDatabaseLock() {
-  return await alert(
+async function notifySecurity(event) {
+  return alert(
     ALERT_LEVELS.CRITICAL,
-    'Database Locked',
-    'Database is locked or inaccessible'
+    'Security Event',
+    event
   );
 }
 
-async function notifyMqttDisconnect() {
-  return await alert(
-    ALERT_LEVELS.CRITICAL,
-    'MQTT Disconnected',
-    'Lost connection to MQTT broker'
+async function notifyDeviceOffline(deviceId, lastSeen) {
+  return alert(
+    ALERT_LEVELS.WARNING,
+    'Device Offline',
+    { deviceId, lastSeen }
   );
 }
 
-async function notifyStartup() {
-  return await alert(
+async function notifySensorThreshold(sensorType, value, threshold, deviceId) {
+  return alert(
+    ALERT_LEVELS.WARNING,
+    'Sensor Threshold Exceeded',
+    { sensorType, value, threshold, deviceId }
+  );
+}
+
+async function notifyIrrigationComplete(farmId, duration, waterUsed) {
+  return alert(
     ALERT_LEVELS.INFO,
-    'Server Started',
-    `EcoSynTech v${require('../../package.json').version} started successfully`
+    'Irrigation Complete',
+    { farmId, duration, waterUsed }
+  );
+}
+
+async function notifySystemStartup() {
+  return alert(
+    ALERT_LEVELS.INFO,
+    'System Started',
+    { timestamp: new Date().toISOString(), version: require('../../package.json').version }
   );
 }
 
 module.exports = {
-  ALERT_LEVELS,
   alert,
   notifyError,
-  notifyDatabaseLock,
-  notifyMqttDisconnect,
-  notifyStartup,
-  sendTelegramMessage
+  notifySecurity,
+  notifyDeviceOffline,
+  notifySensorThreshold,
+  notifyIrrigationComplete,
+  notifySystemStartup,
+  ALERT_LEVELS
 };
