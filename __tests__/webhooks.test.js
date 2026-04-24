@@ -24,7 +24,8 @@ afterAll(async () => {
 });
 
 function signatureFor(payload, secret) {
-  return crypto.createHmac('sha256', secret).update(JSON.stringify(payload)).digest('hex');
+  const bodyStr = JSON.stringify(payload);
+  return crypto.createHmac('sha256', secret).update(bodyStr).digest('hex');
 }
 
 describe('Webhooks - Signed endpoints', () => {
