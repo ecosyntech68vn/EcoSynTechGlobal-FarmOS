@@ -49,6 +49,8 @@
 | **Giám sát sức khỏe** | Health report WebLocal | `/api/health-report` |
 | **Truy xuất nguồn gốc** | QR Code, Blockchain (Aptos) | `/api/traceability` |
 | **AI Agents** | Phát hiện bệnh cây (TFLite, 91%), Dự báo tưới (ONNX) | `/api/ai/disease/predict`, `/api/ai/irrigation/predict` |
+| **AI Skills** | 9 intelligent autonomous agents | See Skills section below |
+| **Fuzzy Logic** | Mamdani controller + Genetic Algorithm auto-tuning | Water Optimization with self-learning |
 | **Bảo mật** | RBAC, Audit Trail, Rate Limit | `/api/security` |
 | **Alerts** | Cảnh báo Telegram | `/api/alerts` |
 | **Dashboard** | Tổng quan nông nghiệp | `/api/dashboard/overview` |
@@ -180,6 +182,56 @@ npm run dev       # Chạy development với hot reload
 npm run test      # Chạy tests
 npm run lint     # ESLint
 ```
+
+---
+
+## 🤖 AI SKILLS / KỸ NĂNG AI
+
+Hệ thống bao gồm 9 intelligent skills tự động hóa vận hành nông nghiệp:
+
+### 🌱 Agriculture Skills
+| Skill | Mô tả | Tính năng |
+|-------|-------|-----------|
+| **WeatherIntelligence** | Quyết định dựa trên thời tiết | Dự báo 7 ngày, tư vấn tưới tiêu, đánh giá rủi ro |
+
+### 🔧 Maintenance Skills
+| Skill | Mô tả | Tính năng |
+|-------|-------|-----------|
+| **PredictiveMaintenance** | Dự đoán hỏng thiết bị | Health score, failure probability, lịch bảo trì |
+| **EnergyOptimization** | Quản lý năng lượng | Phân tích tiêu thụ, tối ưu schedule, tính chi phí |
+
+### 🔍 Diagnosis Skills
+| Skill | Mô tả | Tính năng |
+|-------|-------|-----------|
+| **AnomalyDetection** | Phát hiện bất thường | Statistical, moving average, exponential smoothing |
+| **AlertAggregation** | Gom nhóm cảnh báo | Correlation, prioritization, giảm noise |
+
+### 💾 Data Skills
+| Skill | Mô tả | Tính năng |
+|-------|-------|-----------|
+| **DataQuality** | Kiểm tra chất lượng dữ liệu | Freshness, accuracy, consistency, validity checks |
+
+### 📡 IoT Skills
+| Skill | Mô tả | Tính năng |
+|-------|-------|-----------|
+| **DeviceProvisioning** | Tự động cấu hình thiết bị | ESP32 auto-registration, firmware management |
+
+### 🏛️ Governance Skills
+| Skill | Mô tả | Tính năng |
+|-------|-------|-----------|
+| **ComplianceMonitor** | ISO 27001 compliance | Continuous monitoring, gap analysis |
+
+### 🔐 Security Skills
+| Skill | Mô tả | Tính năng |
+|-------|-------|-----------|
+| **SecurityAudit** | Giám sát bảo mật liên tục | Threat detection, vulnerability scanning |
+
+### 🧬 Fuzzy Logic + GA
+| Component | Mô tả |
+|-----------|-------|
+| **IrrigationFuzzyController** | Bộ điều khiển Mamdani với 25 luật |
+| **GeneticOptimizer** | Thuật toán di truyền tự động tối ưu tham số |
+| **AutoTuningService** | Chạy tối ưu hóa hàng ngày lúc 3 AM |
 
 ---
 
