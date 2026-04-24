@@ -66,6 +66,14 @@ Patch: Use the DOCS_GUIDE.md template for future SOP updates; ensure alignment a
 | **SOP-E-08** | AI Telemetry Governance | AI Ops | 1 tháng |
 | **SOP-E-09** | AI Model Checksum Verification | AI Ops | 1 tuần |
 
+### Series F: Repository & Code Management (v6.2)
+
+| SOP Code | Title | Owner | Review Cycle |
+|---------|-------|-------|---------------|
+| **SOP-F-01** | Quản lý Repository & Branch | IT Admin | 3 tháng |
+| **SOP-F-02** | Tạo Demo Branch cho Investor | IT Admin | Khi cần |
+| **SOP-F-03** | Validation trước khi share | IT Admin | Khi cần |
+
 ---
 
 ## QUY TRÌNH CHUNG
@@ -110,6 +118,7 @@ Patch: Use the DOCS_GUIDE.md template for future SOP updates; ensure alignment a
 | 5.0.0 | 2026-04-20 | EcoSynTech | Initial release |
 | 6.0.0 | 2026-04-23 | EcoSynTech | Added SOP-E-04/05/06 (AI Bootstrap, Logging, Incident) |
 | 6.1.0 | 2026-04-23 | EcoSynTech | Added SOP-E-07/08/09 (Data Quality, Telemetry Governance, Checksum) |
+| 6.2.0 | 2026-04-24 | EcoSynTech | Added SOP-F Series (Repository Security, Demo Branch) |
 
 | Role | Name | Date | Signature |
 |------|------|------|----------|

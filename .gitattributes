@@ -1,0 +1,48 @@
+# EcoSynTech Farm OS - .gitattributes
+# ISO 27001:2022 Compliant Repository Configuration
+
+# ====================
+# BINARY FILES - Large Model Files (A.8.4)
+# AI models should NOT be in repo - use external storage
+# ====================
+*.tflite binary
+*.onnx binary
+*.h5 binary
+*.pt binary
+*.pth binary
+*.bin binary
+
+# ====================
+# DOCUMENTATION
+# ====================
+*.md text diff=markdown
+*.mdx text diff=markdown
+
+# ====================
+# CONFIGURATION
+# ====================
+*.json text
+*.yaml text
+*.yml text
+*.toml text
+
+# ====================
+# SOURCE CODE
+# ====================
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+*.py text
+
+# ====================
+# AUTO DETECT EOL
+# ====================
+* text=auto eol=lf
+
+# ====================
+# GIT LFS (Optional - for large files)
+# Uncomment if using Git LFS for models
+# ====================
+# *.tflite filter=lfs diff=lfs merge=lfs -text
+# *.onnx filter=lfs diff=lfs merge=lfs -text
