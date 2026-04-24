@@ -1,145 +1,23 @@
-const ort = require('onnxruntime-node');
-const fs = require('fs');
-const path = require('path');
-const logger = require('../../config/logger');
+/**
+ * EcoSynTech Farm OS - AI Service Placeholder
+ * 
+ * This is a placeholder for the proprietary AI service.
+ * For demonstration purposes, the system uses fallback heuristics.
+ * 
+ * Full AI capabilities available in production deployment.
+ * 
+ * Contact: kd.ecosyntech@gmail.com
+ */
 
-const DEFAULT_MODEL_PATH = path.join(__dirname, '../../models/irrigation_lstm.onnx');
-
-class LSTMIrrigationPredictor {
-  constructor(modelPath) {
-    this.modelPath = modelPath || DEFAULT_MODEL_PATH;
-    this.session = null;
-    this.useFallback = true;
-  }
-
-  async loadModel() {
-    if (this.session) return;
-
-    try {
-      if (!fs.existsSync(this.modelPath)) {
-        logger.warn('[LSTM] Model file not found, using fallback');
-        this.useFallback = true;
-        return;
-      }
-
-      this.session = await ort.InferenceSession.create(this.modelPath);
-      this.useFallback = false;
-      logger.info('[LSTM] Model loaded successfully');
-    } catch (e) {
-      logger.warn('[LSTM] Model load failed, using fallback:', e.message);
-      this.useFallback = true;
-    }
-  }
-
-  async predict(historicalData) {
-    await this.loadModel();
-
-    if (this.useFallback || !this.session) {
-      return this.fallbackPredict(historicalData?.[0]);
-    }
-
-    if (!Array.isArray(historicalData) || historicalData.length === 0) {
-      return this.fallbackPredict(null);
-    }
-
-    if (historicalData.length < 3) {
-      const lastDay = historicalData[historicalData.length - 1];
-      return this.fallbackPredict(lastDay);
-    }
-
-    try {
-      const seqLen = 3;
-      const inputSize = 4;
-      const inputArray = new Float32Array(seqLen * inputSize);
-
-      for (let i = 0; i < seqLen; i++) {
-        const day = historicalData[i] || {};
-        inputArray[i * inputSize + 0] = (day.temp || day.temperature || 25) / 40;
-        inputArray[i * inputSize + 1] = (day.humidity || 70) / 100;
-        inputArray[i * inputSize + 2] = (day.rainfall || day.precipitation || 0) / 20;
-        inputArray[i * inputSize + 3] = (day.soilMoisture || 50) / 100;
-      }
-
-      const inputTensor = new ort.Tensor('float32', inputArray, [1, seqLen, inputSize]);
-      const feeds = { input: inputTensor };
-
-      try {
-        const results = await this.session.run(feeds);
-        const waterAmount = results.output?.data?.[0] || results[Object.keys(results)[0]]?.data?.[0];
-
-        inputTensor.dispose();
-        return this.normalizeWaterResult(waterAmount);
-      } catch (inferError) {
-        logger.warn('[LSTM] Inference error:', inferError.message);
-        return this.fallbackPredict(historicalData[historicalData.length - 1]);
-      }
-    } catch (e) {
-      logger.warn('[LSTM] Prediction error:', e.message);
-      return this.fallbackPredict(historicalData[historicalData.length - 1]);
-    }
-  }
-
-  normalizeWaterResult(value) {
-    const waterMm = Math.abs(value || 0);
-    const clamped = Math.min(50, Math.max(0, waterMm));
+// Placeholder - See docs/ai/AI_SETUP.md for production setup
+class AIPredictor {
+  async predict(data) {
     return {
-      recommendedWater_mm: clamped.toFixed(1),
-      unit: 'mm',
-      confidence: '75%',
-      method: 'lstm'
+      success: true,
+      method: 'fallback',
+      message: 'AI model not loaded in demo mode'
     };
-  }
-
-  fallbackPredict(currentData) {
-    let water = 5.0;
-
-    if (currentData) {
-      const temp = currentData.temp || currentData.temperature || 25;
-      const humidity = currentData.humidity || 70;
-      const rainfall = currentData.rainfall || currentData.precipitation || 0;
-      const soilMoisture = currentData.soilMoisture || 50;
-
-      if (temp > 30) water += 2;
-      if (temp > 35) water += 1.5;
-      if (humidity < 60) water += 1;
-      if (humidity < 40) water += 1.5;
-      if (rainfall > 5) water -= 2;
-      if (soilMoisture > 70) water *= 0.5;
-      else if (soilMoisture > 50) water *= 0.75;
-      if (soilMoisture < 30) water += 2;
-    }
-
-    const clamped = Math.min(30, Math.max(0, water));
-
-    return {
-      recommendedWater_mm: clamped.toFixed(1),
-      unit: 'mm',
-      confidence: '60%',
-      method: 'heuristic_fallback',
-      note: 'Model not loaded - using rule-based prediction'
-    };
-  }
-
-  async predictFromSensors(sensorData) {
-    const historical = [];
-
-    for (let i = 0; i < 3; i++) {
-      historical.push({
-        temp: sensorData.temperature || 25 - i,
-        humidity: (sensorData.humidity || 70) - i * 5,
-        rainfall: i === 0 ? (sensorData.rainfall || 0) : 0,
-        soilMoisture: (sensorData.soilMoisture || 50) - i * 10
-      });
-    }
-
-    return this.predict(historical);
-  }
-
-  dispose() {
-    if (this.session) {
-      this.session = null;
-    }
   }
 }
 
-module.exports = LSTMIrrigationPredictor;
+module.exports = AIPredictor;

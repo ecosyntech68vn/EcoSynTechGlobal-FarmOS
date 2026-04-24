@@ -440,3 +440,8 @@ MIT License - EcoSynTech Global 2026
 *"Nông nghiệp thông minh - Cho nông dân, cho mọi người"*
 
 🌱🚀 **"Cắm là chạy!"** 🚀🌱
+
+---
+## 🏷️ DEMO VERSION
+This is a public demo version. Full AI capabilities available in production.
+Contact: kd.ecosyntech@gmail.com
