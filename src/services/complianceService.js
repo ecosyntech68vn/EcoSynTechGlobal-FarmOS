@@ -35,16 +35,28 @@ const EVIDENCE_DOCS = {
     status: COMPLIANCE_STATUS.COMPLIANT 
   },
   
-  // A.6 People (ISMS Roles)
+  // A.6 People
   'A.6.1': { 
     doc: 'EMPLOYEE_HANDBOOK.md', 
     path: 'operations/EMPLOYEE_HANDBOOK.md',
     status: COMPLIANCE_STATUS.COMPLIANT 
   },
+  'A.6.2': { 
+    doc: 'EMPLOYEE_HANDBOOK.md', 
+    path: 'operations/EMPLOYEE_HANDBOOK.md',
+    status: COMPLIANCE_STATUS.NOT_APPLICABLE,
+    note: 'Evidence: HR manages employment terms per local labor law' 
+  },
   'A.6.3': { 
     doc: 'SECURITY_AWARENESS_TRAINING.md', 
     path: 'policies/SECURITY_AWARENESS_TRAINING.md',
     status: COMPLIANCE_STATUS.COMPLIANT 
+  },
+  'A.6.4': { 
+    doc: 'EMPLOYEE_HANDBOOK.md', 
+    path: 'operations/EMPLOYEE_HANDBOOK.md',
+    status: COMPLIANCE_STATUS.NOT_APPLICABLE,
+    note: 'Evidence: Disciplinary process per labor law' 
   },
   'A.6.5': { 
     doc: 'TERMS_OF_SERVICE.md', 
@@ -62,16 +74,30 @@ const EVIDENCE_DOCS = {
     status: COMPLIANCE_STATUS.COMPLIANT 
   },
   
-  // A.7 Physical Security (not in code - infrastructure)
+  // A.7 Physical Security (NOT applicable - infrastructure)
   'A.7.1': { 
     doc: 'SOP_AN_TOAN_VAT_LY.md', 
     path: 'sop/SOP_AN_TOAN_VAT_LY.md',
-    status: COMPLIANCE_STATUS.COMPLIANT 
+    status: COMPLIANCE_STATUS.NOT_APPLICABLE,
+    note: 'Evidence: Physical security is managed by facility/landlord' 
   },
   'A.7.2': { 
     doc: 'SOP_AN_TOAN_VAT_LY.md', 
     path: 'sop/SOP_AN_TOAN_VAT_LY.md',
-    status: COMPLIANCE_STATUS.COMPLIANT 
+    status: COMPLIANCE_STATUS.NOT_APPLICABLE,
+    note: 'Evidence: Physical entry controlled by building management' 
+  },
+  'A.7.3': { 
+    doc: 'SOP_AN_TOAN_VAT_LY.md', 
+    path: 'sop/SOP_AN_TOAN_VAT_LY.md',
+    status: COMPLIANCE_STATUS.NOT_APPLICABLE,
+    note: 'Evidence: Office secured by facility management' 
+  },
+  'A.7.4': { 
+    doc: 'SOP_AN_TOAN_VAT_LY.md', 
+    path: 'sop/SOP_AN_TOAN_VAT_LY.md',
+    status: COMPLIANCE_STATUS.NOT_APPLICABLE,
+    note: 'Evidence: CCTV/monitoring by building security' 
   },
   
   // A.8 Technology Controls
@@ -204,7 +230,12 @@ const CONTROLS = {
   'A.8.1.4': { name: 'Info deletion', status: COMPLIANCE_STATUS.COMPLIANT },
   'A.8.1.5': { name: 'Removed access', status: COMPLIANCE_STATUS.COMPLIANT },
   'A.8.2.1': { name: 'Malware protection', status: COMPLIANCE_STATUS.COMPLIANT },
-  'A.8.2.2': { name: 'Signature updates', status: COMPLIANCE_STATUS.NOT_APPLICABLE },
+  'A.8.2.2': { 
+    name: 'Signature updates', 
+    status: COMPLIANCE_STATUS.NOT_APPLICABLE,
+    evidence: 'Cloud provider manages malware protection',
+    note: 'Evidence: Managed by cloud provider (cloudflare, aws guardduty)' 
+  },
   'A.8.3.1': { name: 'Management policy', status: COMPLIANCE_STATUS.COMPLIANT },
   'A.8.3.2': { name: 'Encryption', status: COMPLIANCE_STATUS.COMPLIANT },
   'A.8.4.1': { name: 'Disposal', status: COMPLIANCE_STATUS.COMPLIANT },
@@ -578,7 +609,13 @@ class ComplianceService {
         type: 'infrastructure',
         tier: 'critical',
         sla: '99.9%',
-        compliance: ['ISO 27001', 'SOC 2']
+        compliance: ['ISO 27001', 'SOC 2'],
+        responsibilities: [
+          'Physical security (A.7.1-A.7.4)',
+          'Malware protection (A.8.2.2)',
+          'Network security',
+          'Backup & recovery'
+        ]
       },
       database: {
         name: 'PostgreSQL',
