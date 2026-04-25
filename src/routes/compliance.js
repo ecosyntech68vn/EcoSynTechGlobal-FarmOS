@@ -144,4 +144,71 @@ router.get('/evidence/:controlId', auth, async (req, res) => {
   }
 });
 
+// GET /api/compliance/evidence - Get all evidence from documents
+router.get('/evidence', auth, async (req, res) => {
+  try {
+    const evidence = complianceService.getAllEvidence();
+    res.json({
+      ok: true,
+      data: evidence
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// GET /api/compliance/policies - Get available policies
+router.get('/policies', auth, async (req, res) => {
+  try {
+    const policies = complianceService.getPolicies();
+    res.json({
+      ok: true,
+      data: policies,
+      count: Object.keys(policies).length
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// GET /api/compliance/roles - Get ISMS roles
+router.get('/roles', auth, async (req, res) => {
+  try {
+    const roles = complianceService.getISMSRoles();
+    res.json({
+      ok: true,
+      data: roles
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// GET /api/compliance/suppliers - Get suppliers list
+router.get('/suppliers', auth, async (req, res) => {
+  try {
+    const suppliers = complianceService.getSuppliers();
+    res.json({
+      ok: true,
+      data: suppliers,
+      count: Object.keys(suppliers).length
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+// GET /api/compliance/bcdr - Get BC/DR status
+router.get('/bcdr', auth, async (req, res) => {
+  try {
+    const bcdr = complianceService.getBCDRStatus();
+    res.json({
+      ok: true,
+      data: bcdr
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
 module.exports = router;
