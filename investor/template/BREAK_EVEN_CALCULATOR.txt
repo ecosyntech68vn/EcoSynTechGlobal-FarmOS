@@ -1,0 +1,98 @@
+# EcoSynTech - Break-Even Calculator
+# Copy to Excel or Google Sheets and use as template
+
+## SECTION 1: INPUTS (Nhập dữ liệu tại đây)
+
+### Fixed Costs (Monthly)
+,Item,Amount (VND)
+FC1,Server (VPS),500000
+FC2,Domain + SSL,100000
+FC3,MQTT Broker,150000
+FC4,Support Tools,200000
+FC5,Marketing,500000
+FC6,Development,100000
+TOTAL_FIXED,,=SUM(C6:C11)
+
+### Variable Costs (Per Customer/Month)
+,Item,Amount (VND)
+VC1,Data Storage,5000
+VC2,API/AI Calls,10000
+VC3,Support,15000
+TOTAL_VARIABLE,,=SUM(C15:C17)
+
+### Pricing (Subscription)
+,Tier,Monthly Price (VND)
+P1,BASE,0
+P2,PRO,99000
+P3,PRO MAX,199000
+P4,PREMIUM,299000
+
+### Customer Mix (%)
+,Tier,Percentage
+M1,BASE,5%
+M2,PRO,60%
+M3,PRO MAX,25%
+M4,PREMIUM,10%
+TOTAL_MIX,,=SUM(C28:C31)
+
+## SECTION 2: CALCULATIONS (Tự động tính)
+
+### Contribution Margin by Tier
+,Tier,Revenue,Variable,CM
+CM1,BASE,=C24,=C18,=E24-E25
+CM2,PRO,=C25,=C18,=E25-E25
+CM3,PRO MAX,=C26,=C18,=E26-E25
+CM4,PREMIUM,=C27,=C18,=E27-E25
+
+### Weighted Contribution Margin
+,Tier,CM,Mix,Weighted CM
+WM1,BASE,=F24,=C28,=F24*C28
+WM2,PRO,=F25,=C29,=F25*C29
+WM3,PRO MAX,=F26,=C30,=F26*C30
+WM4,PREMIUM,=F27,=C31,=F27*C31
+WEIGHTED_CM,,,=SUM(H24:H27)
+
+### Break-Even Analysis
+,Value
+BEP_MONTHLY,=C12/H33
+BEP_ANNUAL,=C35*12
+
+## SECTION 3: REVENUE FORECAST
+
+### Monthly Revenue at Different Customer Levels
+,10 Customers,22 Customers,50 Customers,100 Customers
+REV_BASE,=10*C28*C24,=22*C28*C24,=50*C28*C24,=100*C28*C24
+REV_PRO,=10*C29*C25,=22*C29*C25,=50*C29*C25,=100*C29*C25
+REV_MAX,=10*C30*C26,=22*C30*C26,=50*C30*C26,=100*C30*C26
+REV_PREMIUM,=10*C31*C27,=22*C31*C27,=50*C31*C27,=100*C31*C27
+TOTAL_REV,=C42:C45,=D42:D45,=E42:E45,=F42:F45
+
+### Profit/Loss at Different Levels
+,10 Customers,22 Customers,50 Customers,100 Customers
+REVENUE,=SUM(C42:C45),=SUM(D42:D45),=SUM(E42:E45),=SUM(F42:F45)
+VARIABLE_COST,=C40*C18,=D40*C18,=E40*C18,=F40*C18
+FIXED_COST,=C12,=C12,=C12,=C12
+PROFIT,=C49-C50-C51,=D49-D50-D51,=E49-E50-E51,=F49-F50-F51
+
+## SECTION 4: SENSITIVITY ANALYSIS
+
+### BEP if Mix Changes
+,PRO %,MAX %,PREMIUM %,BASE %,Weighted CM,BEP
+SENS1,70%,20%,10%,0%,=70%*F25+20%*F26+10%*F27+0%*F24,=C12/H60
+SENS2,60%,30%,10%,0%,=60%*F25+30%*F26+10%*F27+0%*F24,=C12/H61
+SENS3,50%,30%,20%,0%,=50%*F25+30%*F26+20%*F27+0%*F24,=C12/H62
+SENS4,40%,30%,30%,0%,=40%*F25+30%*F26+30%*F27+0%*F24,=C12/H63
+
+### BEP if Price Changes
+,Price Change,New Price,New CM,BEP
+PRICE1,-20%,=C25*0.8,=E70-C18,=C12/E71
+PRICE2,-10%,=C25*0.9,=E72-C18,=C12/E73
+PRICE3,Current,C25,F25,C12/F25
+PRICE4,+10%,=C25*1.1,=E75-C18,=C12/E76
+PRICE5,+20%,=C25*1.2,=E77-C18,=C12/E78
+
+---
+# HƯỚNG DẪN:
+# 1. Nhập dữ liệu vào SECTION 1 (cột C)
+# 2. SECTION 2 và 3 sẽ tự động tính toán
+# 3. SECTION 4 dùng để phân tích độ nhạy

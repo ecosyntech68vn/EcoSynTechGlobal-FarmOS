@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSynTech Break-Even Calculator</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        h1 { color: #1a5f2a; text-align: center; }
+        h2 { color: #2e7d32; border-bottom: 2px solid #4caf50; padding-bottom: 10px; margin-top: 30px; }
+        .section { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #4caf50; color: white; }
+        tr:hover { background: #f5f5f5; }
+        .input-cell { background: #fffde7; }
+        input { padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 120px; font-size: 14px; }
+        input:focus { outline: none; border-color: #4caf50; }
+        .result { font-weight: bold; color: #1a5f2a; }
+        .highlight { background: #e8f5e9; }
+        .warning { color: #f44336; font-weight: bold; }
+        .success { color: #4caf50; font-weight: bold; }
+        .summary { background: linear-gradient(135deg, #1a5f2a, #4caf50); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .summary h3 { margin: 0 0 10px 0; }
+        .summary .big-number { font-size: 48px; font-weight: bold; }
+        @media (max-width: 768px) {
+            input { width: 80px; }
+            th, td { padding: 5px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🌱 EcoSynTech Break-Even Calculator</h1>
+    
+    <!-- SECTION 1: FIXED COSTS -->
+    <div class="section">
+        <h2>📊 1. Fixed Costs (Monthly)</h2>
+        <table>
+            <tr><th>Item</th><th>Amount (VND)</th></tr>
+            <tr><td>Server (VPS)</td><td><input type="number" id="fc1" value="500000" oninput="calculate()"></td></tr>
+            <tr><td>Domain + SSL</td><td><input type="number" id="fc2" value="100000" oninput="calculate()"></td></tr>
+            <tr><td>MQTT Broker</td><td><input type="number" id="fc3" value="150000" oninput="calculate()"></td></tr>
+            <tr><td>Support Tools</td><td><input type="number" id="fc4" value="200000" oninput="calculate()"></td></tr>
+            <tr><td>Marketing</td><td><input type="number" id="fc5" value="500000" oninput="calculate()"></td></tr>
+            <tr><td>Development</td><td><input type="number" id="fc6" value="1000000" oninput="calculate()"></td></tr>
+            <tr style="background: #e8f5e9;"><th>Total Fixed Costs</th><th class="result" id="totalFixed">2,450,000 VND</th></tr>
+        </table>
+    </div>
+
+    <!-- SECTION 2: VARIABLE COSTS -->
+    <div class="section">
+        <h2>📊 2. Variable Costs (Per Customer/Month)</h2>
+        <table>
+            <tr><th>Item</th><th>Amount (VND)</th></tr>
+            <tr><td>Data Storage</td><td><input type="number" id="vc1" value="5000" oninput="calculate()"></td></tr>
+            <tr><td>API/AI Calls</td><td><input type="number" id="vc2" value="10000" oninput="calculate()"></td></tr>
+            <tr><td>Support</td><td><input type="number" id="vc3" value="15000" oninput="calculate()"></td></tr>
+            <tr style="background: #e8f5e9;"><th>Total Variable/Customer</th><th class="result" id="totalVariable">30,000 VND</th></tr>
+        </table>
+    </div>
+
+    <!-- SECTION 3: PRICING -->
+    <div class="section">
+        <h2>💰 3. Subscription Pricing</h2>
+        <table>
+            <tr><th>Tier</th><th>Monthly Price (VND)</th><th>Notes</th></tr>
+            <tr><td>BASE</td><td><input type="number" id="price1" value="0" oninput="calculate()"></td><td>Free tier</td></tr>
+            <tr><td>PRO</td><td><input type="number" id="price2" value="99000" oninput="calculate()"></td><td>Most popular</td></tr>
+            <tr><td>PRO MAX</td><td><input type="number" id="price3" value="199000" oninput="calculate()"></td><td>Full features</td></tr>
+            <tr><td>PREMIUM</td><td><input type="number" id="price4" value="299000" oninput="calculate()"></td><td>Enterprise</td></tr>
+        </table>
+    </div>
+
+    <!-- SECTION 4: CUSTOMER MIX -->
+    <div class="section">
+        <h2>👥 4. Customer Mix (%)</h2>
+        <table>
+            <tr><th>Tier</th><th>Percentage</th><th>Calculated</th></tr>
+            <tr><td>BASE</td><td><input type="number" id="mix1" value="5" min="0" max="100" oninput="calculate()">%</td><td id="mixCalc1">5%</td></tr>
+            <tr><td>PRO</td><td><input type="number" id="mix2" value="60" min="0" max="100" oninput="calculate()">%</td><td id="mixCalc2">60%</td></tr>
+            <tr><td>PRO MAX</td><td><input type="number" id="mix3" value="25" min="0" max="100" oninput="calculate()">%</td><td id="mixCalc3">25%</td></tr>
+            <tr><td>PREMIUM</td><td><input type="number" id="mix4" value="10" min="0" max="100" oninput="calculate()">%</td><td id="mixCalc4">10%</td></tr>
+            <tr style="background: #e8f5e9;"><th>Total</th><th id="totalMix">100%</th><th id="mixStatus" class="success">✓ Valid</th></tr>
+        </table>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="section">
+        <h2>📈 5. Results</h2>
+        <table>
+            <tr><th>Tier</th><th>Revenue</th><th>Variable</th><th>Contribution Margin</th></tr>
+            <tr><td>BASE</td><td id="rev1">0</td><td id="var1">30,000</td><td id="cm1" class="warning">-30,000</td></tr>
+            <tr><td>PRO</td><td id="rev2">99,000</td><td id="var2">30,000</td><td id="cm2" class="result">69,000</td></tr>
+            <tr><td>PRO MAX</td><td id="rev3">199,000</td><td id="var3">30,000</td><td id="cm3" class="result">169,000</td></tr>
+            <tr><td>PREMIUM</td><td id="rev4">299,000</td><td id="var4">30,000</td><td id="cm4" class="result">269,000</td></tr>
+        </table>
+        
+        <table style="margin-top: 20px;">
+            <tr style="background: #fff3e0;"><th>Weighted Contribution Margin</th><th class="result" id="weightedCM">110,050 VND/customer</th></tr>
+            <tr style="background: #e8f5e9;"><th>Monthly Break-Even</th><th class="result" id="bepMonthly" style="font-size: 24px;">22 customers</th></tr>
+            <tr style="background: #e8f5e9;"><th>Annual Break-Even</th><th class="result" id="bepAnnual">264 customers</th></tr>
+        </table>
+    </div>
+
+    <!-- SCENARIOS -->
+    <div class="section">
+        <h2>📊 6. Revenue Scenarios</h2>
+        <table>
+            <tr><th>Customers</th><th>Revenue</th><th>Variable Costs</th><th>Fixed Costs</th><th>Profit/Loss</th></tr>
+            <tr><td>10</td><td id="rev10">0</td><td id="var10">0</td><td>2,450,000</td><td id="profit10" class="warning">-2,450,000</td></tr>
+            <tr><td>22</td><td id="rev22">0</td><td id="var22">0</td><td>2,450,000</td><td id="profit22">0</td></tr>
+            <tr><td>50</td><td id="rev50">0</td><td id="var50">0</td><td>2,450,000</td><td id="profit50" class="success">+2,800,000</td></tr>
+            <tr><td>100</td><td id="rev100">0</td><td id="var100">0</td><td>2,450,000</td><td id="profit100" class="success">+8,600,000</td></tr>
+        </table>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary">
+        <h3>🎯 Break-Even Point</h3>
+        <div class="big-number" id="mainBEP">22</div>
+        <div>customers per month</div>
+        <div id="monthlyRevenue" style="margin-top: 10px; font-size: 18px;"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            // Get fixed costs
+            const fc1 = parseFloat(document.getElementById('fc1').value) || 0;
+            const fc2 = parseFloat(document.getElementById('fc2').value) || 0;
+            const fc3 = parseFloat(document.getElementById('fc3').value) || 0;
+            const fc4 = parseFloat(document.getElementById('fc4').value) || 0;
+            const fc5 = parseFloat(document.getElementById('fc5').value) || 0;
+            const fc6 = parseFloat(document.getElementById('fc6').value) || 0;
+            const totalFixed = fc1 + fc2 + fc3 + fc4 + fc5 + fc6;
+            document.getElementById('totalFixed').textContent = totalFixed.toLocaleString('vi-VN') + ' VND';
+
+            // Get variable costs
+            const vc1 = parseFloat(document.getElementById('vc1').value) || 0;
+            const vc2 = parseFloat(document.getElementById('vc2').value) || 0;
+            const vc3 = parseFloat(document.getElementById('vc3').value) || 0;
+            const totalVariable = vc1 + vc2 + vc3;
+            document.getElementById('totalVariable').textContent = totalVariable.toLocaleString('vi-VN') + ' VND';
+
+            // Get pricing
+            const price1 = parseFloat(document.getElementById('price1').value) || 0;
+            const price2 = parseFloat(document.getElementById('price2').value) || 0;
+            const price3 = parseFloat(document.getElementById('price3').value) || 0;
+            const price4 = parseFloat(document.getElementById('price4').value) || 0;
+
+            // Get customer mix
+            const mix1 = parseFloat(document.getElementById('mix1').value) || 0;
+            const mix2 = parseFloat(document.getElementById('mix2').value) || 0;
+            const mix3 = parseFloat(document.getElementById('mix3').value) || 0;
+            const mix4 = parseFloat(document.getElementById('mix4').value) || 0;
+            const totalMix = mix1 + mix2 + mix3 + mix4;
+            
+            document.getElementById('totalMix').textContent = totalMix + '%';
+            document.getElementById('mixCalc1').textContent = (mix1/totalMix*100).toFixed(1) + '%';
+            document.getElementById('mixCalc2').textContent = (mix2/totalMix*100).toFixed(1) + '%';
+            document.getElementById('mixCalc3').textContent = (mix3/totalMix*100).toFixed(1) + '%';
+            document.getElementById('mixCalc4').textContent = (mix4/totalMix*100).toFixed(1) + '%';
+            
+            if (Math.abs(totalMix - 100) > 0.1) {
+                document.getElementById('mixStatus').textContent = '⚠ Total must be 100%';
+                document.getElementById('mixStatus').className = 'warning';
+            } else {
+                document.getElementById('mixStatus').textContent = '✓ Valid';
+                document.getElementById('mixStatus').className = 'success';
+            }
+
+            // Calculate normalized mix percentages
+            const normMix1 = mix1 / totalMix;
+            const normMix2 = mix2 / totalMix;
+            const normMix3 = mix3 / totalMix;
+            const normMix4 = mix4 / totalMix;
+
+            // Calculate contribution margins
+            const cm1 = price1 - totalVariable;
+            const cm2 = price2 - totalVariable;
+            const cm3 = price3 - totalVariable;
+            const cm4 = price4 - totalVariable;
+
+            // Display revenue and CM
+            document.getElementById('rev1').textContent = price1.toLocaleString('vi-VN');
+            document.getElementById('rev2').textContent = price2.toLocaleString('vi-VN');
+            document.getElementById('rev3').textContent = price3.toLocaleString('vi-VN');
+            document.getElementById('rev4').textContent = price4.toLocaleString('vi-VN');
+            
+            document.getElementById('var1').textContent = totalVariable.toLocaleString('vi-VN');
+            document.getElementById('var2').textContent = totalVariable.toLocaleString('vi-VN');
+            document.getElementById('var3').textContent = totalVariable.toLocaleString('vi-VN');
+            document.getElementById('var4').textContent = totalVariable.toLocaleString('vi-VN');
+            
+            document.getElementById('cm1').textContent = cm1.toLocaleString('vi-VN');
+            document.getElementById('cm2').textContent = cm2.toLocaleString('vi-VN');
+            document.getElementById('cm3').textContent = cm3.toLocaleString('vi-VN');
+            document.getElementById('cm4').textContent = cm4.toLocaleString('vi-VN');
+
+            // Calculate weighted CM
+            const weightedCM = (cm1 * normMix1) + (cm2 * normMix2) + (cm3 * normMix3) + (cm4 * normMix4);
+            document.getElementById('weightedCM').textContent = weightedCM.toLocaleString('vi-VN') + ' VND/customer';
+
+            // Calculate BEP
+            const bepMonthly = Math.ceil(totalFixed / weightedCM);
+            const bepAnnual = bepMonthly * 12;
+            
+            document.getElementById('bepMonthly').textContent = bepMonthly + ' customers';
+            document.getElementById('bepAnnual').textContent = bepAnnual + ' customers';
+            document.getElementById('mainBEP').textContent = bepMonthly;
+
+            // Calculate scenarios
+            const customers = [10, 22, 50, 100];
+            customers.forEach(cust => {
+                const revenue = cust * (price1 * normMix1 + price2 * normMix2 + price3 * normMix3 + price4 * normMix4);
+                const variableCost = cust * totalVariable;
+                const profit = revenue - variableCost - totalFixed;
+                
+                const prefix = 'rev' + cust;
+                const prefix2 = 'var' + cust;
+                const prefix3 = 'profit' + cust;
+                
+                document.getElementById(prefix).textContent = revenue.toLocaleString('vi-VN');
+                document.getElementById(prefix2).textContent = variableCost.toLocaleString('vi-VN');
+                
+                const profitEl = document.getElementById(prefix3);
+                profitEl.textContent = (profit >= 0 ? '+' : '') + profit.toLocaleString('vi-VN');
+                profitEl.className = profit >= 0 ? 'success' : 'warning';
+            });
+
+            // Update summary
+            const monthlyRevenue = bepMonthly * weightedCM;
+            document.getElementById('monthlyRevenue').textContent = 
+                'Monthly revenue at BEP: ' + monthlyRevenue.toLocaleString('vi-VN') + ' VND';
+        }
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>

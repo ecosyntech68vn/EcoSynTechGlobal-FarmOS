@@ -1,0 +1,77 @@
+Tier,Item,Amount (VND),Formula/Notes
+,,,,;
+,,,,SECTION 1: INPUTS,;
+,,,,;
+FIXED_COSTS_Monthly,,,;
+,Server (VPS),500000,Enter your server cost
+,Domain + SSL,100000,Annual / 12
+,MQTT Broker,150000,Cloud MQTT service
+,Support Tools,200000,Telegram, CRM etc
+,Marketing,500000,Content, ads
+,Development,1000000,Part-time dev
+TOTAL_FIXED,,2450000,=SUM(B6:B11)
+,,,,;
+VARIABLE_COSTS_Per_Customer_Monthly,,,;
+,Data Storage,5000,Per customer
+,API/AI Calls,10000,Per customer
+,Support,15000,Per customer
+TOTAL_VARIABLE,,30000,=SUM(B15:B17)
+,,,,;
+PRICING_Subscription_Monthly,,,;
+BASE,Monthly Price,0,Free tier
+PRO,Monthly Price,99000,Most popular
+PRO_MAX,Monthly Price,199000,Full features
+PREMIUM,Monthly Price,299000,Enterprise
+,,,,;
+CUSTOMER_MIX_Percentage,,,;
+BASE,%,5%,Demo customers
+PRO,%,60%,Main revenue
+PRO_MAX,%,25%,Growth customers
+PREMIUM,%,10%,Enterprise customers
+TOTAL_MIX,,100%,=SUM(B28:B31)
+,,,,;
+,,,,SECTION 2: CALCULATIONS,;
+,,,,;
+CONTRIBUTION_MARGIN,,,;
+Tier,Revenue,Variable,CM,Formula
+BASE,0,30000,-30000,=B34-B17
+PRO,99000,30000,69000,=B35-B17
+PRO_MAX,199000,30000,169000,=B36-B17
+PREMIUM,299000,30000,269000,=B37-B17
+,,,,;
+WEIGHTED_CONTRIBUTION_MARGIN,,,;
+Tier,CM,Mix %,Weighted CM,Formula
+BASE,-30000,5%,-1500,=B41*C28
+PRO,69000,60%,41400,=B42*C29
+PRO_MAX,169000,25%,42250,=B43*C30
+PREMIUM,269000,10%,26900,=B44*C31
+WEIGHTED_CM,,,110050,=SUM(D41:D44)
+,,,,;
+BREAK_EVEN_ANALYSIS,,,;
+Metric,Value,Formula
+Monthly BEP (customers),22,=B12/D47
+Annual BEP (customers),264,=B50*12
+,,,,;
+,,,,SECTION 3: REVENUE SCENARIOS,;
+,,,,;
+Customer Count,10,22,50,100
+TOTAL_REVENUE,,=B55*B34*B28+B55*B35*B29+B55*B36*B30+B55*B37*B31,=B56*B34*B28+B56*B35*B29+B56*B36*B30+B56*B37*B31,=B57*B34*B28+B57*B35*B29+B57*B36*B30+B57*B37*B31,=B58*B34*B28+B58*B35*B29+B58*B36*B30+B58*B37*B31
+VARIABLE_COST,,=B55*B17,=B56*B17,=B57*B17,=B58*B17
+FIXED_COST,,=B12,=B12,=B12,=B12
+PROFIT,,=B60-B61-B62,=C60-C61-C62,=D60-D61-D62,=E60-E61-E62
+,,,,;
+,,,,SECTION 4: SENSITIVITY,;
+,,,,;
+PRICE_SENSITIVITY,,,;
+Scenario,New Price,New CM,BEP
+PRO-20%,79200,49200,=B12/C70
+PRO-10%,89100,59100,=B12/C71
+PRO Current,99000,69000,=B12/C72
+PRO+10%,108900,78900,=B12/C73
+PRO+20%,118800,88800,=B12/C74
+,,,,;
+MIX_SENSITIVITY,,,;
+Scenario,PRO%,MAX%,Premium%,Weighted CM,BEP
+High PRO,70%,20%,10%,=70%*B42+20%*B43+10%*B44,=B12/C80
+Balanced,60%,25%,10%,=60%*B42+25%*B43+10%*B44,=B12/C81
+High Premium,40%,30%,30%,=40%*B42+30%*B43+30%*B44,=B12/C82
