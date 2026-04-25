@@ -448,17 +448,24 @@ class ComplianceService {
     };
   }
 
-  // Get compliance score
+// Get compliance score
   getComplianceScore() {
     const summary = this.getControlsSummary();
+    
+    const applicable = summary.total - summary.byStatus.notApplicable;
+    const actualCoverage = applicable > 0 ? Math.round((summary.byStatus.compliant / applicable) * 100) : 0;
+    
     return {
-      score: summary.coverage,
-      grade: summary.coverage >= 95 ? 'A' :
-             summary.coverage >= 85 ? 'B' :
-             summary.coverage >= 70 ? 'C' : 'D',
-      status: summary.coverage >= 95 ? 'EXCELLENT' :
-              summary.coverage >= 85 ? 'GOOD' :
-              summary.coverage >= 70 ? 'FAIR' : 'POOR'
+      score: actualCoverage,
+      rawScore: summary.coverage,
+      applicable,
+      notApplicable: summary.byStatus.notApplicable,
+      grade: actualCoverage >= 95 ? 'A' :
+             actualCoverage >= 85 ? 'B' :
+             actualCoverage >= 70 ? 'C' : 'D',
+      status: actualCoverage >= 95 ? 'EXCELLENT' :
+               actualCoverage >= 85 ? 'GOOD' :
+               actualCoverage >= 70 ? 'FAIR' : 'POOR'
     };
   }
 
