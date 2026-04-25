@@ -1,77 +1,81 @@
-# EcoSynTech - One Pager
+# EcoSynTech - One Pager / Trang tóm tắt
 
-## Company Overview
+## Tổng quan công ty / Company Overview
 
-| Field | Details |
-|-------|---------|
-| **Name** | EcoSynTech FarmOS |
-| **Founded** | 2024 |
-| **Location** | Vietnam |
+| Field / Trường | Details / Chi tiết |
+|----------------|---------------------|
+| **Tên / Name** | EcoSynTech FarmOS |
+| **Thành lập / Founded** | 2024 |
+| **Nơi đặt / Location** | Việt Nam / Vietnam |
 | **Website** | http://139.59.101.136:3000 |
 
-## Problem
+## Vấn đề / Problem
 
 9 triệu hộ nông nghiệp Việt Nam cần công nghệ nhưng:
-- ❌ Không internet ổn định
-- ❌ Giải pháp hiện tại quá đắt (5-20M/tháng)
-- ❌ Quá phức tạp để dùng
+9M Vietnamese farm households need technology but:
 
-## Solution
+- ❌ Không internet ổn định / No stable internet
+- ❌ Giải pháp hiện tại quá đắt (5-20M/tháng) / Current solutions too expensive
+- ❌ Quá phức tạp để dùng / Too complex to use
+
+## Giải pháp / Solution
 
 **Nền tảng Nông nghiệp Thông minh Offline-first**
+**Offline-first Smart Agriculture Platform**
 
-✅ Hoạt động khi MẤT INTERNET  
-✅ Giá chỉ 99K/tháng  
-✅ ESP32 hardware  
+✅ Hoạt động khi MẤT INTERNET / Works when NO INTERNET  
+✅ Giá chỉ 99K/tháng / Price only 99K/month  
+✅ Phần cứng ESP32 / ESP32 hardware  
 ✅ AI/ML 8 models  
-✅ ISO 27001 Compliant  
+✅ Tuân thủ ISO 27001 / ISO 27001 Compliant  
 
-## Market
+## Thị trường / Market
 
-| Segment | Size |
-|---------|------|
-| TAM | 9,000,000 hộ |
+| Phân khúc / Segment | Quy mô / Size |
+|---------------------|---------------|
+| TAM | 9,000,000 hộ / households |
 | SAM | 2,000,000 hộ |
-| SOM (3 năm) | 100,000 hộ |
+| SOM (3 năm / 3 years) | 100,000 hộ |
 
-## Business Model
+## Mô hình kinh doanh / Business Model
 
-| Plan | Price | Features |
-|------|-------|----------|
-| BASE | Free | 5 sensors |
-| PRO | 99K | 20 sensors + AI |
-| MAX | 199K | Unlimited + E-commerce |
-| PREMIUM | 299K | All + Priority |
+| Gói / Plan | Giá / Price | Tính năng / Features |
+|------------|-------------|----------------------|
+| BASE | Miễn phí / Free | 5 cảm biến / sensors |
+| PRO | 99K | 20 cảm biến + AI |
+| MAX | 199K | Không giới hạn + TMĐT / E-commerce |
+| PREMIUM | 299K | Tất cả + Ưu tiên / Priority |
 
-## Competition
+## Cạnh tranh / Competition
 
 | | FPT | Viettel | **EcoSynTech** |
-|---|-----|---------|----------------|
+|---|-----|---------|-----------------|
 | Offline | ❌ | ❌ | **✅** |
-| Price | 5-20M | 1-5M | **99K** |
+| Giá / Price | 5-20M | 1-5M | **99K** |
 | AI/ML | 1 | 1 | **8** |
 
-## Metrics
+## Chỉ số / Metrics
 
-| Metric | Value |
-|--------|-------|
+| Chỉ số / Metric | Giá trị / Value |
+|------------------|-----------------|
 | ISO 27001 | 100% |
 | API Endpoints | 41 |
 | Skills | 83 |
 | AI Models | 8 |
 
-## Ask
+## Yêu cầu / Ask
 
-| Round | Amount | Equity |
-|-------|--------|--------|
+| Vòng / Round | Số tiền / Amount | Cổ phần / Equity |
+|--------------|-------------------|-------------------|
 | Pre-Seed | $50,000 | 10% |
 
-## Team
+## Đội ngũ / Team
 
-Founder with full-stack technical expertise + agriculture domain knowledge
+Founder với chuyên môn kỹ thuật + kiến thức ngành nông nghiệp
+Founder with technical expertise + agriculture domain knowledge
 
 ---
 
-**Contact:** [Your Email] | **Demo:** http://139.59.101.136:3000
+**Liên hệ / Contact:** [Your Email] | **Demo:** http://139.59.101.136:3000
 
 © 2026 EcoSynTech
