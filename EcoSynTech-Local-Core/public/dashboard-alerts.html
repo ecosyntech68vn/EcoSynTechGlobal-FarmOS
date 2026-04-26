@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cảnh báo & Sự cố - EcoSynTech</title>
+    <style>
+        :root { --primary: #10b981; --secondary: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --dark: #1f2937; --darker: #0f172a; --light: #f3f4f6; --gray: #64748b; --border: #e2e8f0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: var(--light); min-height: 100vh; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: var(--darker); color: white; padding: 20px 0; z-index: 100; }
+        .logo { padding: 20px; font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .logo span { color: white; }
+        .nav-section { padding: 10px 20px; font-size: 11px; text-transform: uppercase; color: var(--gray); font-weight: 600; }
+        .nav-item { display: flex; align-items: center; padding: 12px 20px; color: #94a3b8; text-decoration: none; gap: 12px; }
+        .nav-item:hover, .nav-item.active { background: rgba(16, 185, 129, 0.15); color: var(--primary); border-left: 3px solid var(--primary); }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-size: 26px; color: var(--dark); font-weight: 600; }
+        .header-right { display: flex; gap: 12px; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+        .stat-card h3 { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; }
+        .stat-card .value.danger { color: var(--danger); }
+        .stat-card .value.warning { color: var(--warning); }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); margin-bottom: 25px; }
+        .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2 { font-size: 16px; color: var(--dark); font-weight: 600; }
+        .card-body { padding: 0; }
+        .alert-item { display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); gap: 15px; }
+        .alert-item:last-child { border-bottom: none; }
+        .alert-item:hover { background: #f8fafc; }
+        .alert-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .alert-icon.critical { background: #fee2e2; }
+        .alert-icon.warning { background: #fef3c7; }
+        .alert-icon.info { background: #dbeafe; }
+        .alert-content { flex: 1; }
+        .alert-title { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+        .alert-desc { font-size: 12px; color: var(--gray); }
+        .alert-meta { display: flex; gap: 15px; font-size: 12px; color: var(--gray); }
+        .alert-time { font-size: 12px; color: var(--gray); white-space: nowrap; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-critical { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-resolved { background: #d1fae5; color: #065f46; }
+        .filters { display: flex; gap: 10px; margin-bottom: 20px; }
+        .filter-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: white; font-size: 12px; cursor: pointer; }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">Eco<span>SynTech</span> 🟢</div>
+        <div class="nav-section">Vận hành</div>
+        <a href="dashboard-main.html" class="nav-item">📊 Dashboard</a>
+        <a href="dashboard-devices.html" class="nav-item">📡 Thiết bị</a>
+        <a href="dashboard-monitoring.html" class="nav-item">📈 Giám sát</a>
+        <a href="dashboard-alerts.html" class="nav-item active">🔔 Cảnh báo</a>
+        <a href="dashboard-automation.html" class="nav-item">⚙️ Tự động hóa</a>
+        <a href="dashboard-maintenance.html" class="nav-item">🔧 Bảo trì</a>
+        <div class="nav-section">Quản lý</div>
+        <a href="dashboard-sales.html" class="nav-item">💰 Bán hàng</a>
+        <a href="dashboard-inventory.html" class="nav-item">📦 Tồn kho</a>
+        <a href="dashboard-ai.html" class="nav-item">🤖 AI Center</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="header">
+            <h1>🔔 Cảnh báo & Sự cố</h1>
+            <div class="header-right">
+                <button class="btn btn-secondary">⚙️ Cài đặt</button>
+                <button class="btn btn-primary" onclick="createRule()">+ Tạo rule</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Tổng cảnh báo</h3>
+                <div class="value">156</div>
+                <div style="font-size: 12px; color: var(--gray);">24h qua</div>
+            </div>
+            <div class="stat-card">
+                <h3>Nghiêm trọng</h3>
+                <div class="value danger">3</div>
+                <div style="font-size: 12px; color: var(--gray);">Cần xử lý ngay</div>
+            </div>
+            <div class="stat-card">
+                <h3>Cảnh báo</h3>
+                <div class="value warning">12</div>
+                <div style="font-size: 12px; color: var(--gray);">Cần quan sát</div>
+            </div>
+            <div class="stat-card">
+                <h3>Đã xử lý</h3>
+                <div class="value">141</div>
+                <div style="font-size: 12px; color: var(--gray);">24h qua</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Cảnh báo nghiêm trọng</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert-item">
+                    <div class="alert-icon critical">🔴</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Thiết bị offline > 2 giờ</div>
+                        <div class="alert-desc">Soil-Moist-003 tại Nông trại B không phản hồi</div>
+                        <div class="alert-meta">
+                            <span>📍 Nông trại B - Vùng 1</span>
+                            <span>Thiết bị: Soil-Moist-003</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-critical">Nghiêm trọng</span>
+                    <span class="alert-time">2 giờ trước</span>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-icon critical">🔴</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Pin yếu dưới 15%</div>
+                        <div class="alert-desc">Thiết bị Light-004 sắp hết pin</div>
+                        <div class="alert-meta">
+                            <span>📍 Nông trại A - Vùng 3</span>
+                            <span>Thiết bị: Light-004</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-critical">Nghiêm trọng</span>
+                    <span class="alert-time">5 giờ trước</span>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-icon critical">🔴</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Nhiệt độ vượt ngưỡng</div>
+                        <div class="alert-desc">Nhiệt độ 38°C vượt ngưỡng an toàn 35°C</div>
+                        <div class="alert-meta">
+                            <span>📍 Nông trại A - Vùng 2</span>
+                            <span>Cảm biến: DHT22-002</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-critical">Nghiêm trọng</span>
+                    <span class="alert-time">1 giờ trước</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Lịch sử cảnh báo</h2>
+            </div>
+            <div class="card-body">
+                <div class="filters">
+                    <button class="filter-btn active">Tất cả</button>
+                    <button class="filter-btn">Nghiêm trọng</button>
+                    <button class="filter-btn">Cảnh báo</button>
+                    <button class="filter-btn">Thông tin</button>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-icon warning">🟡</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Độ ẩm đất thấp</div>
+                        <div class="alert-desc">Độ ẩm đất 25% dưới ngưỡng 30%</div>
+                    </div>
+                    <span class="badge badge-warning">Cảnh báo</span>
+                    <span class="alert-time">30 phút trước</span>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-icon warning">🟡</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Tín hiệu yếu</div>
+                        <div class="alert-desc">RSSI -95 dBm dưới ngưỡng -90 dBm</div>
+                    </div>
+                    <span class="badge badge-warning">Cảnh báo</span>
+                    <span class="alert-time">1 giờ trước</span>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-icon info">🔵</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Khởi động lại hệ thống</div>
+                        <div class="alert-desc">Server khởi động lại sau bảo trì</div>
+                    </div>
+                    <span class="badge badge-resolved">Thông tin</span>
+                    <span class="alert-time">6 giờ trước</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function createRule() { window.location.href = '/alerts/rule/new'; }
+    </script>
+</body>
+</html>

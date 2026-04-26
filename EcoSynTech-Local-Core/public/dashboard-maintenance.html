@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảo trì - EcoSynTech</title>
+    <style>
+        :root { --primary: #10b981; --secondary: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --dark: #1f2937; --darker: #0f172a; --light: #f3f4f6; --gray: #64748b; --border: #e2e8f0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: var(--light); min-height: 100vh; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: var(--darker); color: white; padding: 20px 0; z-index: 100; }
+        .logo { padding: 20px; font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .logo span { color: white; }
+        .nav-section { padding: 10px 20px; font-size: 11px; text-transform: uppercase; color: var(--gray); font-weight: 600; }
+        .nav-item { display: flex; align-items: center; padding: 12px 20px; color: #94a3b8; text-decoration: none; gap: 12px; }
+        .nav-item:hover, .nav-item.active { background: rgba(16, 185, 129, 0.15); color: var(--primary); border-left: 3px solid var(--primary); }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-size: 26px; color: var(--dark); font-weight: 600; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; }
+        .btn-primary { background: var(--primary); color: white; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+        .stat-card h3 { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); margin-bottom: 25px; }
+        .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2 { font-size: 16px; color: var(--dark); font-weight: 600; }
+        .card-body { padding: 0; }
+        .task-item { display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); gap: 15px; }
+        .task-item:last-child { border-bottom: none; }
+        .task-icon { font-size: 20px; }
+        .task-content { flex: 1; }
+        .task-title { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+        .task-desc { font-size: 12px; color: var(--gray); }
+        .task-meta { font-size: 12px; color: var(--gray); }
+        .priority { width: 10px; height: 10px; border-radius: 50%; }
+        .priority.high { background: var(--danger); }
+        .priority.medium { background: var(--warning); }
+        .priority.low { background: var(--success); }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-progress { background: #dbeafe; color: #1e40af; }
+        .badge-done { background: #d1fae5; color: #065f46; }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">Eco<span>SynTech</span> 🟢</div>
+        <div class="nav-section">Vận hành</div>
+        <a href="dashboard-main.html" class="nav-item">📊 Dashboard</a>
+        <a href="dashboard-devices.html" class="nav-item">📡 Thiết bị</a>
+        <a href="dashboard-monitoring.html" class="nav-item">📈 Giám sát</a>
+        <a href="dashboard-alerts.html" class="nav-item">🔔 Cảnh báo</a>
+        <a href="dashboard-automation.html" class="nav-item">⚙️ Tự động hóa</a>
+        <a href="dashboard-maintenance.html" class="nav-item active">🔧 Bảo trì</a>
+        <div class="nav-section">Quản lý</div>
+        <a href="dashboard-sales.html" class="nav-item">💰 Bán hàng</a>
+        <a href="dashboard-ai.html" class="nav-item">🤖 AI Center</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="header">
+            <h1>🔧 Bảo trì & Sửa chữa</h1>
+            <button class="btn btn-primary" onclick="newTask()">+ Tạo task</button>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Tổng task tháng</h3>
+                <div class="value">24</div>
+            </div>
+            <div class="stat-card">
+                <h3>Đang chờ</h3>
+                <div class="value" style="color: var(--warning);">5</div>
+            </div>
+            <div class="stat-card">
+                <h3>Đang tiến hành</h3>
+                <div class="value" style="color: var(--secondary);">3</div>
+            </div>
+            <div class="stat-card">
+                <h3>Hoàn thành</h3>
+                <div class="value" style="color: var(--success);">16</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Công việc bảo trì đang chờ</h2>
+            </div>
+            <div class="card-body">
+                <div class="task-item">
+                    <div class="task-icon">🔋</div>
+                    <div class="task-content">
+                        <div class="task-title">Thay pin thiết bị Light-004</div>
+                        <div class="task-desc">Pin yếu, cần thay pin AAA</div>
+                        <div class="task-meta">📍 Nông trại A - Vùng 3 | Thiết bị: Light-004</div>
+                    </div>
+                    <span class="priority high"></span>
+                    <span class="badge badge-pending">Chờ xử lý</span>
+                </div>
+                <div class="task-item">
+                    <div class="task-icon">📡</div>
+                    <div class="task-content">
+                        <div class="task-title">Khắc phục thiết bị Soil-Moist-003</div>
+                        <div class="task-desc">Thiết bị offline, kiểm tra nguồn điện</div>
+                        <div class="task-meta">📍 Nông trại B - Vùng 1 | Thiết bị: Soil-Moist-003</div>
+                    </div>
+                    <span class="priority high"></span>
+                    <span class="badge badge-progress">Đang tiến hành</span>
+                </div>
+                <div class="task-item">
+                    <div class="task-icon">🧹</div>
+                    <div class="task-content">
+                        <div class="task-title">Vệ sinh cảm biến DHT22-005</div>
+                        <div class="task-desc">Cảm biến bụi bẩn, đọc sai nhiệt độ</div>
+                        <div class="task-meta">📍 Nông trại A - Vùng 2 | Thiết bị: DHT22-005</div>
+                    </div>
+                    <span class="priority medium"></span>
+                    <span class="badge badge-pending">Chờ xử lý</span>
+                </div>
+                <div class="task-item">
+                    <div class="task-icon">📶</div>
+                    <div class="task-content">
+                        <div class="task-title">Cập nhật firmware ESP32-008</div>
+                        <div class="task-desc">Cập nhật lên phiên bản mới</div>
+                        <div class="task-meta">📍 Nông trại A - Vùng 4 | Thiết bị: ESP32-008</div>
+                    </div>
+                    <span class="priority low"></span>
+                    <span class="badge badge-done">Hoàn thành</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Lịch sử bảo trì</h2>
+            </div>
+            <div class="card-body">
+                <div class="task-item">
+                    <div class="task-icon">✅</div>
+                    <div class="task-content">
+                        <div class="task-title">Bảo trì định kỳ ESP32-001</div>
+                        <div class="task-desc">Kiểm tra, vệ sinh, cập nhật firmware</div>
+                        <div class="task-meta">15/04/2026 - Kỹ thuật viên A</div>
+                    </div>
+                    <span class="badge badge-done">Hoàn thành</span>
+                </div>
+                <div class="task-item">
+                    <div class="task-icon">✅</div>
+                    <div class="task-content">
+                        <div class="task-title">Thay cảm biến DHT22-002</div>
+                        <div class="task-desc">Cảm biến hỏng, thay mới</div>
+                        <div class="task-meta">10/04/2026 - Kỹ thuật viên B</div>
+                    </div>
+                    <span class="badge badge-done">Hoàn thành</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function newTask() { window.location.href = '/maintenance/new'; }
+    </script>
+</body>
+</html>

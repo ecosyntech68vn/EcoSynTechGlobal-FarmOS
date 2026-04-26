@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Thiết bị IoT - EcoSynTech</title>
+    <style>
+        :root { --primary: #10b981; --secondary: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --dark: #1f2937; --darker: #0f172a; --light: #f3f4f6; --gray: #64748b; --border: #e2e8f0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--light); min-height: 100vh; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: var(--darker); color: white; padding: 20px 0; z-index: 100; overflow-y: auto; }
+        .logo { padding: 20px; font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .logo span { color: white; }
+        .nav-section { padding: 10px 20px; font-size: 11px; text-transform: uppercase; color: var(--gray); font-weight: 600; letter-spacing: 0.5px; }
+        .nav-item { display: flex; align-items: center; padding: 12px 20px; color: #94a3b8; text-decoration: none; transition: all 0.2s; gap: 12px; font-size: 14px; }
+        .nav-item:hover, .nav-item.active { background: rgba(16, 185, 129, 0.15); color: var(--primary); border-left: 3px solid var(--primary); }
+        .nav-icon { font-size: 16px; width: 24px; text-align: center; }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-size: 26px; color: var(--dark); font-weight: 600; }
+        .header-right { display: flex; gap: 12px; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #059669; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--dark); }
+        .btn-danger { background: var(--danger); color: white; }
+        .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+        .stat-card h3 { font-size: 12px; color: var(--gray); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; }
+        .stat-card .value { font-size: 28px; font-weight: 700; color: var(--dark); }
+        .stat-card .value.success { color: var(--success); }
+        .stat-card .value.warning { color: var(--warning); }
+        .stat-card .value.danger { color: var(--danger); }
+        .stat-card .sub { font-size: 12px; color: var(--gray); margin-top: 5px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); margin-bottom: 25px; overflow: hidden; }
+        .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2 { font-size: 16px; color: var(--dark); font-weight: 600; }
+        .card-body { padding: 20px 24px; }
+        .filters { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-select { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; min-width: 150px; background: white; }
+        .search-input { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; width: 250px; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: var(--gray); text-transform: uppercase; background: #f8fafc; border-bottom: 1px solid var(--border); }
+        .table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .table tr:hover { background: #f8fafc; }
+        .table tr:last-child td { border-bottom: none; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .device-icon { width: 36px; height: 36px; border-radius: 8px; background: #e0f2fe; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .progress-cell { width: 100px; }
+        .progress-bar { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .progress-bar .fill { height: 100%; border-radius: 3px; }
+        .progress-bar .fill.green { background: var(--success); }
+        .progress-bar .fill.yellow { background: var(--warning); }
+        .progress-bar .fill.red { background: var(--danger); }
+        .action-btn { padding: 6px 12px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; background: var(--light); color: var(--dark); }
+        .action-btn:hover { background: var(--border); }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">Eco<span>SynTech</span> 🟢</div>
+        <div class="nav-section">Vận hành</div>
+        <a href="dashboard-main.html" class="nav-item">📊 Dashboard</a>
+        <a href="dashboard-devices.html" class="nav-item active">📡 Thiết bị</a>
+        <a href="dashboard-monitoring.html" class="nav-item">📈 Giám sát</a>
+        <a href="dashboard-alerts.html" class="nav-item">🔔 Cảnh báo</a>
+        <a href="dashboard-automation.html" class="nav-item">⚙️ Tự động hóa</a>
+        <a href="dashboard-maintenance.html" class="nav-item">🔧 Bảo trì</a>
+        <div class="nav-section">Quản lý</div>
+        <a href="dashboard-sales.html" class="nav-item">💰 Bán hàng</a>
+        <a href="dashboard-inventory.html" class="nav-item">📦 Tồn kho</a>
+        <a href="dashboard-marketing.html" class="nav-item">📢 Marketing</a>
+        <a href="dashboard-hr.html" class="nav-item">👥 Nhân sự</a>
+        <div class="nav-section">AI & System</div>
+        <a href="dashboard-ai.html" class="nav-item">🤖 AI Center</a>
+        <a href="dashboard-system.html" class="nav-item">💻 Hệ thống</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="header">
+            <h1>📡 Quản lý Thiết bị IoT</h1>
+            <div class="header-right">
+                <button class="btn btn-outline" onclick="exportDevices()">📥 Export</button>
+                <button class="btn btn-secondary">📊 Báo cáo</button>
+                <button class="btn btn-primary" onclick="addDevice()">+ Thêm thiết bị</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Tổng thiết bị</h3>
+                <div class="value">156</div>
+                <div class="sub">+12 tháng này</div>
+            </div>
+            <div class="stat-card">
+                <h3>Đang hoạt động</h3>
+                <div class="value success">142</div>
+                <div class="sub">91%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Offline</h3>
+                <div class="value danger">8</div>
+                <div class="sub">5.1%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Cần bảo trì</h3>
+                <div class="value warning">6</div>
+                <div class="sub">3.8%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Đăng ký mới</h3>
+                <div class="value">23</div>
+                <div class="sub">Chờ duyệt</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Danh sách thiết bị</h2>
+            </div>
+            <div class="card-body">
+                <div class="filters">
+                    <input type="text" class="search-input" placeholder="🔍 Tìm theo tên, ID...">
+                    <select class="filter-select">
+                        <option>Tất cả trạng thái</option>
+                        <option>Đang hoạt động</option>
+                        <option>Offline</option>
+                        <option>Cần bảo trì</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Tất cả loại</option>
+                        <option>ESP32</option>
+                        <option>Raspberry Pi</option>
+                        <option>Arduino</option>
+                        <option>Sensor</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Tất cả trang trại</option>
+                        <option>Nông trại A</option>
+                        <option>Nông trại B</option>
+                    </select>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Thiết bị</th>
+                            <th>Loại</th>
+                            <th>Vị trí</th>
+                            <th>Trạng thái</th>
+                            <th>Pin</th>
+                            <th>RSSI</th>
+                            <th>Hoạt động cuối</th>
+                            <th style="width: 100px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="device-icon">📡</div>
+                                    <div>
+                                        <strong>ESP32-001</strong><br>
+                                        <span style="font-size: 11px; color: var(--gray);">00:1A:2B:3C:4D:5E</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>ESP32</td>
+                            <td>Nông trại A - Vùng 1</td>
+                            <td><span class="badge badge-success">🟢 Hoạt động</span></td>
+                            <td>
+                                <div class="progress-cell">
+                                    <div class="progress-bar"><div class="fill green" style="width: 85%;"></div></div>
+                                    <div style="font-size: 11px; color: var(--gray);">85%</div>
+                                </div>
+                            </td>
+                            <td>-42 dBm</td>
+                            <td>1 phút trước</td>
+                            <td>
+                                <button class="action-btn">⚙️</button>
+                                <button class="action-btn">📊</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="device-icon">🌡️</div>
+                                    <div>
+                                        <strong>DHT22-001</strong><br>
+                                        <span style="font-size: 11px; color: var(--gray);">00:1A:2B:3C:4D:5F</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>DHT22 Sensor</td>
+                            <td>Nông trại A - Vùng 2</td>
+                            <td><span class="badge badge-success">🟢 Hoạt động</span></td>
+                            <td>
+                                <div class="progress-cell">
+                                    <div class="progress-bar"><div class="fill green" style="width: 92%;"></div></div>
+                                    <div style="font-size: 11px; color: var(--gray);">92%</div>
+                                </div>
+                            </td>
+                            <td>-55 dBm</td>
+                            <td>30 giây trước</td>
+                            <td>
+                                <button class="action-btn">⚙️</button>
+                                <button class="action-btn">📊</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="device-icon">💧</div>
+                                    <div>
+                                        <strong>Soil-Moist-003</strong><br>
+                                        <span style="font-size: 11px; color: var(--gray);">00:1A:2B:3C:4D:60</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Soil Moisture</td>
+                            <td>Nông trại B - Vùng 1</td>
+                            <td><span class="badge badge-warning">🟡 Offline</span></td>
+                            <td>
+                                <div class="progress-cell">
+                                    <div class="progress-bar"><div class="fill red" style="width: 12%;"></div></div>
+                                    <div style="font-size: 11px; color: var(--gray);">12%</div>
+                                </div>
+                            </td>
+                            <td>-98 dBm</td>
+                            <td>2 giờ trước</td>
+                            <td>
+                                <button class="action-btn">⚙️</button>
+                                <button class="action-btn">📊</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="device-icon">🔆</div>
+                                    <div>
+                                        <strong>Light-004</strong><br>
+                                        <span style="font-size: 11px; color: var(--gray);">00:1A:2B:3C:4D:61</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Light Sensor</td>
+                            <td>Nông trại A - Vùng 3</td>
+                            <td><span class="badge badge-danger">🔴 Cần bảo trì</span></td>
+                            <td>
+                                <div class="progress-cell">
+                                    <div class="progress-bar"><div class="fill yellow" style="width: 45%;"></div></div>
+                                    <div style="font-size: 11px; color: var(--gray);">45%</div>
+                                </div>
+                            </td>
+                            <td>-67 dBm</td>
+                            <td>5 giờ trước</td>
+                            <td>
+                                <button class="action-btn">⚙️</button>
+                                <button class="action-btn">📊</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function addDevice() { window.location.href = '/devices/new'; }
+        function exportDevices() { alert('Đang export danh sách thiết bị...'); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Health - EcoSynTech</title>
+    <style>
+        :root { --primary: #10b981; --secondary: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --dark: #1f2937; --darker: #0f172a; --light: #f3f4f6; --gray: #64748b; --border: #e2e8f0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: var(--light); min-height: 100vh; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: var(--darker); color: white; padding: 20px 0; z-index: 100; }
+        .logo { padding: 20px; font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .logo span { color: white; }
+        .nav-section { padding: 10px 20px; font-size: 11px; text-transform: uppercase; color: var(--gray); font-weight: 600; }
+        .nav-item { display: flex; align-items: center; padding: 12px 20px; color: #94a3b8; text-decoration: none; gap: 12px; }
+        .nav-item:hover, .nav-item.active { background: rgba(16, 185, 129, 0.15); color: var(--primary); border-left: 3px solid var(--primary); }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-size: 26px; color: var(--dark); font-weight: 600; }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #d1fae5; color: #065f46; border-radius: 20px; font-size: 14px; font-weight: 600; }
+        .status-dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+        .stat-card h3 { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); margin-bottom: 25px; }
+        .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2 { font-size: 16px; color: var(--dark); font-weight: 600; }
+        .card-body { padding: 20px 24px; }
+        .health-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .health-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--light); border-radius: 8px; }
+        .health-name { font-weight: 500; font-size: 14px; }
+        .health-status { display: flex; align-items: center; gap: 8px; }
+        .health-bar { width: 80px; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+        .health-bar .fill { height: 100%; border-radius: 4px; }
+        .health-bar .fill.green { background: var(--success); }
+        .health-bar .fill.yellow { background: var(--warning); }
+        .health-bar .fill.red { background: var(--danger); }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">Eco<span>SynTech</span> 🟢</div>
+        <div class="nav-section">Vận hành</div>
+        <a href="dashboard-main.html" class="nav-item">📊 Dashboard</a>
+        <a href="dashboard-devices.html" class="nav-item">📡 Thiết bị</a>
+        <a href="dashboard-automation.html" class="nav-item">⚙️ Tự động hóa</a>
+        <div class="nav-section">Quản lý</div>
+        <a href="dashboard-sales.html" class="nav-item">💰 Bán hàng</a>
+        <a href="dashboard-ai.html" class="nav-item">🤖 AI Center</a>
+        <a href="dashboard-system.html" class="nav-item active">💻 Hệ thống</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="header">
+            <h1>💻 Sức khỏe Hệ thống</h1>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                Tất cả hệ thống hoạt động tốt
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Uptime</h3>
+                <div class="value">99.9%</div>
+                <div style="font-size: 12px; color: var(--gray);">30 ngày</div>
+            </div>
+            <div class="stat-card">
+                <h3>Response Time</h3>
+                <div class="value">45ms</div>
+                <div style="font-size: 12px; color: var(--gray);">Trung bình</div>
+            </div>
+            <div class="stat-card">
+                <h3>Memory</h3>
+                <div class="value">384MB</div>
+                <div style="font-size: 12px; color: var(--gray);">/ 512MB</div>
+            </div>
+            <div class="stat-card">
+                <h3>CPU</h3>
+                <div class="value">12%</div>
+                <div style="font-size: 12px; color: var(--gray);">Trung bình</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>System Components</h2>
+            </div>
+            <div class="card-body">
+                <div class="health-grid">
+                    <div class="health-item">
+                        <span class="health-name">🌐 Web Server</span>
+                        <div class="health-status">
+                            <div class="health-bar"><div class="fill green" style="width: 95%;"></div></div>
+                            <span style="color: var(--success);">✓</span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-name">📡 MQTT Broker</span>
+                        <div class="health-status">
+                            <div class="health-bar"><div class="fill green" style="width: 98%;"></div></div>
+                            <span style="color: var(--success);">✓</span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-name">🗄️ Database</span>
+                        <div class="health-status">
+                            <div class="health-bar"><div class="fill green" style="width: 92%;"></div></div>
+                            <span style="color: var(--success);">✓</span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-name">📦 Redis Cache</span>
+                        <div class="health-status">
+                            <div class="health-bar"><div class="fill green" style="width: 88%;"></div></div>
+                            <span style="color: var(--success);">✓</span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-name">📨 Email Service</span>
+                        <div class="health-status">
+                            <div class="health-bar"><div class="fill green" style="width: 100%;"></div></div>
+                            <span style="color: var(--success);">✓</span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-name">🔐 Auth Service</span>
+                        <div class="health-status">
+                            <div class="health-bar"><div class="fill green" style="width: 99%;"></div></div>
+                            <span style="color: var(--success);">✓</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

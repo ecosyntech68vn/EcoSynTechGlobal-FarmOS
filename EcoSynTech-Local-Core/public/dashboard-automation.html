@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tự động hóa - EcoSynTech</title>
+    <style>
+        :root { --primary: #10b981; --secondary: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --dark: #1f2937; --darker: #0f172a; --light: #f3f4f6; --gray: #64748b; --border: #e2e8f0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: var(--light); min-height: 100vh; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: var(--darker); color: white; padding: 20px 0; z-index: 100; }
+        .logo { padding: 20px; font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .logo span { color: white; }
+        .nav-section { padding: 10px 20px; font-size: 11px; text-transform: uppercase; color: var(--gray); font-weight: 600; }
+        .nav-item { display: flex; align-items: center; padding: 12px 20px; color: #94a3b8; text-decoration: none; gap: 12px; }
+        .nav-item:hover, .nav-item.active { background: rgba(16, 185, 129, 0.15); color: var(--primary); border-left: 3px solid var(--primary); }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-size: 26px; color: var(--dark); font-weight: 600; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; }
+        .btn-primary { background: var(--primary); color: white; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+        .stat-card h3 { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); margin-bottom: 25px; }
+        .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2 { font-size: 16px; color: var(--dark); font-weight: 600; }
+        .card-body { padding: 20px 24px; }
+        .rule-card { display: flex; align-items: center; padding: 16px; background: var(--light); border-radius: 10px; margin-bottom: 12px; gap: 15px; }
+        .rule-card:last-child { margin-bottom: 0; }
+        .rule-status { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .rule-status.active { background: #d1fae5; }
+        .rule-status.paused { background: #f3f4f6; }
+        .rule-content { flex: 1; }
+        .rule-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .rule-desc { font-size: 12px; color: var(--gray); }
+        .rule-trigger { display: inline-block; padding: 4px 10px; background: #dbeafe; color: #1e40af; border-radius: 4px; font-size: 11px; margin-right: 8px; }
+        .rule-action { display: inline-block; padding: 4px 10px; background: #d1fae5; color: #065f46; border-radius: 4px; font-size: 11px; }
+        .toggle { position: relative; width: 50px; height: 26px; background: var(--border); border-radius: 13px; cursor: pointer; transition: 0.3s; }
+        .toggle.on { background: var(--success); }
+        .toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: 0.3s; }
+        .toggle.on::after { left: 27px; }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">Eco<span>SynTech</span> 🟢</div>
+        <div class="nav-section">Vận hành</div>
+        <a href="dashboard-main.html" class="nav-item">📊 Dashboard</a>
+        <a href="dashboard-devices.html" class="nav-item">📡 Thiết bị</a>
+        <a href="dashboard-monitoring.html" class="nav-item">📈 Giám sát</a>
+        <a href="dashboard-alerts.html" class="nav-item">🔔 Cảnh báo</a>
+        <a href="dashboard-automation.html" class="nav-item active">⚙️ Tự động hóa</a>
+        <a href="dashboard-maintenance.html" class="nav-item">🔧 Bảo trì</a>
+        <div class="nav-section">Quản lý</div>
+        <a href="dashboard-sales.html" class="nav-item">💰 Bán hàng</a>
+        <a href="dashboard-ai.html" class="nav-item">🤖 AI Center</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="header">
+            <h1>⚙️ Tự động hóa</h1>
+            <button class="btn btn-primary" onclick="createRule()">+ Tạo rule mới</button>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Tổng rules</h3>
+                <div class="value">24</div>
+            </div>
+            <div class="stat-card">
+                <h3>Đang chạy</h3>
+                <div class="value" style="color: var(--success);">18</div>
+            </div>
+            <div class="stat-card">
+                <h3>Tạm dừng</h3>
+                <div class="value" style="color: var(--gray);">6</div>
+            </div>
+            <div class="stat-card">
+                <h3>Lần chạy hôm nay</h3>
+                <div class="value">1,245</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Automation Rules đang hoạt động</h2>
+            </div>
+            <div class="card-body">
+                <div class="rule-card">
+                    <div class="rule-status active">✓</div>
+                    <div class="rule-content">
+                        <div class="rule-title">Tưới nước tự động</div>
+                        <div class="rule-desc">
+                            <span class="rule-trigger">IF độ ẩm đất < 30%</span>
+                            <span class="rule-action">→ Bật máy bơm</span>
+                        </div>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-status active">✓</div>
+                    <div class="rule-content">
+                        <div class="rule-title">Bật quạt khi nóng</div>
+                        <div class="rule-desc">
+                            <span class="rule-trigger">IF nhiệt độ > 32°C</span>
+                            <span class="rule-action">→ Bật quạt làm mát</span>
+                        </div>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-status active">✓</div>
+                    <div class="rule-content">
+                        <div class="rule-title">Phun sương khi khô</div>
+                        <div class="rule-desc">
+                            <span class="rule-trigger">IF độ ẩm không khí < 60%</span>
+                            <span class="rule-action">→ Phun sương 5 phút</span>
+                        </div>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-status active">✓</div>
+                    <div class="rule-content">
+                        <div class="rule-title">Cảnh báo pin yếu</div>
+                        <div class="rule-desc">
+                            <span class="rule-trigger">IF pin < 20%</span>
+                            <span class="rule-action">→ Gửi cảnh báo</span>
+                        </div>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Automation Rules tạm dừng</h2>
+            </div>
+            <div class="card-body">
+                <div class="rule-card">
+                    <div class="rule-status paused">⏸</div>
+                    <div class="rule-content">
+                        <div class="rule-title">Điều chỉnh đèn theo ánh sáng</div>
+                        <div class="rule-desc">
+                            <span class="rule-trigger">IF ánh sáng < 500 lux</span>
+                            <span class="rule-action">→ Bật đèn grow light</span>
+                        </div>
+                    </div>
+                    <div class="toggle" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-status paused">⏸</div>
+                    <div class="rule-content">
+                        <div class="rule-title">Tưới nước theo lịch</div>
+                        <div class="rule-desc">
+                            <span class="rule-trigger">IF 6:00 sáng</span>
+                            <span class="rule-action">→ Tưới 10 phút</span>
+                        </div>
+                    </div>
+                    <div class="toggle" onclick="this.classList.toggle('on')"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function createRule() { window.location.href = '/automation/new'; }
+    </script>
+</body>
+</html>
