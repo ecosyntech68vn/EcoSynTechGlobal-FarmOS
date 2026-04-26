@@ -112,6 +112,70 @@ app.use(compression());
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
   });
 
+  app.get('/dashboard/main', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-main.html'));
+  });
+
+  app.get('/dashboard/devices', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-devices.html'));
+  });
+
+  app.get('/dashboard/monitoring', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-monitoring.html'));
+  });
+
+  app.get('/dashboard/alerts', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-alerts.html'));
+  });
+
+  app.get('/dashboard/automation', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-automation.html'));
+  });
+
+  app.get('/dashboard/maintenance', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-maintenance.html'));
+  });
+
+  app.get('/dashboard/traceability', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-traceability.html'));
+  });
+
+  app.get('/dashboard/energy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-energy.html'));
+  });
+
+  app.get('/dashboard/multifarm', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-multifarm.html'));
+  });
+
+  app.get('/dashboard/reports', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-reports.html'));
+  });
+
+  app.get('/dashboard/sales', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-sales.html'));
+  });
+
+  app.get('/dashboard/inventory', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-inventory.html'));
+  });
+
+  app.get('/dashboard/marketing', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-marketing.html'));
+  });
+
+  app.get('/dashboard/hr', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-hr.html'));
+  });
+
+  app.get('/dashboard/ai', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-ai.html'));
+  });
+
+  app.get('/dashboard/system', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-system.html'));
+  });
+
   // Bootstrap UI (admin)
   app.get('/bootstrap', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'bootstrap.html'));
