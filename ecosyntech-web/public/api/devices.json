@@ -1,0 +1,10 @@
+{
+  "pump": { "id": "pump", "name": "Máy bơm nước", "status": "off", "type": "actuator", "timestamp": "2026-04-18T10:00:00.000Z" },
+  "fan": { "id": "fan", "name": "Quạt làm mát", "status": "off", "type": "actuator", "timestamp": "2026-04-18T10:00:00.000Z" },
+  "light": { "id": "light", "name": "Đèn Grow Light", "status": "off", "type": "actuator", "timestamp": "2026-04-18T10:00:00.000Z" },
+  "valve": { "id": "valve", "name": "Van nước tự động", "status": "off", "type": "actuator", "timestamp": "2026-04-18T10:00:00.000Z" },
+  "sensor_soil_1": { "id": "sensor_soil_1", "name": "Cảm biến đất #1", "status": "online", "type": "sensor", "timestamp": "2026-04-18T10:00:00.000Z" },
+  "sensor_temp_1": { "id": "sensor_temp_1", "name": "Cảm biến nhiệt #1", "status": "online", "type": "sensor", "timestamp": "2026-04-18T10:00:00.000Z" },
+  "sensor_humidity_1": { "id": "sensor_humidity_1", "name": "Cảm biến ẩm #1", "status": "online", "type": "sensor", "timestamp": "2026-04-18T10:00:00.000Z" },
+  "sensor_light_1": { "id": "sensor_light_1", "name": "Cảm biến sáng #1", "status": "online", "type": "sensor", "timestamp": "2026-04-18T10:00:00.000Z" }
+}

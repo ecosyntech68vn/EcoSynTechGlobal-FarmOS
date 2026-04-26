@@ -1,0 +1,5 @@
+[
+  { "id": 1, "severity": "warning", "title": "Độ ẩm đất thấp", "message": "Độ ẩm đất giảm xuống 35%", "timestamp": "2026-04-18T09:30:00.000Z", "sensor": "soil_moisture" },
+  { "id": 2, "severity": "info", "title": "Cần bón phân", "message": "Đã đến thời điểm bón phân định kỳ", "timestamp": "2026-04-18T08:00:00.000Z", "sensor": "system" },
+  { "id": 3, "severity": "info", "title": "Sync hoàn tất", "message": "Đồng bộ dữ liệu từ Edge thành công", "timestamp": "2026-04-18T07:00:00.000Z", "sensor": "system" }
+]

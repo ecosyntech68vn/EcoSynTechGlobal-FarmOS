@@ -1,0 +1,23 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": null,
+    "title": "Telemetry Observability",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "API Latency",
+        "targets": [ { "expr": "rate(http_requests_total[5m])", "legendFormat": "requests" } ],
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 9 }
+      },
+      {
+        "type": "graph",
+        "title": "Error Rate",
+        "targets": [ { "expr": "rate(http_request_errors_total[5m])", "legendFormat": "errors" } ],
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 9 }
+      }
+    ],
+    "schemaVersion": 16,
+    "version": 0
+  }
+}

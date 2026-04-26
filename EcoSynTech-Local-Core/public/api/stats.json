@@ -1,0 +1,11 @@
+{
+  "totalSensors": 6,
+  "onlineSensors": 6,
+  "offlineSensors": 0,
+  "totalDevices": 4,
+  "activeDevices": 0,
+  "totalAlerts": 3,
+  "uptime": "24h",
+  "lastSync": "2026-04-18T10:00:00.000Z",
+  "version": "2.3.2"
+}

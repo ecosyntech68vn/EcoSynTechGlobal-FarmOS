@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cài đặt Farm OS - EcoSynTech</title>
+  <meta name="description" content="Cài đặt hệ thống Farm OS cho trang trại. Giám sát thông minh, tưới tự động, tiết kiệm 30-50% nước và nhân công.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-dark: #1B5E20;
+      --primary-light: #4CAF50;
+      --accent: #81C784;
+      --surface: #1B5E20;
+      --background: #0D3311;
+      --background-card: #153D1A;
+      --text: #FFFFFF;
+      --text-secondary: #A5D6A7;
+      --warning: #FFA726;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--background) 0%, #0A2910 100%);
+      padding-bottom: 80px;
+    }
+    
+    header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    
+    .logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .logo-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+    
+    .hero-text {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+    
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(76, 175, 80, 0.15);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--accent);
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    @media (max-width: 600px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .product-card {
+      background: var(--background-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(76, 175, 80, 0.15);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    
+    .product-card.featured {
+      border: 2px solid var(--primary-light);
+      position: relative;
+    }
+    
+    .product-badge {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary-light);
+      color: var(--text);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .product-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    
+    .product-name {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .product-desc {
+      color: var(--text-secondary);
+      font-size: 13px;
+      margin-bottom: 12px;
+      flex: 1;
+    }
+    
+    .product-price {
+      margin-bottom: 16px;
+    }
+    
+    .product-price .price {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .product-price .unit {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .product-features {
+      list-style: none;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    
+    .product-features li {
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+    }
+    
+    .product-features li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    .buy-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: var(--text);
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .buy-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
+    }
+    
+    .cta-section {
+      background: var(--background-card);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+    
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    
+    .cta-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .cta-btn {
+      background: var(--accent);
+      color: var(--background);
+      border: none;
+      padding: 16px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 32px 0;
+      text-align: center;
+    }
+    
+    @media (max-width: 480px) {
+      .benefits {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .benefit {
+      padding: 16px;
+    }
+    
+    .benefit-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    
+    .benefit-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .benefit-value {
+      color: var(--accent);
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--background-card);
+      padding: 12px 20px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 12px));
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid rgba(76, 175, 80, 0.1);
+    }
+    
+    nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 11px;
+    }
+    
+    nav a.active, nav a:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <a href="/" class="logo">
+        <div class="logo-img">🌱</div>
+        <div>
+          <div class="logo-text">EcoSynTech</div>
+          <div class="logo-sub">Farm OS bản quyền</div>
+        </div>
+      </a>
+    </header>
+    
+    <main>
+      <div class="hero-text">
+        <h1 class="hero-title">Chọn gói phù hợp</h1>
+        <p class="hero-subtitle">Cài đặt nhanh - Dùng ngay - Tiết kiệm ngay</p>
+      </div>
+      
+      <div class="trust-badges">
+        <span class="badge">⚡ Lắp đặt 1 ngày</span>
+        <span class="badge">📱 App điện thoại</span>
+        <span class="badge">🔧 Bảo hành 2 năm</span>
+      </div>
+      
+      <div class="products-grid" id="productsGrid"></div>
+      
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-icon">💧</div>
+          <div class="benefit-title">Tiết kiệm nước</div>
+          <div class="benefit-value">30-50%</div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">👨‍🌾</div>
+          <div class="benefit-title">Giảm nhân công</div>
+          <div class="benefit-value">60%</div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">📈</div>
+          <div class="benefit-title">Tăng năng suất</div>
+          <div class="benefit-value">15-25%</div>
+        </div>
+      </div>
+      
+      <div class="cta-section">
+        <h3 class="cta-title">Chưa chắc chọn gói nào?</h3>
+        <p class="cta-desc">Để lại số điện thoại, kỹ sư gọi tư vấn miễn phí trong 24h</p>
+        <button class="cta-btn" onclick="requestCallback()">Yêu cầu gọi lại</button>
+      </div>
+    </main>
+    
+    <nav>
+      <a href="/">🏠</a>
+      <a href="/products" class="active">📦</a>
+      <a href="/dashboard">📊</a>
+      <a href="tel:0989516698">📞</a>
+    </nav>
+  </div>
+  
+  <script>
+    const products = {
+      starter: {
+        id: 'starter',
+        icon: '📡',
+        name: 'Gói Khởi Động',
+        desc: 'Cho farm nhỏ dưới 1 ha',
+        price: 5800000,
+        features: [
+          '5 cảm biến độ ẩm + nhiệt',
+          '1 Gateway kết nối app',
+          'App theo dõi trên điện thoại',
+          'Cảnh báo qua Zalo/SMS',
+          'Lịch sử dữ liệu 6 tháng'
+        ]
+      },
+      growth: {
+        id: 'growth',
+        icon: '🤖',
+        name: 'Gói Tăng Trưởng',
+        desc: 'Farm 1-5 ha, có tưới tự động',
+        price: 9800000,
+        features: [
+          '10 cảm biến đa thông số',
+          'Gateway Pro + 4G dự phòng',
+          'AI dự báo thời tiết',
+          'Điều khiển tưới tự động',
+          'Tích hợp van/bơm',
+          'Báo cáo tuần tự động'
+        ],
+        featured: true
+      },
+      business: {
+        id: 'business',
+        icon: '🏭',
+        name: 'Gói Doanh Nghiệp',
+        desc: 'Farm >5 ha, HTX, doanh nghiệp',
+        price: 18000000,
+        features: [
+          '20 cảm biến cao cấp',
+          'Multi-zone quản lý',
+          'AI tối ưu hoàn toàn',
+          'ERP integration',
+          'API đầy đ��',
+          'Hỗ trợ 24/7 ưu tiên'
+        ]
+      },
+      enterprise: {
+        id: 'enterprise',
+        icon: '⭐',
+        name: 'Gói Liên Hoàn',
+        desc: 'Nhiều farm, traceability',
+        price: 35000000,
+        features: [
+          'Không giới hạn thiết bị',
+          'Multi-farm management',
+          'Blockchain truy xuat nguồn',
+          'Báo cáo ESG tự động',
+          'Train AI riêng',
+          'Dedicated support team'
+        ]
+      }
+    };
+    
+    function formatPrice(vnd) {
+      return new Intl.NumberFormat('vi-VN', { 
+        style: 'currency', 
+        currency: 'VND',
+        maximumFractionDigits: 0 
+      }).format(vnd);
+    }
+    
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = Object.values(products).map(p => `
+        <div class="product-card ${p.featured ? 'featured' : ''}">
+          ${p.featured ? '<div class="product-badge">Bán chạy nhất</div>' : ''}
+          <div class="product-icon">${p.icon}</div>
+          <h3 class="product-name">${p.name}</h3>
+          <p class="product-desc">${p.desc}</p>
+          <div class="product-price">
+            <span class="price">${formatPrice(p.price)}</span>
+            <span class="unit"> / lần đầu</span>
+          </div>
+          <ul class="product-features">
+            ${p.features.map(f => `<li>${f}</li>`).join('')}
+          </ul>
+          <button class="buy-btn" onclick="orderPackage('${p.id}')">Chọn gói này</button>
+        </div>
+      `).join('');
+    }
+    
+    function orderPackage(packageId) {
+      const p = products[packageId];
+      const msg = `Xin chào, tôi muốn đăng ký Gói ${p.name} (${formatPrice(p.price)}) cho trang trại của tôi.`;
+      const phone = '0989516698';
+      window.location.href = `https://zalo.me/${phone}?msg=${encodeURIComponent(msg)}`;
+    }
+    
+    function requestCallback() {
+      const phone = prompt('Số điện thoại của bạn:');
+      if (phone) {
+        const msg = `Yêu cầu gọi lại. Số: ${phone}`;
+        window.location.href = `https://zalo.me/0989516698?msg=${encodeURIComponent(msg)}`;
+      }
+    }
+    
+    renderProducts();
+  </script>
+</body>
+</html>

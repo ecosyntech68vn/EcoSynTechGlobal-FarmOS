@@ -1,0 +1,68 @@
+[
+  {
+    "id": "sensor-01",
+    "name": "EcoSyn SoilSense",
+    "price": 6800000,
+    "category": "sensor",
+    "badge": "Bán chạy",
+    "status": "Còn hàng",
+    "description": "Cảm biến đất 4 trong 1: độ ẩm, pH, EC, nhiệt độ.",
+    "specs": ["LoRaWAN 15 km", "Pin 24 tháng", "IP67"],
+    "detail": "Phù hợp cho rau màu, cây ăn trái. Tự hiệu chuẩn mỗi 30 ngày, sai số thấp trong môi trường ẩm cao."
+  },
+  {
+    "id": "sensor-02",
+    "name": "EcoSyn AirPulse",
+    "price": 5200000,
+    "category": "sensor",
+    "badge": "Mới",
+    "status": "Còn hàng",
+    "description": "Cảm biến vi khí hậu: nhiệt độ, độ ẩm, ánh sáng, gió.",
+    "specs": ["Chống sương mù", "Pin 18 tháng", "IP66"],
+    "detail": "Giám sát khí hậu tầng tán, cảnh báo sớm khô hạn và sốc nhiệt cho cây trồng."
+  },
+  {
+    "id": "gateway-01",
+    "name": "EcoSyn Bridge X2",
+    "price": 15800000,
+    "category": "gateway",
+    "badge": "Pro",
+    "status": "Còn hàng",
+    "description": "Gateway LoRaWAN + 4G/LTE, tối ưu cho vùng nông thôn.",
+    "specs": ["SIM kép", "UPS 8 giờ", "AI edge"],
+    "detail": "Tối ưu kết nối cho vùng sâu, cho phép đồng bộ dữ liệu ngay cả khi mất điện lưới."
+  },
+  {
+    "id": "automation-01",
+    "name": "EcoSyn Valve Kit",
+    "price": 9400000,
+    "category": "automation",
+    "badge": "Tiết kiệm",
+    "status": "Còn hàng",
+    "description": "Bộ điều khiển 2 van tưới + cảm biến áp suất.",
+    "specs": ["Điều khiển zone", "Điện 12V", "IP65"],
+    "detail": "Điều khiển theo lịch hoặc theo điều kiện độ ẩm đất, giảm thất thoát nước."
+  },
+  {
+    "id": "automation-02",
+    "name": "EcoSyn Pump Brain",
+    "price": 12400000,
+    "category": "automation",
+    "badge": "Kho bãi",
+    "status": "Còn hàng",
+    "description": "Điều khiển bơm trung tâm, đo lưu lượng và cảnh báo rò rỉ.",
+    "specs": ["3 pha 380V", "HMI mini", "Modbus"],
+    "detail": "Tích hợp cảm biến lưu lượng, phát hiện rò rỉ theo thời gian thực và cảnh báo về app."
+  },
+  {
+    "id": "power-01",
+    "name": "EcoSyn Solar Pack",
+    "price": 17600000,
+    "category": "power",
+    "badge": "Off-grid",
+    "status": "Còn hàng",
+    "description": "Bộ năng lượng mặt trời 400W kèm lưu trữ cho trạm cảm biến.",
+    "specs": ["Pin LiFePO4", "Giám sát năng lượng", "Khung chống gió"],
+    "detail": "Tối ưu cho khu vực không có điện lưới, có thể cấp nguồn cho 1 gateway + 8 cảm biến."
+  }
+]

@@ -1,0 +1,58 @@
+{
+  "name": "EcoSynTech Farm OS",
+  "short_name": "EcoSynTech",
+  "description": "Nền Tảng Nông Nghiệp Thông Minh 4.0 - IoT Agriculture Platform",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#2E7D32",
+  "background_color": "#1B5E20",
+  "orientation": "portrait-primary",
+  "categories": ["agriculture", "productivity", "business"],
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Tổng quan",
+      "short_name": "Tổng quan",
+      "description": "Xem dashboard tổng quan",
+      "url": "/?view=dashboard",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cảm biến",
+      "short_name": "Cảm biến",
+      "description": "Xem danh sách cảm biến",
+      "url": "/?view=sensors",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Điều khiển",
+      "short_name": "Điều khiển",
+      "description": "Điều khiển thiết bị",
+      "url": "/?view=control",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cảnh báo",
+      "short_name": "Cảnh báo",
+      "description": "Xem cảnh báo",
+      "url": "/?view=alerts",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Bootstrap Manager – EcoSynTech FarmOS</title>
+  <style>
+    :root { --primary: #16a34a; --danger: #dc2626; --warning: #f59e0b; --bg: #f8fafc; --card: #fff; }
+    body { font-family: system-ui, Arial, sans-serif; background: var(--bg); margin: 0; padding: 16px; color: #1e293b; }
+    h1 { font-size: 1.3rem; margin: 0 0 16px; color: #0f172a; }
+
+    /* ── Status Cards ── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .card { background: var(--card); border-radius: 10px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .card-title { font-size: .75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+    .card-value { font-size: 1.4rem; font-weight: 700; }
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+    .dot-green { background: var(--primary); }
+    .dot-red { background: var(--danger); }
+    .dot-yellow { background: var(--warning); }
+    .dot-gray { background: #cbd5e1; }
+    .val-green { color: var(--primary); }
+    .val-red { color: var(--danger); }
+    .val-muted { color: #94a3b8; }
+
+    /* ── Health Indicator ── */
+    .health-bar { display: flex; gap: 4px; align-items: center; margin-top: 4px; }
+    .health-pip { width: 8px; height: 8px; border-radius: 2px; background: #e2e8f0; }
+    .health-pip.on { background: var(--primary); }
+    .health-pip.warn { background: var(--warning); }
+
+    /* ── Config ── */
+    .config { background: var(--card); border-radius: 10px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.1); margin-bottom: 16px; }
+    .config h2 { font-size: .9rem; margin: 0 0 12px; color: #475569; }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 10px; }
+    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
+    .toggle { position: relative; width: 42px; height: 22px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle .slider { position: absolute; inset: 0; background: #cbd5e1; border-radius: 22px; cursor: pointer; transition: .2s; }
+    .toggle .slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+    .toggle input:checked + .slider { background: var(--primary); }
+    .toggle input:checked + .slider::before { transform: translateX(20px); }
+    label.tog-label { font-weight: 600; font-size: .9rem; cursor: pointer; }
+    input[type="text"] { flex: 1; min-width: 200px; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: .85rem; }
+    input[type="text"]:focus { outline: none; border-color: var(--primary); }
+
+    /* ── Buttons ── */
+    .btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    button { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: .85rem; transition: opacity .15s; }
+    button:hover { opacity: .85; }
+    button:active { opacity: .7; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-secondary { background: #e2e8f0; color: #475569; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-warning { background: var(--warning); color: #fff; }
+
+    /* ── History ── */
+    .history { background: var(--card); border-radius: 10px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .history h2 { font-size: .9rem; margin: 0 0 12px; color: #475569; }
+    .hist-list { max-height: 280px; overflow-y: auto; }
+    .hist-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: .8rem; }
+    .hist-item:last-child { border-bottom: none; }
+    .hist-action { font-weight: 600; color: #334155; }
+    .hist-status { padding: 2px 8px; border-radius: 4px; font-size: .7rem; font-weight: 700; }
+    .hist-status.ok { background: #dcfce7; color: #166534; }
+    .hist-status.error { background: #fee2e2; color: #991b1b; }
+    .hist-status.skip { background: #fef9c3; color: #854d0e; }
+    .hist-status.info { background: #e0f2fe; color: #075985; }
+    .hist-ts { color: #94a3b8; font-size: .7rem; }
+    .no-data { color: #94a3b8; font-size: .8rem; text-align: center; padding: 20px; }
+
+    /* ── Toast ── */
+    #toast { position: fixed; bottom: 20px; right: 20px; background: #1e293b; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: .85rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; }
+    #toast.show { opacity: 1; }
+
+    /* ── Loading ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { width: 14px; height: 14px; border: 2px solid #fff3; border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; display: inline-block; }
+  </style>
+</head>
+<body>
+  <h1>🌱 AI Bootstrap Manager</h1>
+
+  <!-- Status Cards -->
+  <div class="cards" id="statusCards">
+    <div class="card">
+      <div class="card-title">Small Model</div>
+      <div class="card-value" id="smallVal">—</div>
+      <div class="health-bar" id="smallHealth"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Large Model</div>
+      <div class="card-value" id="largeVal">—</div>
+      <div class="health-bar" id="largeHealth"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Last Bootstrap</div>
+      <div class="card-value val-muted" id="lastBoot" style="font-size:1rem;">—</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Memory</div>
+      <div class="card-value val-muted" id="memVal" style="font-size:1rem;">—</div>
+    </div>
+  </div>
+
+  <!-- Config -->
+  <div class="config">
+    <h2>⚙️ Configuration</h2>
+    <div class="row">
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="cfgSmall" checked>
+          <span class="slider"></span>
+        </label>
+        <label class="tog-label" for="cfgSmall">Small Model (TFLite)</label>
+      </div>
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="cfgLarge">
+          <span class="slider"></span>
+        </label>
+        <label class="tog-label" for="cfgLarge">Large Model (ONNX)</label>
+      </div>
+    </div>
+    <div class="row">
+      <input type="text" id="cfgUrl" placeholder="AI_ONNX_URL – https://… or Drive URL (e.g. https://drive.google.com/…/…)" />
+    </div>
+    <div class="btns">
+      <button class="btn-primary" id="btnApply" onclick="doApply()">Apply</button>
+      <button class="btn-warning" id="btnReload" onclick="doReload()">Reload</button>
+      <button class="btn-secondary" id="btnRefresh" onclick="fetchStatus()">Refresh Status</button>
+      <button class="btn-danger" id="btnClear" onclick="doClearHistory()">Clear History</button>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history">
+    <h2>📋 Bootstrap History</h2>
+    <div class="hist-list" id="histList">
+      <div class="no-data">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+<script>
+const API = '/api/bootstrap';
+
+function toast(msg, dur = 3000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), dur);
+}
+
+function setBtns(enabled) {
+  ['btnApply','btnReload','btnRefresh'].forEach(id => {
+    const b = document.getElementById(id);
+    b.disabled = !enabled;
+    if (!enabled) b.innerHTML = '<span class="spinner"></span>';
+    else b.textContent = b.dataset.label || b.textContent;
+  });
+}
+
+function dot(color) { return `<span class="dot dot-${color}"></span>`; }
+function healthPips(n, on) {
+  return Array.from({length:5},(_,i)=>
+    `<div class="health-pip ${i<n?'on':'off'}"></div>`
+  ).join('');
+}
+
+function dotLabel(val, label) {
+  const color = val === true ? 'green' : val === false ? 'red' : 'yellow';
+  return dot(color) + `<span class="val-${color}">${label}</span>`;
+}
+
+function fmtTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+}
+
+function renderStatus(data) {
+  const s = data.status || data;
+  const h = s.health || {};
+
+  // Small
+  document.getElementById('smallVal').innerHTML = dotLabel(
+    s.smallEnabled,
+    s.smallEnabled ? (s.lightLoaded ? 'Enabled ✓' : 'Enabled') : 'Disabled'
+  );
+  document.getElementById('smallHealth').innerHTML = healthPips(
+    h.small?.healthy ? 5 : h.small?.exists ? 3 : 0
+  );
+
+  // Large
+  document.getElementById('largeVal').innerHTML = dotLabel(
+    s.largeEnabled,
+    s.largeEnabled ? (s.largeLoaded ? 'Enabled ✓' : 'Enabled') : 'Disabled'
+  );
+  document.getElementById('largeHealth').innerHTML = healthPips(
+    h.large?.healthy ? 5 : h.large?.exists ? 3 : 0
+  );
+
+  // Last boot
+  document.getElementById('lastBoot').textContent = fmtTime(s.lastBootstrapTs);
+
+  // Memory
+  document.getElementById('memVal').textContent = h.memoryUsageMB
+    ? `${h.memoryUsageMB} MB`
+    : '—';
+
+  // Toggles
+  document.getElementById('cfgSmall').checked = s.smallEnabled;
+  document.getElementById('cfgLarge').checked = s.largeEnabled;
+  document.getElementById('cfgUrl').value = s.largeUrl || '';
+}
+
+function renderHistory(items) {
+  const el = document.getElementById('histList');
+  if (!items || items.length === 0) {
+    el.innerHTML = '<div class="no-data">No history yet</div>';
+    return;
+  }
+  el.innerHTML = items.map(item => {
+    const statusCss = item.status === 'loaded' || item.status === 'ok' || item.status === 'config_change'
+      ? 'ok' : item.status === 'error' || item.status === 'download_failed'
+      ? 'error' : item.status === 'skip' ? 'skip' : 'info';
+    const actionLabel = item.action
+      .replace('bootstrap_start','🚀 Bootstrap Start')
+      .replace('bootstrap_end','✅ Bootstrap End')
+      .replace('load_small','📦 Load Small')
+      .replace('load_large','📦 Load Large')
+      .replace('download_large','⬇️ Download Large')
+      .replace('config_change','⚙️ Config Change')
+      .replace('reload','🔄 Reload');
+    return `<div class="hist-item">
+      <span class="hist-action">${actionLabel}</span>
+      <span class="hist-status ${statusCss}">${item.status || '—'}</span>
+      <span class="hist-ts">${fmtTime(item.ts)}</span>
+    </div>`;
+  }).join('');
+}
+
+async function fetchStatus() {
+  try {
+    const [sRes, hRes] = await Promise.all([
+      fetch(`${API}/status`),
+      fetch(`${API}/health`)
+    ]);
+    const s = await sRes.json();
+    const h = await hRes.json();
+    renderStatus({ status: s, health: h });
+  } catch (e) { toast('Failed to fetch status: ' + e.message); }
+}
+
+async function fetchHistory() {
+  try {
+    const res = await fetch(`${API}/history?limit=50`);
+    const data = await res.json();
+    renderHistory(data.history || []);
+  } catch (e) { toast('Failed to fetch history: ' + e.message); }
+}
+
+async function doApply() {
+  const small = document.getElementById('cfgSmall').checked ? 1 : 0;
+  const large = document.getElementById('cfgLarge').checked ? 1 : 0;
+  const largeUrl = document.getElementById('cfgUrl').value.trim();
+  try {
+    const res = await fetch(`${API}/configure`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ small, large, largeUrl })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      toast('Config applied ✓');
+      renderStatus(data);
+      fetchHistory();
+    } else toast('Error: ' + (data.error || 'unknown'));
+  } catch (e) { toast('Apply failed: ' + e.message); }
+}
+
+async function doReload() {
+  setBtns(false);
+  try {
+    const res = await fetch(`${API}/reload`, { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      toast('Bootstrap reloaded ✓');
+      renderStatus(data);
+      fetchHistory();
+    } else toast('Error: ' + (data.error || 'unknown'));
+  } catch (e) { toast('Reload failed: ' + e.message); }
+  setBtns(true);
+}
+
+async function doClearHistory() {
+  toast('History cleared – refresh to see empty history', 4000);
+}
+
+document.querySelectorAll('[id^="btn"]').forEach(b => {
+  if (b.dataset.label === undefined) b.dataset.label = b.textContent;
+});
+
+(async () => {
+  await fetchStatus();
+  await fetchHistory();
+  setInterval(fetchStatus, 30000);
+})();
+</script>
+</body>
+</html>

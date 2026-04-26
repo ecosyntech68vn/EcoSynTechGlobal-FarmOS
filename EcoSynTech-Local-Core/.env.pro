@@ -1,0 +1,69 @@
+# ═══════════════════════════════════════════════════════════════════════
+# EcoSynTech Local Core V3.0 - PRO Environment
+# Gói chuyên nghiệp - Đầy đủ tính năng cho HTX và doanh nghiệp
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# 🔐 BẢO MẬT
+JWT_SECRET=pro-secret-key-2024
+JWT_EXPIRY=43200
+
+# 🖥️ SERVER
+PORT=3000
+NODE_ENV=production
+
+# 🤖 AI - Đa nhà cung cấp
+AI_PROVIDER=deepseek
+DEEPSEEK_API_KEY=
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=llama3
+OPENAI_API_KEY=
+
+# 📱 NOTIFICATIONS - Đầy đủ
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+ZALO_APP_ID=
+ZALO_APP_SECRET=
+
+# 💳 PAYMENT (VNPay)
+VNPAY_TMNCODE=
+
+# 📊 ANALYTICS & MONITORING
+METRICS_ENABLED=true
+
+# 🔒 SECURITY NÂNG CAO
+CORS_ORIGIN=*
+RATE_LIMIT_WINDOW_MS=600000
+RATE_LIMIT_MAX_REQUESTS=500
+SESSION_TIMEOUT=3600
+HMAC_SECRET=pro-hmac-secret
+
+# 💾 BACKUP TỰ ĐỘNG
+AUTO_BACKUP_ENABLED=true
+BACKUP_INTERVAL=daily
+BACKUP_RETENTION=14
+
+# 📈 AI FEATURES - Mở rộng
+AI_ENGINE_ENABLED=true
+AI_CONFIDENCE_THRESHOLD=0.5
+
+# 🌤️ WEATHER
+FARM_LAT=10.7769
+FARM_LON=106.7009
+
+# 💧 WATER OPTIMIZATION
+WATER_OPTIMIZATION_ENABLED=true
+WATER_MIN_MOISTURE=25
+WATER_MAX_MOISTURE=75
+WATER_CHECK_INTERVAL=180000
+
+# 📱 MULTI-USER
+MAX_USERS_UNLIMITED=false
+MAX_USERS=50
+
+# 📊 DATABASE
+DB_TYPE=sqlite
+DB_PATH=./data/ecosyntech.db
+
+# 🧹 MAINTENANCE
+LOG_LEVEL=info
+OPS_SCHEDULER_INTERVAL=120000

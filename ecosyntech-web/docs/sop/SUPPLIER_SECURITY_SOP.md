@@ -1,0 +1,1 @@
+# SUPPLIER_SECURITY_SOP placeholder

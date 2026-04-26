@@ -1,0 +1,47 @@
+# EcoSynTech Local Core - Lite Version
+# For Raspberry Pi, low RAM devices (<512MB free)
+# Uses SQLite, minimal services
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecosyntech-lite
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_PATH=/app/data/ecosyntech.db
+      - JWT_SECRET=${JWT_SECRET:-change-this-secret}
+      - AI_PROVIDER=template
+      - NODE_OPTIONS=--max-old-space-size=256
+    mem_limit: 512m
+    cpus: 1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Redis for caching (uncomment if needed)
+  # redis:
+  #   image: redis:alpine
+  #   container_name: ecosyntech-redis
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   mem_limit: 128m
+  #   command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
+
+networks:
+  default:
+    name: ecosyntech-network

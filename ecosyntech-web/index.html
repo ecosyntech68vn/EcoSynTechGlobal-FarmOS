@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="EcoSynTech cung cap web app ban hang va tu van giai phap IoT cho nong nghiep thong minh, toi uu nuoc, nang suat va van hanh trang trai." />
+  <meta name="theme-color" content="#dff1e7" />
+  <title>EcoSynTech | He thong ban giai phap IoT nong nghiep thong minh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#hero">
+      <span class="brand-mark">E</span>
+      <span>
+        <strong>EcoSynTech</strong>
+        <small>Smart Agriculture IoT</small>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Dieu huong chinh">
+      <a href="#solutions">Giai phap</a>
+      <a href="#planner">Tu van cau hinh</a>
+      <a href="#products">San pham</a>
+      <a href="#catalog">Thiet bi</a>
+      <a href="#operations">Van hanh</a>
+      <a href="#pricing">Bang gia</a>
+      <a href="#contact">Lien he</a>
+    </nav>
+
+    <div class="topbar-actions">
+      <a class="ghost compact-hide" href="#planner">Tinh ROI</a>
+      <button class="cart-button" type="button" data-open-cart>
+        Bao gia
+        <span class="cart-count">0</span>
+      </button>
+      <button class="menu-button" type="button" aria-label="Mo menu">Menu</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero" class="hero">
+      <div class="hero-company-banner">
+        <span class="company-badge">🏢 Công ty TNHH EcoSynTech Global</span>
+        <span class="company-tagline">Sứ mệnh: Đưa IoT đến mọi trang trại Việt Nam</span>
+      </div>
+      <div class="hero-copy reveal">
+        <p class="eyebrow">He thong ban hang IoT cho nong nghiep thong minh</p>
+        <h1>Mau xanh diu mat, quy trinh ro rang, chot giai phap IoT nhanh hon cho tung trang trai.</h1>
+        <p class="lead">
+          EcoSynTech ket hop landing page ban hang, bo cau hinh giai phap, cua hang thiet bi va bang dieu phoi van hanh trong mot web app thong nhat.
+          Khach hang co the tu danh gia nhu cau, nhan de xuat bo kit va gui yeu cau bao gia trong vai phut.
+        </p>
+
+        <div class="hero-actions">
+          <a class="cta" href="#planner">Bat dau cau hinh</a>
+          <a class="ghost" href="#catalog">Xem catalog</a>
+        </div>
+
+        <div class="hero-metrics">
+          <article>
+            <strong>30-45%</strong>
+            <span>Giam luong nuoc tuoi theo zone</span>
+          </article>
+          <article>
+            <strong>14 ngay</strong>
+            <span>Trien khai nhanh cho farm vua</span>
+          </article>
+          <article>
+            <strong>24/7</strong>
+            <span>Canh bao va giamsat vi khi hau</span>
+          </article>
+        </div>
+      </div>
+
+      <div class="hero-panels reveal">
+        <article class="insight-card live-card">
+          <div class="card-head">
+            <div>
+              <p class="mini-label">Pipeline demo</p>
+              <h2>Trung tam tu van EcoCloud</h2>
+            </div>
+            <span class="status-pill">Live</span>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-block">
+              <span>Lead dang xu ly</span>
+              <strong>42</strong>
+            </div>
+            <div class="kpi-block">
+              <span>Ty le chot</span>
+              <strong>6.8%</strong>
+            </div>
+            <div class="kpi-block">
+              <span>Gia tri trung binh</span>
+              <strong>128M</strong>
+            </div>
+            <div class="kpi-block">
+              <span>Bo kit de xuat</span>
+              <strong>19</strong>
+            </div>
+          </div>
+
+          <div class="wave-chart" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="signal-list">
+            <div>
+              <strong>Do am dat</strong>
+              <span>42%</span>
+            </div>
+            <div>
+              <strong>Nhiet do</strong>
+              <span>27.8 C</span>
+            </div>
+            <div>
+              <strong>Muc nuoc bon</strong>
+              <span>78%</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="insight-card soft-card">
+          <p class="mini-label">Gia tri co the ban</p>
+          <h3>Phu hop cho nha kinh, vuon cay, trang trai mo va hop tac xa.</h3>
+          <ul class="feature-list">
+            <li>Cau hinh tu dong theo quy mo va cay trong</li>
+            <li>Bo cong cu ROI de doi chieu chi phi va loi ich</li>
+            <li>Goi bao gia gan voi san pham thuc te</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="trust reveal">
+      <p>Duoc quan tam boi doi van hanh nha kinh, trang trai cay an trai va doanh nghiep che bien nong san.</p>
+      <div class="trust-row">
+        <span>GreenDelta</span>
+        <span>Mekong Fresh</span>
+        <span>Lam Dong Farm Hub</span>
+        <span>AgriVista</span>
+        <span>Song Tien Cooperative</span>
+      </div>
+    </section>
+
+    <section id="solutions" class="section-block">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Kien truc giai phap</p>
+        <h2>Mot he thong ban hang co the giai thich ro san pham, du lieu va gia tri van hanh.</h2>
+      </div>
+
+      <div class="solution-grid">
+        <article class="solution-card reveal">
+          <span class="card-index">01</span>
+          <h3>Lop hien truong</h3>
+          <p>Cac cam bien dat, vi khi hau, muc nuoc, EC, pH va gateway chiu duoc moi truong nong nghiep thuc te.</p>
+          <ul>
+            <li>LoRaWAN va 4G cho khu vuc xa</li>
+            <li>Canh bao su co tai cho</li>
+            <li>Tuong thich nhieu kieu cay trong</li>
+          </ul>
+        </article>
+
+        <article class="solution-card reveal">
+          <span class="card-index">02</span>
+          <h3>Lop tu dong hoa</h3>
+          <p>Dieu khien bom, van, quat, den va lich tuoi dua tren trang thai cam bien thay vi thao tac thu cong.</p>
+          <ul>
+            <li>Rule IF-THEN theo zone</li>
+            <li>Lich tuoi theo mua vu</li>
+            <li>Giam lang phi nuoc va dien</li>
+          </ul>
+        </article>
+
+        <article class="solution-card reveal">
+          <span class="card-index">03</span>
+          <h3>Lop doanh thu va bao cao</h3>
+          <p>Web app ban hang giup tu van nhanh, tao bao gia, uoc tinh ROI va trinh bay dashboard van hanh cho khach hang.</p>
+          <ul>
+            <li>Bo de xuat goi thong minh</li>
+            <li>Bang gia va cart de gui bao gia</li>
+            <li>Mo rong sang dashboard sau trien khai</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="planner" class="planner-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Cong cu tu van</p>
+        <h2>Chon quy mo va muc tieu, he thong se de xuat cau hinh phu hop.</h2>
+      </div>
+
+      <div class="planner-layout">
+        <form class="planner-card reveal" id="plannerForm">
+          <div class="field-grid">
+            <label>
+              Quy mo trang trai
+              <select name="farmSize">
+                <option value="1">Duoi 1 ha</option>
+                <option value="3" selected>1-3 ha</option>
+                <option value="8">3-10 ha</option>
+                <option value="20">Tren 10 ha</option>
+              </select>
+            </label>
+
+            <label>
+              Loai cay trong
+              <select name="cropType">
+                <option value="vegetable" selected>Rau nha kinh</option>
+                <option value="fruit">Cay an trai</option>
+                <option value="rice">Lua va cay ngan ngay</option>
+                <option value="herb">Duoc lieu va rau gia vi</option>
+              </select>
+            </label>
+
+            <label>
+              Muc do tu dong hoa
+              <select name="automationLevel">
+                <option value="starter">Giam sat co ban</option>
+                <option value="growth" selected>Giam sat + tuoi tu dong</option>
+                <option value="pro">Full automation</option>
+              </select>
+            </label>
+
+            <label>
+              Muc tieu uu tien
+              <select name="businessGoal">
+                <option value="water" selected>Tiet kiem nuoc</option>
+                <option value="yield">Tang nang suat</option>
+                <option value="labor">Giam nhan cong</option>
+                <option value="trace">Bao cao va truy xuat</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="slider-group">
+            <label for="budgetRange">Ngan sach du kien</label>
+            <input id="budgetRange" name="budgetRange" type="range" min="40" max="400" step="10" value="140" />
+            <div class="range-row">
+              <span>40M</span>
+              <strong id="budgetValue">140M VND</strong>
+              <span>400M</span>
+            </div>
+          </div>
+
+          <div class="planner-actions">
+            <button class="cta" type="submit">Cap nhat de xuat</button>
+            <button class="ghost" type="button" id="addBundleToCart">Them goi de xuat vao bao gia</button>
+          </div>
+        </form>
+
+        <div class="recommend-card reveal">
+          <div class="recommend-head">
+            <div>
+              <p class="mini-label">Goi de xuat</p>
+              <h3 id="bundleName">EcoSyn Growth Kit</h3>
+            </div>
+            <span class="tag">Khuyen nghi</span>
+          </div>
+
+          <p id="bundleSummary">
+            Cau hinh can bang giua giamsat va tuoi tu dong, phu hop farm 1-3 ha can giam luong nuoc va on dinh nang suat.
+          </p>
+
+          <div class="recommend-metrics">
+            <article>
+              <span>Chi phi dau tu</span>
+              <strong id="bundlePrice">138.000.000 VND</strong>
+            </article>
+            <article>
+              <span>Hoan von uoc tinh</span>
+              <strong id="bundlePayback">11 thang</strong>
+            </article>
+            <article>
+              <span>Tiet kiem nuoc</span>
+              <strong id="bundleWater">31%</strong>
+            </article>
+            <article>
+              <span>Giam nhan cong</span>
+              <strong id="bundleLabor">22%</strong>
+            </article>
+          </div>
+
+          <div class="bundle-composition">
+            <h4>Thanh phan chinh</h4>
+            <ul id="bundleItems"></ul>
+          </div>
+
+          <div class="roi-card">
+            <div>
+              <span>Gia tri tiep can khach hang</span>
+              <strong id="roiValue">+186M / nam</strong>
+            </div>
+            <p id="roiNarrative">
+              Cau hinh nay giup khach hang de hinh dung loi ich qua tiet kiem nuoc, giam thao tac tay va giam rui ro bat thuong moi truong.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalog" class="section-block catalog-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Catalog san pham</p>
+        <h2>Cua hang thiet bi cho phep tu chon tung thanh phan vao goi bao gia.</h2>
+      </div>
+
+      <div class="catalog-tools reveal">
+        <div class="filter-row" id="filterRow">
+          <button class="filter-button active" type="button" data-filter="all">Tat ca</button>
+          <button class="filter-button" type="button" data-filter="sensor">Cam bien</button>
+          <button class="filter-button" type="button" data-filter="gateway">Gateway</button>
+          <button class="filter-button" type="button" data-filter="control">Dieu khien</button>
+          <button class="filter-button" type="button" data-filter="cloud">Cloud</button>
+        </div>
+
+        <label class="search-field">
+          <span>Tim san pham</span>
+          <input id="catalogSearch" type="search" placeholder="VD: Soil, Gateway, Pump..." />
+        </label>
+      </div>
+
+      <div class="catalog-grid reveal" id="catalogGrid"></div>
+    </section>
+
+    <section id="operations" class="operations-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Mo phong van hanh</p>
+        <h2>Trinh bay cho khach hang cach he thong se duoc van hanh sau khi trien khai.</h2>
+      </div>
+
+      <div class="operations-grid">
+        <article class="ops-card reveal">
+          <div class="ops-top">
+            <h3>Dashboard thoi gian thuc</h3>
+            <span class="status-pill">On farm</span>
+          </div>
+          <div class="sensor-grid">
+            <div class="sensor-tile">
+              <span>Do am dat</span>
+              <strong>42%</strong>
+              <small>On dinh</small>
+            </div>
+            <div class="sensor-tile">
+              <span>Nhiet do</span>
+              <strong>27.8 C</strong>
+              <small>+0.8 C</small>
+            </div>
+            <div class="sensor-tile">
+              <span>EC dinh duong</span>
+              <strong>1.9 mS</strong>
+              <small>Hop ly</small>
+            </div>
+            <div class="sensor-tile">
+              <span>Muc nuoc</span>
+              <strong>78%</strong>
+              <small>An toan</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="ops-card reveal">
+          <div class="ops-top">
+            <h3>Rule dieu khien</h3>
+            <span class="tag">IF THEN</span>
+          </div>
+          <div class="rule-list">
+            <div class="rule-item">
+              <strong>Neu do am dat &lt; 35%</strong>
+              <span>Mo van Zone 1 trong 12 phut</span>
+            </div>
+            <div class="rule-item">
+              <strong>Neu nhiet do &gt; 31 C</strong>
+              <span>Bat quat thong gio va gui canh bao</span>
+            </div>
+            <div class="rule-item">
+              <strong>Neu muc nuoc &lt; 25%</strong>
+              <span>Canh bao doi van hanh qua app</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ops-card reveal">
+          <div class="ops-top">
+            <h3>Goc nhin kinh doanh</h3>
+            <span class="status-pill muted">Sales asset</span>
+          </div>
+          <div class="business-points">
+            <div>
+              <strong>Case study</strong>
+              <p>Mo phong ket qua cho vuon xoai: giam 40% nuoc tuoi sau 2 thang.</p>
+            </div>
+            <div>
+              <strong>ESG va truy xuat</strong>
+              <p>Co san chu ky bao cao nuoc, nang luong va lich su can thiep.</p>
+            </div>
+            <div>
+              <strong>Upsell cloud</strong>
+              <p>De dang ban them goi canh bao, bao cao, dashboard theo nhom trang trai.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block timeline-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Lo trinh trien khai</p>
+        <h2>Trien khai duoc trinh bay thanh 4 buoc ngan gon de ho tro chot deal.</h2>
+      </div>
+
+      <div class="timeline-grid">
+        <article class="timeline-card reveal">
+          <span>01</span>
+          <h3>Khao sat farm</h3>
+          <p>Xac dinh zone, dien tich, nguon nuoc, nguon dien va bai toan van hanh.</p>
+        </article>
+        <article class="timeline-card reveal">
+          <span>02</span>
+          <h3>Chot cau hinh</h3>
+          <p>Ghep thiet bi vao goi, tinh tong muc dau tu, tao bao gia va tai lieu demo.</p>
+        </article>
+        <article class="timeline-card reveal">
+          <span>03</span>
+          <h3>Lap dat va calibrate</h3>
+          <p>Gan sensor, gateway, rule dieu khien va kiem thu moi truong theo cay trong.</p>
+        </article>
+        <article class="timeline-card reveal">
+          <span>04</span>
+          <h3>Van hanh va upsell</h3>
+          <p>Theo doi sau trien khai, ban them cloud analytics, dashboard ESG va traceability.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="products" class="products-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">San pham</p>
+        <h2>Chon goi giai phap phu hop</h2>
+        <p>Tu goi co ban den nang cao - deu co san phu hop voi trang trai cua ban</p>
+      </div>
+      
+      <div class="products-grid" id="productsGrid">
+        <article class="product-card reveal" data-product="starter">
+          <div class="product-badge">Khởi động</div>
+          <h3>Gói Khởi Động</h3>
+          <p class="product-desc">Farm nhỏ dưới 1 ha</p>
+          <div class="product-price">
+            <span class="price">5.8M</span>
+            <span class="unit">VNĐ</span>
+          </div>
+          <ul class="product-features">
+            <li>📡 5 cảm biến</li>
+            <li>🌐 1 Gateway</li>
+            <li>📱 App điện thoại</li>
+            <li>🔔 Cảnh báo Zalo/SMS</li>
+            <li>📊 Dashboard</li>
+          </ul>
+          <button class="cta" type="button" data-buy="starter">Chọn gói</button>
+        </article>
+
+        <article class="product-card featured reveal" data-product="growth">
+          <div class="product-badge">Bán chạy nhất</div>
+          <h3>Gói Tăng Trưởng</h3>
+          <p class="product-desc">Farm 1-5 ha, tưới tự động</p>
+          <div class="product-price">
+            <span class="price">9.8M</span>
+            <span class="unit">VNĐ</span>
+          </div>
+          <ul class="product-features">
+            <li>📡 10 cảm biến</li>
+            <li>🌐 Gateway Pro</li>
+            <li>🤖 AI dự báo</li>
+            <li>⚙️ Tưới tự động</li>
+            <li>📈 Báo cáo tuần</li>
+          </ul>
+          <button class="cta" type="button" data-buy="growth">Chọn gói</button>
+        </article>
+
+        <article class="product-card reveal" data-product="business">
+          <div class="product-badge">Doanh nghiệp</div>
+          <h3>Gói Doanh Nghiệp</h3>
+          <p class="product-desc">Farm >5 ha, HTX</p>
+          <div class="product-price">
+            <span class="price">18M</span>
+            <span class="unit">VNĐ</span>
+          </div>
+          <ul class="product-features">
+            <li>📡 20 cảm biến</li>
+            <li>🌐 Multi-zone</li>
+            <li>🤖 AI tối ưu</li>
+            <li>🏢 ERP integration</li>
+            <li>🔧 Support 24/7</li>
+          </ul>
+          <button class="cta" type="button" data-buy="business">Chọn gói</button>
+        </article>
+
+        <article class="product-card reveal" data-product="enterprise">
+          <div class="product-badge">Liên hoàn</div>
+          <h3>Gói Liên Hoàn</h3>
+          <p class="product-desc">Nhiều farm, traceability</p>
+          <div class="product-price">
+            <span class="price">35M</span>
+            <span class="unit">VNĐ</span>
+          </div>
+          <ul class="product-features">
+            <li>⭐ Không giới hạn</li>
+            <li>🏭 Multi-farm</li>
+            <li>⛓️ Blockchain</li>
+            <li>� ESG tự động</li>
+            <li>👤 Team support</li>
+          </ul>
+          <button class="cta" type="button" data-buy="enterprise">Chọn gói</button>
+        </article>
+      </div>
+
+      <div class="products-cta reveal">
+        <p>Can tu van? Chat ngay voi AI!</p>
+        <button class="ghost" type="button" data-chat-ai">Tro chuyen AI</button>
+      </div>
+    </section>
+
+    <section id="pricing" class="pricing-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Bang gia dinh huong</p>
+        <h2>Ba tang gia tri de ban nhanh tu muc co ban den enterprise.</h2>
+      </div>
+
+      <div class="pricing-grid">
+        <article class="price-card reveal">
+          <p class="tier">Starter</p>
+          <h3>Giam sat co ban</h3>
+          <strong>49M - 79M</strong>
+          <ul>
+            <li>Cam bien dat va vi khi hau co ban</li>
+            <li>1 gateway</li>
+            <li>Dashboard cloud 12 thang</li>
+          </ul>
+          <button class="ghost" type="button" data-plan="Starter">Them vao bao gia</button>
+        </article>
+
+        <article class="price-card featured reveal">
+          <p class="tier">Growth</p>
+          <h3>Giam sat + tuoi tu dong</h3>
+          <strong>118M - 168M</strong>
+          <ul>
+            <li>Cam bien dat, thoi tiet, muc nuoc</li>
+            <li>Van va bom dieu khien theo zone</li>
+            <li>Rule canh bao va lich tuoi</li>
+          </ul>
+          <button class="cta" type="button" data-plan="Growth">Chon goi nay</button>
+        </article>
+
+        <article class="price-card reveal">
+          <p class="tier">Enterprise</p>
+          <h3>Full automation + bao cao</h3>
+          <strong>Theo du an</strong>
+          <ul>
+            <li>Da khu vuc, da trang trai</li>
+            <li>Tich hop ERP va ESG report</li>
+            <li>Dong hanh trien khai 24/7</li>
+          </ul>
+          <button class="ghost" type="button" data-plan="Enterprise">Dat lich tu van</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block case-section">
+      <div class="case-layout">
+        <div class="case-copy reveal">
+          <p class="eyebrow">Tinh huong ban hang</p>
+          <h2>Mot case study ro rang lam tang kha nang chot deal.</h2>
+          <p>
+            Voi vuon cay an trai 6 ha, EcoSynTech co the de xuat goi Growth + cloud analytics.
+            Khach hang duoc thay ngay bai toan tiet kiem nuoc, giam nhan cong va canh bao som tai mot giao dien duy nhat.
+          </p>
+        </div>
+
+        <div class="case-panel reveal">
+          <div class="case-stat">
+            <span>Nuoc tuoi</span>
+            <strong>-40%</strong>
+          </div>
+          <div class="case-stat">
+            <span>San luong</span>
+            <strong>+18%</strong>
+          </div>
+          <div class="case-stat">
+            <span>Loi nhuan</span>
+            <strong>+22%</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+      <div class="contact-card reveal">
+        <div class="contact-copy">
+          <p class="eyebrow">Lien he tu van</p>
+          <h2>Gui thong tin de nhan dashboard demo va bao gia cau hinh trong 48 gio.</h2>
+          <p>
+            Form nay phu hop cho doi sales hoac doi ky thuat su dung ngay khi demo voi khach hang.
+          </p>
+          <div class="contact-lines">
+            <span>Hotline: 1900 88 66 92</span>
+            <span>Email: hello@ecosyntech.vn</span>
+            <span>Van phong: Ho Chi Minh, Dong Thap, Lam Dong</span>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <label>
+            Ten doanh nghiep
+            <input type="text" name="company" placeholder="Vi du: Hop tac xa Lua Vang" required />
+          </label>
+          <label>
+            Quy mo canh tac
+            <input type="text" name="scale" placeholder="Vi du: 3 ha, 8 nha kinh" required />
+          </label>
+          <label>
+            Muc tieu uu tien
+            <select name="interest">
+              <option value="water">Tiet kiem nuoc</option>
+              <option value="yield">Tang nang suat</option>
+              <option value="labor">Giam nhan cong</option>
+              <option value="trace">Truy xuat va ESG</option>
+            </select>
+          </label>
+          <label>
+            So dien thoai
+            <input type="tel" name="phone" placeholder="Vi du: 0901 123 456" required />
+          </label>
+          <button class="cta" type="submit">Gui yeu cau tu van</button>
+          <p class="form-note" id="contactMessage" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <aside class="cart-drawer" aria-hidden="true">
+    <div class="cart-header">
+      <div>
+        <p class="mini-label">Bao gia tam tinh</p>
+        <h3>Goi EcoSynTech</h3>
+      </div>
+      <button class="ghost small-button" type="button" data-close-cart>Dong</button>
+    </div>
+
+    <div class="cart-body">
+      <div class="cart-items" id="cartItems"></div>
+
+      <div class="cart-summary">
+        <div>
+          <span>Tam tinh thiet bi</span>
+          <strong id="subtotalValue">0 VND</strong>
+        </div>
+        <div>
+          <span>Trien khai va calibrate</span>
+          <strong id="serviceValue">0 VND</strong>
+        </div>
+        <div class="cart-total-row">
+          <span>Tong muc de xuat</span>
+          <strong id="totalValue">0 VND</strong>
+        </div>
+      </div>
+
+      <form class="quote-form" id="quoteForm">
+        <h4>Gui bao gia</h4>
+        <input type="text" name="contactName" placeholder="Ten nguoi lien he" required />
+        <input type="text" name="contactPhone" placeholder="So dien thoai" required />
+        <input type="text" name="contactRegion" placeholder="Khu vuc trien khai" required />
+        <textarea name="note" rows="4" placeholder="Ghi chu them nhu so zone, loai cay trong, nhu cau dac thu"></textarea>
+        <button class="cta" type="submit">Gui yeu cau bao gia</button>
+        <p class="form-note" id="quoteMessage" aria-live="polite"></p>
+      </form>
+    </div>
+  </aside>
+  <div class="cart-overlay" data-close-cart></div>
+
+  <footer class="footer">
+    <div class="footer-company">
+      <strong>🌱 EcoSynTech Global</strong>
+      <p>Nền Tảng Nông Nghiệp Thông Minh 4.0</p>
+      <p class="footer-desc">Sứ mệnh: Đưa công nghệ IoT đến mọi trang trại Việt Nam. Giúp nông dân tăng năng suất, giảm chi phí, sống bền vững.</p>
+      <div class="footer-values">
+        <span>🧡 Khách hàng là trung tâm</span>
+        <span>💡 Đổi mới liên tục</span>
+        <span>🤝 Đồng hành dài hạn</span>
+        <span>🌿 Bền vững</span>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="#solutions">Giải pháp</a>
+      <a href="#products">Sản phẩm</a>
+      <a href="#catalog">Thiết bị</a>
+      <a href="#pricing">Bảng giá</a>
+      <a href="#contact">Liên hệ</a>
+    </div>
+    <div class="footer-contact">
+      <p>📞 Hotline: 1900 xxxx | 📧 info@ecosyntech.vn</p>
+    </div>
+    <small>© 2026 Công ty TNHH EcoSynTech Global. All rights reserved.</small>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1048 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "EcoSynTech FarmOS PRO API",
+    "description": "Smart Agriculture IoT Platform - REST API Documentation",
+    "version": "5.0.0",
+    "contact": {
+      "name": "EcoSynTech Global",
+      "email": "kd.ecosyntech@gmail.com",
+      "url": "https://ecosyntechglobal.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Development"
+    },
+    {
+      "url": "https://api.ecosyntech.com",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Authentication & User management" },
+    { "name": "Farms", "description": "Multi-farm management" },
+    { "name": "IoT", "description": "Devices & Sensors" },
+    { "name": "Workers", "description": "Personnel management" },
+    { "name": "Tasks", "description": "Task management" },
+    { "name": "Inventory", "description": "Stock management" },
+    { "name": "Finance", "description": "Financial tracking" },
+    { "name": "SupplyChain", "description": "Batch & shipment" },
+    { "name": "Crops", "description": "Crop & planting management" },
+    { "name": "Traceability", "description": "QR & traceability" },
+    { "name": "AI", "description": "AI predictions" },
+    { "name": "Rules", "description": "Automation rules" },
+    { "name": "Dashboard", "description": "Statistics & overview" },
+    { "name": "Alerts", "description": "Notifications" }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password", "name"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "minLength": 6 },
+                  "name": { "type": "string" },
+                  "phone": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created" },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" },
+                "example": { "ok": true, "token": "eyJ...", "user": {} }
+              }
+            }
+          },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user info",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User data" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/farms": {
+      "get": {
+        "tags": ["Farms"],
+        "summary": "Get all farms",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "status", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Farm list" }
+        }
+      },
+      "post": {
+        "tags": ["Farms"],
+        "summary": "Create new farm",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "name_vi": { "type": "string" },
+                  "location": { "type": "string" },
+                  "area_size": { "type": "number" },
+                  "area_unit": { "type": "string", "default": "hectare" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Farm created" }
+        }
+      }
+    },
+    "/farms/{id}": {
+      "get": {
+        "tags": ["Farms"],
+        "summary": "Get farm by ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Farm data" },
+          "404": { "description": "Farm not found" }
+        }
+      },
+      "put": {
+        "tags": ["Farms"],
+        "summary": "Update farm",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "type": "object" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Farm updated" }
+        }
+      },
+      "delete": {
+        "tags": ["Farms"],
+        "summary": "Delete farm",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Farm deleted" }
+        }
+      }
+    },
+    "/devices": {
+      "get": {
+        "tags": ["IoT"],
+        "summary": "Get all devices",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "farm_id", "schema": { "type": "string" } },
+          { "in": "query", "name": "status", "schema": { "type": "string" } },
+          { "in": "query", "name": "type", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Device list" }
+        }
+      },
+      "post": {
+        "tags": ["IoT"],
+        "summary": "Register new device",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "type"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": { "type": "string", "enum": ["sensor", "actuator", "camera", "pump"] },
+                  "farm_id": { "type": "string" },
+                  "area_id": { "type": "string" },
+                  "location": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Device created" }
+        }
+      }
+    },
+    "/devices/{id}": {
+      "get": {
+        "tags": ["IoT"],
+        "summary": "Get device by ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Device data" }
+        }
+      },
+      "put": {
+        "tags": ["IoT"],
+        "summary": "Update device",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Device updated" }
+        },
+      "delete": {
+        "tags": ["IoT"],
+        "summary": "Delete device",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Device deleted" }
+        }
+      }
+    },
+    "/sensors/{type}": {
+      "get": {
+        "tags": ["IoT"],
+        "summary": "Get sensor data by type",
+        "parameters": [
+          { "in": "path", "name": "type", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Sensor data" }
+        }
+      }
+    },
+    "/sensors/update": {
+      "post": {
+        "tags": ["IoT"],
+        "summary": "Update sensor value (IoT device)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["device_id", "type", "value"],
+                "properties": {
+                  "device_id": { "type": "string" },
+                  "type": { "type": "string" },
+                  "value": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Sensor updated" }
+        }
+      }
+    },
+    "/workers": {
+      "get": {
+        "tags": ["Workers"],
+        "summary": "Get all workers",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "farm_id", "schema": { "type": "string" } },
+          { "in": "query", "name": "status", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Worker list" }
+        }
+      },
+      "post": {
+        "tags": ["Workers"],
+        "summary": "Add new worker",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "farm_id": { "type": "string" },
+                  "role": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "email": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Worker created" }
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get all tasks",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "farm_id", "schema": { "type": "string" } },
+          { "in": "query", "name": "status", "schema": { "type": "string" } },
+          { "in": "query", "name": "worker_id", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Task list" }
+        }
+      },
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Create new task",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title"],
+                "properties": {
+                  "title": { "type": "string" },
+                  "farm_id": { "type": "string" },
+                  "worker_id": { "type": "string" },
+                  "description": { "type": "string" },
+                  "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+                  "due_date": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Task created" }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "put": {
+        "tags": ["Tasks"],
+        "summary": "Update task status",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["pending", "in_progress", "completed"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Task updated" }
+        }
+      }
+    },
+    "/inventory": {
+      "get": {
+        "tags": ["Inventory"],
+        "summary": "Get inventory items",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "farm_id", "schema": { "type": "string" } },
+          { "in": "query", "name": "category", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Inventory list" }
+        }
+      },
+      "post": {
+        "tags": ["Inventory"],
+        "summary": "Add inventory item",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "farm_id": { "type": "string" },
+                  "category": { "type": "string" },
+                  "quantity": { "type": "number" },
+                  "unit": { "type": "string" },
+                  "min_quantity": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Item created" }
+        }
+      }
+    },
+    "/finance": {
+      "get": {
+        "tags": ["Finance"],
+        "summary": "Get finance entries",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "farm_id", "schema": { "type": "string" } },
+          { "in": "query", "name": "type", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Finance list" }
+        }
+      },
+      "post": {
+        "tags": ["Finance"],
+        "summary": "Add finance entry",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["type", "amount"],
+                "properties": {
+                  "type": { "type": "string", "enum": ["income", "expense"] },
+                  "amount": { "type": "number" },
+                  "category": { "type": "string" },
+                  "description": { "type": "string" },
+                  "farm_id": { "type": "string" },
+                  "entry_date": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Entry created" }
+        }
+      }
+    },
+    "/supply-chain": {
+      "get": {
+        "tags": ["SupplyChain"],
+        "summary": "Get supply chain batches",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Batch list" }
+        }
+      },
+      "post": {
+        "tags": ["SupplyChain"],
+        "summary": "Create new batch",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["product_name"],
+                "properties": {
+                  "product_name": { "type": "string" },
+                  "farm_id": { "type": "string" },
+                  "quantity": { "type": "number" },
+                  "unit": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Batch created" }
+        }
+      }
+    },
+    "/crops": {
+      "get": {
+        "tags": ["Crops"],
+        "summary": "Get all crops",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "category", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Crop list" }
+        }
+      }
+    },
+    "/crops/plantings": {
+      "get": {
+        "tags": ["Crops"],
+        "summary": "Get crop plantings",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "farm_id", "schema": { "type": "string" } },
+          { "in": "query", "name": "status", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Planting list" }
+        }
+      },
+      "post": {
+        "tags": ["Crops"],
+        "summary": "Register new planting",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["crop_id"],
+                "properties": {
+                  "crop_id": { "type": "string" },
+                  "farm_id": { "type": "string" },
+                  "area": { "type": "number" },
+                  "planting_date": { "type": "string", "format": "date" },
+                  "expected_harvest_date": { "type": "string", "format": "date" },
+                  "yield_expected": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Planting created" }
+        }
+      }
+    },
+    "/crops/plantings/{id}/recommendations": {
+      "get": {
+        "tags": ["Crops"],
+        "summary": "Get AI recommendations for planting",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Recommendations" }
+        }
+      }
+    },
+    "/traceability/tb/batches": {
+      "get": {
+        "tags": ["Traceability"],
+        "summary": "Get all batches (v2)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Batch list" }
+        }
+      },
+      "post": {
+        "tags": ["Traceability"],
+        "summary": "Create new batch (v2)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["product_name"],
+                "properties": {
+                  "product_name": { "type": "string" },
+                  "product_type": { "type": "string" },
+                  "farm_id": { "type": "string" },
+                  "harvest_date": { "type": "string", "format": "date" },
+                  "produced_quantity": { "type": "number" },
+                  "quality_grade": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Batch created" }
+        }
+      }
+    },
+    "/traceability/tb/batches/{id}/events": {
+      "post": {
+        "tags": ["Traceability"],
+        "summary": "Add batch event",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["event_type"],
+                "properties": {
+                  "event_type": { "type": "string" },
+                  "actor_type": { "type": "string" },
+                  "note": { "type": "string" },
+                  "location": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Event created" }
+        }
+      }
+    },
+    "/traceability/tb/batches/{id}/quality-checks": {
+      "post": {
+        "tags": ["Traceability"],
+        "summary": "Add quality check",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["check_type"],
+                "properties": {
+                  "check_type": { "type": "string" },
+                  "result": { "type": "string", "enum": ["pass", "fail", "warning"] },
+                  "score": { "type": "number" },
+                  "details": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Check created" }
+        }
+      }
+    },
+    "/traceability/tb/packages": {
+      "get": {
+        "tags": ["Traceability"],
+        "summary": "Get packages",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Package list" }
+        }
+      },
+      "post": {
+        "tags": ["Traceability"],
+        "summary": "Create package",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["batch_id"],
+                "properties": {
+                  "batch_id": { "type": "string" },
+                  "net_weight": { "type": "number" },
+                  "packaging_type": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Package created" }
+        }
+      }
+    },
+    "/traceability/tb/packages/{id}/qr": {
+      "get": {
+        "tags": ["Traceability"],
+        "summary": "Generate QR code for package",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "QR code generated" }
+        }
+      }
+    },
+    "/traceability/tb/shipments": {
+      "get": {
+        "tags": ["Traceability"],
+        "summary": "Get shipments",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Shipment list" }
+        }
+      },
+      "post": {
+        "tags": ["Traceability"],
+        "summary": "Create shipment",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["items"],
+                "properties": {
+                  "customer_name": { "type": "string" },
+                  "destination": { "type": "string" },
+                  "transport_type": { "type": "string" },
+                  "items": { "type": "array" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Shipment created" }
+        }
+      }
+    },
+    "/traceability/tb/shipments/{id}/status": {
+      "patch": {
+        "tags": ["Traceability"],
+        "summary": "Update shipment status",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["preparing", "shipped", "delivered", "returned", "cancelled"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Status updated" }
+        }
+      }
+    },
+    "/traceability/tb/incidents": {
+      "get": {
+        "tags": ["Traceability"],
+        "summary": "Get recall incidents",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Incident list" }
+        }
+      },
+      "post": {
+        "tags": ["Traceability"],
+        "summary": "Create incident",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["batch_id", "incident_type", "severity"],
+                "properties": {
+                  "batch_id": { "type": "string" },
+                  "incident_type": { "type": "string" },
+                  "severity": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Incident created" }
+        }
+      }
+    },
+    "/public/trace/{code}": {
+      "get": {
+        "tags": ["Traceability"],
+        "summary": "Public trace verification",
+        "description": "No authentication required",
+        "parameters": [
+          { "in": "path", "name": "code", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Trace data" },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/traceability/tb/stats": {
+      "get": {
+        "tags": ["Traceability"],
+        "summary": "Get traceability dashboard stats",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Stats" }
+        }
+      }
+    },
+    "/ai/irrigation": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "Get irrigation recommendation",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Recommendation" }
+        }
+      }
+    },
+    "/ai/fertilizer": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "Get fertilizer recommendation",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Recommendation" }
+        }
+      }
+    },
+    "/ai/yield": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "Get yield forecast",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Forecast" }
+        }
+      }
+    },
+    "/ai/disease": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "Get disease risk",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Risk assessment" }
+        }
+      }
+    },
+    "/ai/anomaly": {
+      "get": {
+        "tags": ["AI"],
+        "summary": "Get anomaly detection",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Anomalies" }
+        }
+      }
+    },
+    "/rules": {
+      "get": {
+        "tags": ["Rules"],
+        "summary": "Get automation rules",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Rule list" }
+        }
+      },
+      "post": {
+        "tags": ["Rules"],
+        "summary": "Create rule",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "condition", "action"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "condition": { "type": "object" },
+                  "action": { "type": "object" },
+                  "enabled": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Rule created" }
+        }
+      }
+    },
+    "/rules/{id}": {
+      "put": {
+        "tags": ["Rules"],
+        "summary": "Update rule",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Rule updated" }
+        }
+      },
+      "delete": {
+        "tags": ["Rules"],
+        "summary": "Delete rule",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Rule deleted" }
+        }
+      }
+    },
+    "/dashboard/overview": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get dashboard overview",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Overview data" }
+        }
+      }
+    },
+    "/dashboard/weather": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get weather forecast",
+        "responses": {
+          "200": { "description": "Weather data" }
+        }
+      }
+    },
+    "/alerts": {
+      "get": {
+        "tags": ["Alerts"],
+        "summary": "Get alerts",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "query", "name": "status", "schema": { "type": "string" } },
+          { "in": "query", "name": "severity", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Alert list" }
+        }
+      },
+      "post": {
+        "tags": ["Alerts"],
+        "summary": "Create alert",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "message"],
+                "properties": {
+                  "title": { "type": "string" },
+                  "message": { "type": "string" },
+                  "severity": { "type": "string", "enum": ["info", "warning", "critical"] },
+                  "farm_id": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Alert created" }
+        }
+      }
+    },
+    "/alerts/{id}/acknowledge": {
+      "post": {
+        "tags": ["Alerts"],
+        "summary": "Acknowledge alert",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Alert acknowledged" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

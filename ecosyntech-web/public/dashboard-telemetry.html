@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Telemetry Observability Dashboard</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      h1 { font-size: 24px; }
+      .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin: 12px 0; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <h1>Telemetry Observability Dashboard</h1>
+    <div class="grid">
+      <div class="card">
+        <h2>API Latency</h2>
+        <p>Placeholder for latency metrics (p50/p95/p99).</p>
+      </div>
+      <div class="card">
+        <h2>Throughput & Errors</h2>
+        <p>Requests/sec, error rate, and health status indicators.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h2>Resource Utilization</h2>
+        <p>CPU, Memory usage of backend services.</p>
+      </div>
+      <div class="card">
+        <h2>Health & Readiness</h2>
+        <p>system health flags for readiness and liveness probes.</p>
+      </div>
+    </div>
+  </body>
+  </html>
+. 

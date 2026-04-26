@@ -1,0 +1,86 @@
+# EcoSynTech Farm OS - .gitignore
+# Protected by ISO 27001:2022 - Information Classification (A.5.9)
+
+# ====================
+# NODE & BUILD
+# ====================
+node_modules/
+logs/
+data/
+*.log
+coverage/
+.nyc_output/
+dist/
+build/
+bundles/
+
+# ====================
+# ENVIRONMENT & SECRETS (A.5.9, A.5.10, A.5.12)
+# ====================
+.env
+.env.local
+.env.*.local
+.env.pilot
+.env.production
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# ====================
+# DATABASE
+# ====================
+*.sqlite
+*.db
+*.sqlite3
+
+# ====================
+# AI/ML MODELS - PROPRIETARY (A.5.9)
+# Model weights are IP - Do NOT commit to repository
+# ====================
+models/*.tflite
+models/*.onnx
+models/*.h5
+models/*.pt
+models/*.pth
+models/*.bin
+!models/README.md
+!models/registry.json
+
+# ====================
+# SENSITIVE CONFIGURATIONS
+# ====================
+config/secrets.*
+credentials.json
+service-account.json
+*.secret
+
+# ====================
+# SYSTEM
+# ====================
+.DS_Store
+.Thumbs.db
+.AppleDouble
+.LSOverride
+
+# ====================
+# IDE
+# ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ====================
+# TEMP
+# ====================
+tmp/
+temp/
+*.tmp
+
+# ====================
+# BOOTSTRAP
+# ====================
+bootstrap/output/

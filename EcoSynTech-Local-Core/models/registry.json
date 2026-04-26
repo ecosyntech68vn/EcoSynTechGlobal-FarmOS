@@ -1,0 +1,102 @@
+{
+  "schema": "1.0.0",
+  "description": "AI Model Inventory for EcoSynTech FarmOS. Aligned with ISO 27001:2022 A.8.1 (Asset Management) and A.14.2 (AI Lifecycle Management).",
+  "lastUpdated": "2026-04-23T18:00:00.000Z",
+  "managedBy": "AI Ops Lead",
+  "models": [
+    {
+      "id": "model-001",
+      "name": "Plant Disease Detector",
+      "type": "TFLite",
+      "file": "plant_disease.tflite",
+      "sizeMB": 3.9,
+      "version": "1.0",
+      "loaded": true,
+      "loadedAt": "2026-04-25T04:17:09.487Z",
+      "source": "https://github.com/Poulinakis-Konstantinos/Deep-Learning-Plant-Disease-Detector",
+      "sourceType": "GitHub",
+      "classes": 38,
+      "inputSpec": {
+        "format": "image",
+        "size": "224x224x3"
+      },
+      "outputSpec": {
+        "format": "disease_class",
+        "confidence": "percentage"
+      },
+      "bootstrapFlag": "AI_SMALL_MODEL",
+      "bootstrapDefault": true,
+      "fallbackMethod": "heuristic",
+      "lastHealthCheck": null,
+      "healthStatus": "healthy",
+      "notes": "MobileNetV2 fine-tuned on PlantVillage dataset. 38 disease classes across 14 crops.",
+      "securityClassification": "Internal",
+      "dataSensitivity": "Low",
+      "checksum": {
+        "algorithm": "SHA256",
+        "value": "899d4f5ec0e87604f2f52e8ee6d79a90ad91834de36997b91ac09fac044d5ed3",
+        "verifiedAt": "2026-04-25T04:17:09.488Z"
+      }
+    },
+    {
+      "id": "model-002",
+      "name": "Irrigation LSTM Predictor",
+      "type": "ONNX",
+      "file": "irrigation_lstm.onnx",
+      "sizeMB": 10,
+      "version": "1.0",
+      "loaded": true,
+      "loadedAt": "2026-04-25T04:17:10.628Z",
+      "source": "AI_ONNX_URL env var (user-provided)",
+      "sourceType": "HTTP or Google Drive",
+      "classes": null,
+      "inputSpec": {
+        "format": "tensor",
+        "shape": "1x3x4",
+        "features": [
+          "temp",
+          "humidity",
+          "rainfall",
+          "soilMoisture"
+        ]
+      },
+      "outputSpec": {
+        "format": "water_mm",
+        "unit": "mm"
+      },
+      "bootstrapFlag": "AI_LARGE_MODEL",
+      "bootstrapDefault": false,
+      "fallbackMethod": "heuristic_water_calc",
+      "lastHealthCheck": null,
+      "healthStatus": "healthy",
+      "notes": "LSTM model for irrigation prediction. Optional - not included in repo. Requires user to provide ONNX file via AI_ONNX_URL.",
+      "securityClassification": "Internal",
+      "dataSensitivity": "Low",
+      "downloadRequired": true,
+      "checksum": {
+        "algorithm": "SHA256",
+        "value": null,
+        "verifiedAt": null,
+        "note": "SHA256 provided by model vendor on download. Required before loading."
+      }
+    }
+  ],
+  "modelLoadHistory": [],
+  "bootstrapConfig": {
+    "AI_SMALL_MODEL": "1",
+    "AI_LARGE_MODEL": "0",
+    "AI_ONNX_URL": ""
+  },
+  "policy": {
+    "retentionMonths": 12,
+    "versionTracking": true,
+    "healthCheckIntervalHours": 24,
+    "maxModelSizeMB": 5000,
+    "allowedSources": [
+      "github.com",
+      "drive.google.com",
+      "http",
+      "https"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "soil_moisture": {
+    "value": 45,
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "status": "online",
+    "timestamp": "2026-04-18T10:00:00.000Z"
+  },
+  "temperature": {
+    "value": 28,
+    "unit": "°C",
+    "min": -40,
+    "max": 80,
+    "status": "online",
+    "timestamp": "2026-04-18T10:00:00.000Z"
+  },
+  "humidity": {
+    "value": 65,
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "status": "online",
+    "timestamp": "2026-04-18T10:00:00.000Z"
+  },
+  "light": {
+    "value": 500,
+    "unit": "lux",
+    "min": 0,
+    "max": 100000,
+    "status": "online",
+    "timestamp": "2026-04-18T10:00:00.000Z"
+  },
+  "soil_temp": {
+    "value": 26,
+    "unit": "°C",
+    "min": -40,
+    "max": 80,
+    "status": "online",
+    "timestamp": "2026-04-18T10:00:00.000Z"
+  },
+  "ph": {
+    "value": 6.5,
+    "unit": "pH",
+    "min": 0,
+    "max": 14,
+    "status": "online",
+    "timestamp": "2026-04-18T10:00:00.000Z"
+  }
+}

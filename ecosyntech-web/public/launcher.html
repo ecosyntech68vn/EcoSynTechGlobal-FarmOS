@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khởi động EcoSynTech - Farm OS</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0D4D2B 0%, #1A7F42 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .logo {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+    
+    h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      opacity: 0.8;
+      margin-bottom: 32px;
+    }
+    
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: white;
+      color: #0D4D2B;
+    }
+    
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    
+    .btn-secondary {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .instructions {
+      margin-top: 40px;
+      text-align: left;
+      opacity: 0.7;
+      font-size: 14px;
+    }
+    
+    .instructions li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🌱</div>
+    <h1>EcoSynTech Farm OS</h1>
+    <p>Khởi động nhanh - Dành cho nông dân</p>
+    
+    <div class="btn-group">
+      <!-- Auto-detect OS and launch -->
+      <button class="btn btn-primary" onclick="autoLaunch()">
+        🚀 Khởi động ngay
+      </button>
+      
+      <a href="start.sh" class="btn btn-secondary" download>
+        📥 Tải script cho Mac/Linux
+      </a>
+      
+      <a href="start.bat" class="btn btn-secondary" download>
+        📥 Tải script cho Windows
+      </a>
+    </div>
+    
+    <ol class="instructions" type="I">
+      <li>Tải script phù hợp với máy của bạn</li>
+      <li>Chạy script (Nhấn đúp chuột)</li>
+      <li>Đợi khởi động xong</li>
+      <li>Truy cập web theo địa chỉ hiển thị</li>
+    </ol>
+  </div>
+  
+  <script>
+    function autoLaunch() {
+      // Try Node.js in PATH first
+      fetch('/api/health')
+        .then(() => {
+          // Server already running
+          window.location.href = '/';
+        })
+        .catch(() => {
+          // Need to run - redirect to instructions
+          document.body.innerHTML = `
+            <div class="container">
+              <div class="logo">🌱</div>
+              <h1>EcoSynTech Farm OS</h1>
+              <p>Server chưa chạy!</p>
+              <div class="btn-group">
+                <a href="start.bat" class="btn btn-primary" download>
+                  📥 Tải và chạy start.bat
+                </a>
+              </div>
+              <p style="margin-top: 24px; opacity: 0.7;">
+                Tải file về máy, nhấn đúp để chạy
+              </p>
+            </div>
+          `;
+        });
+    }
+    
+    // Auto-check if server is running
+    autoLaunch();
+  </script>
+</body>
+</html>

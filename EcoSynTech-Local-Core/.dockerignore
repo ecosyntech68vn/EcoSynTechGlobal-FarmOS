@@ -1,0 +1,14 @@
+node_modules/
+logs/
+data/
+*.log
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.sqlite
+*.db
+coverage/
+.nyc_output/
+dist/
+build/
