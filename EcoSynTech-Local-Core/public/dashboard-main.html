@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoSynTech Admin - Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="styles.css">
-    <style>
         :root {
             --primary: #10b981;
             --primary-dark: #059669;
@@ -512,10 +512,11 @@
         }
         
         function exportData() {
-            alert('Đang xuất report...');
+            app.exportToCSV([], 'ecosyntech-report.csv');
         }
         
         loadStats();
     </script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
