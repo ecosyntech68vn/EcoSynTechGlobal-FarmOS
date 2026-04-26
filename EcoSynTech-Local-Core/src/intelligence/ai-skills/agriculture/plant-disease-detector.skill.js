@@ -31,11 +31,11 @@ class PlantDiseaseDetectorSkill {
   }
 
   async execute(context) {
-    var image = context.image || null;
-    var imageUrl = context.imageUrl || null;
-    var crop = context.crop || 'tomato';
-    var mode = context.mode || 'classify';
-    var returnDetails = context.returnDetails !== false;
+    const image = context.image || null;
+    const imageUrl = context.imageUrl || null;
+    const crop = context.crop || 'tomato';
+    const mode = context.mode || 'classify';
+    const returnDetails = context.returnDetails !== false;
 
     // Demo mode - simulate if no image provided
     if (!image && !imageUrl) {
@@ -50,15 +50,15 @@ class PlantDiseaseDetectorSkill {
   }
 
   simulateDetection(crop, image) {
-    var classes = this.diseaseClasses[crop] || this.diseaseClasses.general;
-    var mockPredictions = classes.slice(0, 5).map(function(cls, idx) {
+    const classes = this.diseaseClasses[crop] || this.diseaseClasses.general;
+    const mockPredictions = classes.slice(0, 5).map(function(cls, idx) {
       return {
         class: idx === 0 ? 'healthy' : classes[Math.min(idx, classes.length - 1)],
         confidence: idx === 0 ? 0.85 : Math.random() * 0.3
       };
     }).sort(function(a, b) { return b.confidence - a.confidence; });
 
-    var topPrediction = mockPredictions[0] || { class: 'healthy', confidence: 0.85 };
+    const topPrediction = mockPredictions[0] || { class: 'healthy', confidence: 0.85 };
 
     return {
       success: true,
@@ -74,7 +74,7 @@ class PlantDiseaseDetectorSkill {
   }
 
   getTreatmentSuggestions(disease) {
-    var treatments = {
+    const treatments = {
       healthy: ['Cay khoe mang. Tiep tuc cham soc binh thuong.'],
       early_blight: ['1. Remove affected leaves', '2. Apply copper fungicide', '3. Improve air circulation', '4. Avoid overhead watering'],
       late_blight: ['1. Remove infected plants immediately', '2. Apply fungicide', '3. Do not compost infected material', '4. Rotate crops next season'],
@@ -94,7 +94,7 @@ class PlantDiseaseDetectorSkill {
   }
 
   getConfig() {
-    var modelEndpoint = process.env.PLANT_DISEASE_API || process.env.TINYML_API;
+    const modelEndpoint = process.env.PLANT_DISEASE_API || process.env.TINYML_API;
     
     return {
       modelEndpoint: modelEndpoint || null,
@@ -122,10 +122,10 @@ class PlantDiseaseDetectorSkill {
 module.exports = PlantDiseaseDetectorSkill;
 
 if (require.main === module) {
-  var skill = new PlantDiseaseDetectorSkill();
+  const skill = new PlantDiseaseDetectorSkill();
   
   (async function() {
-    var result = await skill.execute({ crop: 'tomato' });
+    const result = await skill.execute({ crop: 'tomato' });
     
     console.log('\n' + '='.repeat(50));
     console.log('PLANT DISEASE DETECTOR');

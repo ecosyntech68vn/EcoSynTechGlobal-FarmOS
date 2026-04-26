@@ -13,6 +13,7 @@
     "test:e2e": "NODE_ENV=test npx jest __tests__/e2e.api.flow.test.js --runInBand --forceExit",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
+    "typecheck": "tsc --noEmit",
     "audit": "npm audit --production",
     "audit:fix": "npm audit fix --production",
     "build": "node --check server.js",
@@ -69,10 +70,13 @@
     "ws": "^8.16.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.6.0",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.2",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "typescript": "^6.0.3"
   },
   "optimization": {
     "nodeOptions": "--max-old-space-size=384 --optimize-for-size --gc-interval=100",

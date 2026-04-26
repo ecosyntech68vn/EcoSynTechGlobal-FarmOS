@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Lightweight RBAC middleware for telemetry-related endpoints
 // This is a preparatory hook for stricter access controls following ISO27001.

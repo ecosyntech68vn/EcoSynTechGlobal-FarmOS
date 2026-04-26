@@ -55,26 +55,26 @@ class ZaloMarketingAutomationSkill {
     let result = {};
     try {
       switch (action) {
-        case 'send_message':
-          result = await this.sendMessage(userId, message);
-          break;
-        case 'send_broadcast':
-          result = await this.sendBroadcast(recipients, message);
-          break;
-        case 'create_qr':
-          result = await this.createQRCode(payload);
-          break;
-        case 'get_profile':
-          result = await this.getUserProfile(userId);
-          break;
-        case 'send_template':
-          result = await this.sendTemplateMessage(userId, payload);
-          break;
-        case 'reply_comment':
-          result = await this.replyComment(payload);
-          break;
-        default:
-          return { success: false, error: `Action ${action} not supported` };
+      case 'send_message':
+        result = await this.sendMessage(userId, message);
+        break;
+      case 'send_broadcast':
+        result = await this.sendBroadcast(recipients, message);
+        break;
+      case 'create_qr':
+        result = await this.createQRCode(payload);
+        break;
+      case 'get_profile':
+        result = await this.getUserProfile(userId);
+        break;
+      case 'send_template':
+        result = await this.sendTemplateMessage(userId, payload);
+        break;
+      case 'reply_comment':
+        result = await this.replyComment(payload);
+        break;
+      default:
+        return { success: false, error: `Action ${action} not supported` };
       }
     } catch (error) {
       result = { success: false, error: error.message };

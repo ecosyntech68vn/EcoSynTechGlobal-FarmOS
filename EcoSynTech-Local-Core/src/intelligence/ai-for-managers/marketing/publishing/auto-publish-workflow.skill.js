@@ -42,18 +42,18 @@ class AutoPublishWorkflowSkill {
     } = context;
 
     switch (action) {
-      case 'start_campaign':
-        return await this.startCampaign(campaign);
-      case 'check_results':
-        return this.checkResults(campaign.id);
-      case 'optimize':
-        return await this.optimizeCampaign(campaign.id);
-      case 'stop':
-        return this.stopCampaign(campaign.id);
-      case 'full_automation':
-        return await this.fullAutomation(campaign);
-      default:
-        return { success: false, error: 'Unknown action' };
+    case 'start_campaign':
+      return await this.startCampaign(campaign);
+    case 'check_results':
+      return this.checkResults(campaign.id);
+    case 'optimize':
+      return await this.optimizeCampaign(campaign.id);
+    case 'stop':
+      return this.stopCampaign(campaign.id);
+    case 'full_automation':
+      return await this.fullAutomation(campaign);
+    default:
+      return { success: false, error: 'Unknown action' };
     }
   }
 
@@ -143,11 +143,11 @@ class AutoPublishWorkflowSkill {
 
     if (campaign.type === 'product_launch') {
       title = `${hook} ${product.name} - RA MẮT!`;
-      body = `Chào mọi người!\n\n`;
+      body = 'Chào mọi người!\n\n';
       body += `Hôm nay chúng tôi ra mắt ${product.name} - sản phẩm mới!\n\n`;
       
       if (product.features) {
-        body += `✨ Điểm nổi bật:\n`;
+        body += '✨ Điểm nổi bật:\n';
         product.features.forEach((f, i) => body += `${i+1}. ${f}\n`);
         body += '\n';
       }
@@ -157,9 +157,9 @@ class AutoPublishWorkflowSkill {
     } 
     else if (campaign.type === 'promotion') {
       title = `${hook} GIẢM ${product.discount || '50%'}!`;
-      body = `⚡ FLASH SALE!\n\n`;
+      body = '⚡ FLASH SALE!\n\n';
       body += `${product.discount || '50%'} off ${product.name}!\n`;
-      body += `⏰ Chỉ hôm nay và ngày mai!\n\n`;
+      body += '⏰ Chỉ hôm nay và ngày mai!\n\n';
       body += this.getRandomCTA();
     }
 

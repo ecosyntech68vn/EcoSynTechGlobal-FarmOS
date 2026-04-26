@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Lightweight Web Local bridge to report ML health/telemetry to Web Local dashboard
 // This module respects a few env vars:

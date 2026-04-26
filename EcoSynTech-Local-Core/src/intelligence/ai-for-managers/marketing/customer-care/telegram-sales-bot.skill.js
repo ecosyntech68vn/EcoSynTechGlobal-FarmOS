@@ -66,7 +66,7 @@ class TelegramSalesBotSkill {
     const userId = chatId;
 
     // Get or create conversation
-    let conversation = this.conversations.get(userId) || {
+    const conversation = this.conversations.get(userId) || {
       step: 'greeting',
       data: {},
       history: []
@@ -77,45 +77,45 @@ class TelegramSalesBotSkill {
     
     // Generate response
     let response = '';
-    let actions = [];
+    const actions = [];
 
     switch (intent) {
-      case 'greeting':
-        response = `Xin chào! 👋\n\nTôi là trợ lý ảo của EcoSynTech.\n\nBạn cần hỗ trợ gì?\n\n📋 <b>Các lựa chọn:</b>\n\n1️⃣ Xem sản phẩm\n2️⃣ Báo giá\n3️⃣ Liên hệ tư vấn\n4️⃣ Đặt lịch\n5️⃣ Hỗ trợ kỹ thuật`;
-        conversation.step = 'menu';
-        break;
+    case 'greeting':
+      response = 'Xin chào! 👋\n\nTôi là trợ lý ảo của EcoSynTech.\n\nBạn cần hỗ trợ gì?\n\n📋 <b>Các lựa chọn:</b>\n\n1️⃣ Xem sản phẩm\n2️⃣ Báo giá\n3️⃣ Liên hệ tư vấn\n4️⃣ Đặt lịch\n5️⃣ Hỗ trợ kỹ thuật';
+      conversation.step = 'menu';
+      break;
 
-      case 'products':
-        response = this.formatProductList();
-        conversation.step = 'product_selected';
-        break;
+    case 'products':
+      response = this.formatProductList();
+      conversation.step = 'product_selected';
+      break;
 
-      case 'pricing':
-        response = '📊 <b>Báo giá chi tiết:</b>\n\nVui lòng cho tôi biết:\n- Số lượng người dùng\n-需求的功\u001d呢\n- Yêu cầu đặc biệt\n\nTôi sẽ gửi báo giá trong 24h!';
-        conversation.step = 'pricing';
-        break;
+    case 'pricing':
+      response = '📊 <b>Báo giá chi tiết:</b>\n\nVui lòng cho tôi biết:\n- Số lượng người dùng\n-需求的功\u001d呢\n- Yêu cầu đặc biệt\n\nTôi sẽ gửi báo giá trong 24h!';
+      conversation.step = 'pricing';
+      break;
 
-      case 'contact':
-        response = '📞 <b>Liên hệ tư vấn:</b>\n\n- 📧 Email: support@ecosyntech.com\n- 📱 Zalo: 0123 456 789\n- 🌐 Website: ecosyntech.com\n\nAdmin sẽ liên hệ bạn trong giây lát!';
-        this.notifyAdmin(chatId, message.text);
-        conversation.step = 'contacted';
-        break;
+    case 'contact':
+      response = '📞 <b>Liên hệ tư vấn:</b>\n\n- 📧 Email: support@ecosyntech.com\n- 📱 Zalo: 0123 456 789\n- 🌐 Website: ecosyntech.com\n\nAdmin sẽ liên hệ bạn trong giây lát!';
+      this.notifyAdmin(chatId, message.text);
+      conversation.step = 'contacted';
+      break;
 
-      case 'order':
-        response = '🛒 <b>Đặt hàng:</b>\n\nBạn quan tâm sản phẩm nào?\n\nGõ số hoặc tên sản phẩm để tiếp tục!';
-        conversation.step = 'ordering';
-        break;
+    case 'order':
+      response = '🛒 <b>Đặt hàng:</b>\n\nBạn quan tâm sản phẩm nào?\n\nGõ số hoặc tên sản phẩm để tiếp tục!';
+      conversation.step = 'ordering';
+      break;
 
-      case 'support':
-        response = '🔧 <b>Hỗ trợ kỹ thuật:</b>\n\nBạn gặp vấn đề gì?\n\n1️⃣ Lỗi đăng nhập\n2️⃣ Lỗi tính năng\n3️⃣ Cần hướng dẫn\n4️⃣ Vấn đề khác';
-        conversation.step = 'support';
-        break;
+    case 'support':
+      response = '🔧 <b>Hỗ trợ kỹ thuật:</b>\n\nBạn gặp vấn đề gì?\n\n1️⃣ Lỗi đăng nhập\n2️⃣ Lỗi tính năng\n3️⃣ Cần hướng dẫn\n4️⃣ Vấn đề khác';
+      conversation.step = 'support';
+      break;
 
-      case 'default':
-        response = 'Cảm ơn bạn! Tôi đã ghi nhận và sẽ phản hồi sớm nhất.\n\n📞 Hoặc liên hệ: 0123 456 789';
-        this.notifyAdmin(chatId, text);
-        conversation.step = 'default';
-        break;
+    case 'default':
+      response = 'Cảm ơn bạn! Tôi đã ghi nhận và sẽ phản hồi sớm nhất.\n\n📞 Hoặc liên hệ: 0123 456 789';
+      this.notifyAdmin(chatId, text);
+      conversation.step = 'default';
+      break;
     }
 
     // Save conversation
@@ -229,7 +229,7 @@ class TelegramSalesBotSkill {
   setupBot() {
     return {
       status: 'Bot ready',
-      webhookUrl: `YOUR_SERVER/webhook/telegram`,
+      webhookUrl: 'YOUR_SERVER/webhook/telegram',
       commands: [
         { command: 'start', description: 'Bắt đầu' },
         { command: 'products', description: 'Xem sản phẩm' },

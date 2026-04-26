@@ -30,16 +30,16 @@ class ContentCalendarSkill {
     } = context;
 
     switch (action) {
-      case 'schedule':
-        return await this.scheduleContent(content, schedule);
-      case 'get_calendar':
-        return this.getCalendar(platform);
-      case 'suggest':
-        return this.suggestContent();
-      case 'analyze':
-        return this.analyzePerformance();
-      default:
-        return { success: false, error: 'Unknown action' };
+    case 'schedule':
+      return await this.scheduleContent(content, schedule);
+    case 'get_calendar':
+      return this.getCalendar(platform);
+    case 'suggest':
+      return this.suggestContent();
+    case 'analyze':
+      return this.analyzePerformance();
+    default:
+      return { success: false, error: 'Unknown action' };
     }
   }
 

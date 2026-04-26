@@ -23,18 +23,18 @@ class SystemAuditSkill {
     const { action = 'full_audit' } = context;
 
     switch (action) {
-      case 'full_audit':
-        return await this.fullAudit();
-      case 'iso_compliance':
-        return this.checkISOCompliance();
-      case 'performance':
-        return this.checkPerformance();
-      case 'security':
-        return this.checkSecurity();
-      case 'skills':
-        return this.countSkills();
-      default:
-        return this.getAuditInfo();
+    case 'full_audit':
+      return await this.fullAudit();
+    case 'iso_compliance':
+      return this.checkISOCompliance();
+    case 'performance':
+      return this.checkPerformance();
+    case 'security':
+      return this.checkSecurity();
+    case 'skills':
+      return this.countSkills();
+    default:
+      return this.getAuditInfo();
     }
   }
 

@@ -27,18 +27,18 @@ class CustomerCareHubSkill {
     } = context;
 
     switch (action) {
-      case 'unify_conversations':
-        return await this.unifyConversations(platforms);
-      case 'get_all_chats':
-        return this.getAllChats(filters);
-      case 'broadcast':
-        return await this.broadcastMessage(context);
-      case 'get_conversation':
-        return this.getConversation(context.conversationId);
-      case 'assign_agent':
-        return this.assignAgent(context);
-      default:
-        return { success: false, error: 'Unknown action' };
+    case 'unify_conversations':
+      return await this.unifyConversations(platforms);
+    case 'get_all_chats':
+      return this.getAllChats(filters);
+    case 'broadcast':
+      return await this.broadcastMessage(context);
+    case 'get_conversation':
+      return this.getConversation(context.conversationId);
+    case 'assign_agent':
+      return this.assignAgent(context);
+    default:
+      return { success: false, error: 'Unknown action' };
     }
   }
 

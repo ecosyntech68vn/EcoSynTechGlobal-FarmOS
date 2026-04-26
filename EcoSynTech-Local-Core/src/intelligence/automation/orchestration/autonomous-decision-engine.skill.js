@@ -36,7 +36,7 @@ module.exports = {
       );
       
       for (const decision of pendingDecisions) {
-        let confidence = decision.confidence || 0;
+        const confidence = decision.confidence || 0;
         const data = typeof decision.data === 'string' ? JSON.parse(decision.data) : decision.data;
         
         if (confidence >= this.decisionFramework.autoDecisionThreshold) {

@@ -181,7 +181,7 @@ class DigitalTwin extends EventEmitter {
       const predictedEnsemble = [];
       
       for (const member of this.ensemble) {
-        let newMember = [...member];
+        const newMember = [...member];
         
         const growthRate = 0.01 * (1 + temperature / 30);
         const waterFactor = Math.min(1, waterInput / 500);

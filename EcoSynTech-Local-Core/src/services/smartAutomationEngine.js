@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const os = require('os');
 const { AIManager } = require('./AIManager');
@@ -189,7 +189,7 @@ class SelfOptimizingPipeline {
     const errorRate = this.metrics.errors.length / this.metrics.latency.length;
 
     let status = 'healthy';
-    let recommendations = [];
+    const recommendations = [];
 
     if (avgLatency > 1000) {
       status = 'degraded';

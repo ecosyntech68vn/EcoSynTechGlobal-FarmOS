@@ -1,5 +1,5 @@
 const os = require('os');
-const {AIManager} = (() => {
+const { AIManager } = (() => {
   try { return require('./services/AIManager'); } catch (e) { return { AIManager: null }; }
 })();
 

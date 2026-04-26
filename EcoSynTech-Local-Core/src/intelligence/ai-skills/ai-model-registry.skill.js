@@ -136,18 +136,18 @@ class AIModelRegistrySkill {
     const { action = 'list', modelId = null, ...params } = context;
 
     switch (action) {
-      case 'list':
-        return this.listModels(params);
-      case 'info':
-        return this.getModelInfo(modelId);
-      case 'register':
-        return this.registerModel(params);
-      case 'status':
-        return this.checkStatus(modelId);
-      case 'test':
-        return this.testModel(modelId, params);
-      default:
-        return this.listModels({});
+    case 'list':
+      return this.listModels(params);
+    case 'info':
+      return this.getModelInfo(modelId);
+    case 'register':
+      return this.registerModel(params);
+    case 'status':
+      return this.checkStatus(modelId);
+    case 'test':
+      return this.testModel(modelId, params);
+    default:
+      return this.listModels({});
     }
   }
 
@@ -307,12 +307,12 @@ if (require.main === module) {
     console.log(`\n📊 Total Models: ${stats.totalModels}`);
     console.log(`   Available: ${stats.available}`);
     console.log(`   Coming Soon: ${stats.comingSoon}`);
-    console.log(`\n📈 By Type:`);
+    console.log('\n📈 By Type:');
     Object.entries(stats.byType).forEach(([type, count]) => {
       console.log(`   - ${type}: ${count}`);
     });
     
-    console.log(`\n📋 Available Models:`);
+    console.log('\n📋 Available Models:');
     list.models.forEach(m => {
       console.log(`   - ${m.id}: ${m.name} (${m.model})`);
     });

@@ -44,7 +44,7 @@ class SecurityAuditSkill {
     try {
       const { getAll } = require('../config/database');
       return getAll(
-        `SELECT * FROM history WHERE timestamp > datetime('now', '-24 hours') ORDER BY timestamp DESC LIMIT 500`
+        'SELECT * FROM history WHERE timestamp > datetime(\'now\', \'-24 hours\') ORDER BY timestamp DESC LIMIT 500'
       );
     } catch {
       return [];

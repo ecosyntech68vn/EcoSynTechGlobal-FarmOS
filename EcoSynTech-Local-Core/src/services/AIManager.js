@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const os = require('os');
 
@@ -249,7 +249,7 @@ class AIManager {
     this.availableMemGB = this.totalMem / (1024 * 1024 * 1024);
     this.mode = this.availableMemGB >= 4 ? 'hybrid' : 'heuristic_only';
     ['irrigation', 'climate', 'soil_health', 'energy_saver', 'pest_control',
-     'system_health', 'security_monitor', 'performance_tuner', 'alert_aggregator'].forEach(name => {
+      'system_health', 'security_monitor', 'performance_tuner', 'alert_aggregator'].forEach(name => {
       this.registerAgent(name);
     });
   }

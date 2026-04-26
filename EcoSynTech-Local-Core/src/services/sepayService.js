@@ -36,7 +36,7 @@ async function createSepayPayment(orderId, amount, content, bankId = 'VCB') {
     cancel_url: process.env.SEPAY_CANCEL_URL || 'http://localhost:3000/api/payment/cancel',
     notify_url: process.env.SEPAY_NOTIFY_URL || 'http://localhost:3000/api/payment/sepay-ipn',
     request_time: timestamp,
-    expire_time: (Date.now() + 15 * 60 * 1000).toString(),  // 15 minutes
+    expire_time: (Date.now() + 15 * 60 * 1000).toString()  // 15 minutes
   };
   
   // Generate checksum

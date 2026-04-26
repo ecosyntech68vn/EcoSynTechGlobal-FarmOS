@@ -157,18 +157,18 @@ module.exports = {
     async function attemptRecovery(type, action, context, db, logger) {
       try {
         switch (action) {
-          case 'reconnect':
-          case 'device-reset':
-            logger.info('[AutoRecovery] Attempting: ' + action);
-            return true;
-          case 'clear-cache':
-            await db.query('DELETE FROM cache WHERE expires < datetime("now")');
-            return true;
-          case 'cleanup':
-            await db.query('DELETE FROM logs WHERE timestamp < datetime("now", "-7 days")');
-            return true;
-          default:
-            return Math.random() > 0.3;
+        case 'reconnect':
+        case 'device-reset':
+          logger.info('[AutoRecovery] Attempting: ' + action);
+          return true;
+        case 'clear-cache':
+          await db.query('DELETE FROM cache WHERE expires < datetime("now")');
+          return true;
+        case 'cleanup':
+          await db.query('DELETE FROM logs WHERE timestamp < datetime("now", "-7 days")');
+          return true;
+        default:
+          return Math.random() > 0.3;
         }
       } catch {
         return false;

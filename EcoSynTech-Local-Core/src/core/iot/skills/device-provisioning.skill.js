@@ -76,22 +76,22 @@ class DeviceProvisioningSkill {
 
   async executeStep(step, deviceInfo) {
     switch (step) {
-      case 'discover':
-        return this.discoverDevice(deviceInfo);
-      case 'authenticate':
-        return this.authenticateDevice(deviceInfo);
-      case 'register':
-        return this.registerDevice(deviceInfo);
-      case 'configure':
-        return this.configureDevice(deviceInfo);
-      case 'install-firmware':
-        return this.installFirmware(deviceInfo);
-      case 'verify':
-        return this.verifyDevice(deviceInfo);
-      case 'activate':
-        return this.activateDevice(deviceInfo);
-      default:
-        throw new Error(`Unknown step: ${step}`);
+    case 'discover':
+      return this.discoverDevice(deviceInfo);
+    case 'authenticate':
+      return this.authenticateDevice(deviceInfo);
+    case 'register':
+      return this.registerDevice(deviceInfo);
+    case 'configure':
+      return this.configureDevice(deviceInfo);
+    case 'install-firmware':
+      return this.installFirmware(deviceInfo);
+    case 'verify':
+      return this.verifyDevice(deviceInfo);
+    case 'activate':
+      return this.activateDevice(deviceInfo);
+    default:
+      throw new Error(`Unknown step: ${step}`);
     }
   }
 
@@ -126,7 +126,7 @@ class DeviceProvisioningSkill {
     try {
       const { runQuery } = require('../../config/database');
       runQuery(
-        `INSERT OR REPLACE INTO devices (id, type, status, config, created_at) VALUES (?, ?, ?, ?, datetime("now"))`,
+        'INSERT OR REPLACE INTO devices (id, type, status, config, created_at) VALUES (?, ?, ?, ?, datetime("now"))',
         [deviceId, deviceInfo.type || 'sensor', 'pending', JSON.stringify(this.deviceDefaults)]
       );
     } catch (e) {}
@@ -196,7 +196,7 @@ class DeviceProvisioningSkill {
     try {
       const { runQuery } = require('../../config/database');
       runQuery(
-        `UPDATE devices SET status = 'online' WHERE id = ?`,
+        'UPDATE devices SET status = \'online\' WHERE id = ?',
         [deviceInfo.deviceId]
       );
     } catch (e) {}

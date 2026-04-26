@@ -37,7 +37,7 @@ const skills = {
     { name: 'Job Description Generator', file: 'job-description-generator.skill.js', description: 'Tạo JD tự động với AI' },
     { name: 'Employee Engagement Survey', file: 'employee-engagement-survey.skill.js', description: 'Khảo sát gắn kết nhân viên' }
   ],
-marketing: [
+  marketing: [
     { name: 'Campaign Optimizer', file: 'campaign-optimizer.skill.js' },
     { name: 'Content Generator AI', file: 'content-generator.skill.js' },
     { name: 'Social Sentiment Analyzer', file: 'social-sentiment-analyzer.skill.js' },

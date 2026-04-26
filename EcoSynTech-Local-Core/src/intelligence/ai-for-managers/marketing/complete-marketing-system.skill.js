@@ -37,20 +37,20 @@ class CompleteMarketingSystemSkill {
     const { action = 'help', ...params } = context;
 
     switch (action) {
-      case 'full_campaign':
-        return await this.runFullCampaign(params);
-      case 'generate':
-        return await this.generateWithAI(params);
-      case 'publish':
-        return await this.publishContent(params);
-      case 'leads':
-        return await this.collectLeads(params);
-      case 'funnel':
-        return this.manageFunnel(params);
-      case 'help':
-        return this.getHelp();
-      default:
-        return { success: false, error: 'Unknown action', available: this.getActions() };
+    case 'full_campaign':
+      return await this.runFullCampaign(params);
+    case 'generate':
+      return await this.generateWithAI(params);
+    case 'publish':
+      return await this.publishContent(params);
+    case 'leads':
+      return await this.collectLeads(params);
+    case 'funnel':
+      return this.manageFunnel(params);
+    case 'help':
+      return this.getHelp();
+    default:
+      return { success: false, error: 'Unknown action', available: this.getActions() };
     }
   }
 
@@ -224,14 +224,14 @@ Nội dung cần tạo: ${prompt}`;
     const { type, name, price, features, ...rest } = input;
     
     switch (type) {
-      case 'product':
-        return `Tạo bài quảng cáo cho sản phẩm "${name}" giá ${price}. Điểm nổi bật: ${features?.join(', ') || 'chất lượng cao'}`;
-      case 'promotion':
-        return `Tạo bài khuyến mãi "${name}" giảm ${rest.discount || '50%'}`;
-      case 'event':
-        return `Tạo bài thông báo sự kiện "${name}" diễn ra ${rest.date || 'sắp tới'}`;
-      default:
-        return `Tạo bài marketing về ${name || 'sản phẩm của chúng tôi'}`;
+    case 'product':
+      return `Tạo bài quảng cáo cho sản phẩm "${name}" giá ${price}. Điểm nổi bật: ${features?.join(', ') || 'chất lượng cao'}`;
+    case 'promotion':
+      return `Tạo bài khuyến mãi "${name}" giảm ${rest.discount || '50%'}`;
+    case 'event':
+      return `Tạo bài thông báo sự kiện "${name}" diễn ra ${rest.date || 'sắp tới'}`;
+    default:
+      return `Tạo bài marketing về ${name || 'sản phẩm của chúng tôi'}`;
     }
   }
 }

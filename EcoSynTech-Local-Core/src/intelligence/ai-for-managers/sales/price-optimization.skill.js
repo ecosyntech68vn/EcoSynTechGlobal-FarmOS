@@ -52,7 +52,7 @@ class PriceOptimizationSkill {
         product: p.name,
         elasticity: elasticity.toFixed(1),
         interpretation: elasticity > 2 ? 'nhạy cảm giá' : 
-                      elasticity > 1 ? 'bình thường' : 'không nhạy cảm',
+          elasticity > 1 ? 'bình thường' : 'không nhạy cảm',
         strategy: elasticity > 1.5 ? 'cạnh tranh' : 'giá trị'
       };
     });

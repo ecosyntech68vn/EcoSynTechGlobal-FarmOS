@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const os = require('os');
 const { getAll, getOne } = require('../config/database');
@@ -303,7 +303,7 @@ class ComplianceReportService {
   }
 
   exportToMarkdown(report) {
-    let md = `# Compliance Report\n\n`;
+    let md = '# Compliance Report\n\n';
     md += `**Generated:** ${report.generated}\n`;
     md += `**Period:** ${report.period}\n`;
     md += `**Overall Score:** ${report.summary.overallScore}/100 (${report.summary.compliant ? 'COMPLIANT' : 'NON-COMPLIANT'})\n\n`;

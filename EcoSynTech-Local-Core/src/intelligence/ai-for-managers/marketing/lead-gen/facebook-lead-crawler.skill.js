@@ -51,20 +51,20 @@ class FacebookLeadCrawlerSkill {
     let leads = [];
     try {
       switch (type) {
-        case 'page_leads':
-          leads = await this.getPageLeads(target, limit, fields);
-          break;
-        case 'group_members':
-          leads = await this.getGroupMembers(target, limit);
-          break;
-        case 'ad_audience':
-          leads = await this.getAdAudience(target, limit);
-          break;
-        case 'messenger':
-          leads = await this.getMessengerLeads(target, limit);
-          break;
-        default:
-          return { success: false, error: `Type ${type} not supported` };
+      case 'page_leads':
+        leads = await this.getPageLeads(target, limit, fields);
+        break;
+      case 'group_members':
+        leads = await this.getGroupMembers(target, limit);
+        break;
+      case 'ad_audience':
+        leads = await this.getAdAudience(target, limit);
+        break;
+      case 'messenger':
+        leads = await this.getMessengerLeads(target, limit);
+        break;
+      default:
+        return { success: false, error: `Type ${type} not supported` };
       }
     } catch (error) {
       return { success: false, error: error.message };
@@ -97,7 +97,7 @@ class FacebookLeadCrawlerSkill {
       });
 
       const forms = response.data.data || [];
-      let allLeads = [];
+      const allLeads = [];
 
       for (const form of forms) {
         const leadsResponse = await axios.get(`${this.api}/${form.id}/leads`, {
@@ -169,7 +169,7 @@ class FacebookLeadCrawlerSkill {
         }
       });
 
-      let leads = [];
+      const leads = [];
       for (const conv of conversations.data.data || []) {
         const messages = await axios.get(`${this.api}/${conv.id}/messages`, {
           params: {

@@ -68,14 +68,14 @@ class AnomalyDetectionSkill {
 
   async runDetection(method, sensor, history) {
     switch (method) {
-      case 'statistical':
-        return this.statisticalDetection(sensor, history);
-      case 'movingAverage':
-        return this.movingAverageDetection(sensor, history);
-      case 'exponentialSmoothing':
-        return this.exponentialSmoothingDetection(sensor, history);
-      default:
-        return { isAnomaly: false };
+    case 'statistical':
+      return this.statisticalDetection(sensor, history);
+    case 'movingAverage':
+      return this.movingAverageDetection(sensor, history);
+    case 'exponentialSmoothing':
+      return this.exponentialSmoothingDetection(sensor, history);
+    default:
+      return { isAnomaly: false };
     }
   }
 
@@ -206,7 +206,7 @@ class AnomalyDetectionSkill {
       alerts.push({
         level: 'critical',
         count: critical.length,
-        message: `Critical anomalies detected requiring immediate attention`,
+        message: 'Critical anomalies detected requiring immediate attention',
         sensors: critical.map(a => a.sensorId)
       });
     }
@@ -295,7 +295,7 @@ class AnomalyDetectionSkill {
     try {
       const { getAll } = require('../config/database');
       const rows = getAll(
-        `SELECT value, timestamp FROM sensors WHERE type = ? ORDER BY timestamp DESC LIMIT ?`,
+        'SELECT value, timestamp FROM sensors WHERE type = ? ORDER BY timestamp DESC LIMIT ?',
         [type, this.windowSize]
       );
       return rows.reverse();

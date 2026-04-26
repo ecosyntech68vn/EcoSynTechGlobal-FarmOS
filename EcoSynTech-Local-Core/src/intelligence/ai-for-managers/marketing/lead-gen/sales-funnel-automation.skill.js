@@ -52,18 +52,18 @@ class SalesFunnelAutomationSkill {
     } = context;
 
     switch (action) {
-      case 'process_lead':
-        return await this.processNewLead(lead, source);
-      case 'advance_stage':
-        return await this.advanceStage(lead.id, forceAdvance);
-      case 'get_funnel':
-        return this.getFunnelStatus();
-      case 'get_lead':
-        return this.getLeadStatus(lead.id);
-      case 'assign':
-        return await this.assignLeadToStage(lead.id, lead.stage);
-      default:
-        return { success: false, error: `Action ${action} not supported` };
+    case 'process_lead':
+      return await this.processNewLead(lead, source);
+    case 'advance_stage':
+      return await this.advanceStage(lead.id, forceAdvance);
+    case 'get_funnel':
+      return this.getFunnelStatus();
+    case 'get_lead':
+      return this.getLeadStatus(lead.id);
+    case 'assign':
+      return await this.assignLeadToStage(lead.id, lead.stage);
+    default:
+      return { success: false, error: `Action ${action} not supported` };
     }
   }
 

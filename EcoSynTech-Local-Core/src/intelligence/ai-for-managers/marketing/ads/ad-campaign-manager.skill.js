@@ -73,20 +73,20 @@ class AdCampaignManagerSkill {
     }
 
     switch (action) {
-      case 'create_campaign':
-        return await this.createFBCampaign(campaign);
-      case 'list_campaigns':
-        return await this.listFBCampaigns();
-      case 'get_stats':
-        return await this.getFBStats(campaign.id);
-      case 'optimize':
-        return await this.optimizeFBCampaign(campaign.id);
-      case 'pause':
-        return await this.toggleFBCampaign(campaign.id, 'PAUSED');
-      case 'activate':
-        return await this.toggleFBCampaign(campaign.id, 'ACTIVE');
-      default:
-        return { success: false, error: `Action ${action} not supported` };
+    case 'create_campaign':
+      return await this.createFBCampaign(campaign);
+    case 'list_campaigns':
+      return await this.listFBCampaigns();
+    case 'get_stats':
+      return await this.getFBStats(campaign.id);
+    case 'optimize':
+      return await this.optimizeFBCampaign(campaign.id);
+    case 'pause':
+      return await this.toggleFBCampaign(campaign.id, 'PAUSED');
+    case 'activate':
+      return await this.toggleFBCampaign(campaign.id, 'ACTIVE');
+    default:
+      return { success: false, error: `Action ${action} not supported` };
     }
   }
 
@@ -225,7 +225,7 @@ class AdCampaignManagerSkill {
     const cpc = stats.stats.cpc;
     const conversions = stats.stats.conversions;
     
-    let recommendations = [];
+    const recommendations = [];
     
     if (cpc > 50000) {
       recommendations.push({ type: 'reduce_bid', suggestion: 'Giảm bid để giảm CPC' });

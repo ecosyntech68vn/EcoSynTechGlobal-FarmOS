@@ -74,24 +74,24 @@ class FreeAIContentSkill {
     let result;
     try {
       switch (actualProvider) {
-        case 'deepseek':
-          result = await this.callDeepSeek(prompt, systemPrompt, model);
-          break;
-        case 'ollama':
-          result = await this.callOllama(prompt, systemPrompt, model);
-          // Nếu Ollama trả về lỗi hoặc không có response → template
-          if (!result.content || result.content.includes('error')) {
-            throw new Error('Ollama not available');
-          }
-          break;
-        case 'openai':
-          result = await this.callOpenAI(prompt, systemPrompt, model);
-          break;
-        case 'gemini':
-          result = await this.callGemini(prompt, systemPrompt);
-          break;
-        default:
-          result = await this.callDeepSeek(prompt, systemPrompt, model);
+      case 'deepseek':
+        result = await this.callDeepSeek(prompt, systemPrompt, model);
+        break;
+      case 'ollama':
+        result = await this.callOllama(prompt, systemPrompt, model);
+        // Nếu Ollama trả về lỗi hoặc không có response → template
+        if (!result.content || result.content.includes('error')) {
+          throw new Error('Ollama not available');
+        }
+        break;
+      case 'openai':
+        result = await this.callOpenAI(prompt, systemPrompt, model);
+        break;
+      case 'gemini':
+        result = await this.callGemini(prompt, systemPrompt);
+        break;
+      default:
+        result = await this.callDeepSeek(prompt, systemPrompt, model);
       }
     } catch (error) {
       // Lỗi bất kỳ → Dùng template fallback
@@ -123,14 +123,14 @@ class FreeAIContentSkill {
     if (requestedProvider !== 'auto') {
       // Kiểm tra có API key không
       switch (requestedProvider) {
-        case 'deepseek':
-          return this.config.deepseek.apiKey ? 'deepseek' : null;
-        case 'ollama':
-          return 'ollama'; // Ollama sẽ tự fallback nếu không chạy
-        case 'openai':
-          return this.config.openai.apiKey ? 'openai' : null;
-        case 'gemini':
-          return this.config.gemini.apiKey ? 'gemini' : null;
+      case 'deepseek':
+        return this.config.deepseek.apiKey ? 'deepseek' : null;
+      case 'ollama':
+        return 'ollama'; // Ollama sẽ tự fallback nếu không chạy
+      case 'openai':
+        return this.config.openai.apiKey ? 'openai' : null;
+      case 'gemini':
+        return this.config.gemini.apiKey ? 'gemini' : null;
       }
     }
 
@@ -384,7 +384,7 @@ Liên hệ để biết thêm chi tiết:
   getTemplateContent(prompt) {
     const p = prompt.toLowerCase();
     let template = '';
-    let title = '';
+    const title = '';
     
     // Phân tích prompt để chọn template phù hợp
     if (p.includes('sản phẩm') || p.includes('ra mắt') || p.includes('giới thiệu')) {

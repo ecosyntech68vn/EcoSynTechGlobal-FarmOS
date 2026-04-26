@@ -130,7 +130,7 @@ module.exports = {
     }
     
     async function runAutomationCortex(ctx, db, logger) {
-      let processed = 0, actions = 0;
+      const processed = 0, actions = 0;
       
       return { processed, actions };
     }

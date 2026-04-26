@@ -53,7 +53,7 @@ class BusinessReportGeneratorSkill {
       sales: this.generateSalesSection(data),
       marketing: this.generateMarketingSection(data),
       operations: this.generateOperationsSection(data),
-     人力资源: this.generateHRSection(data),
+      人力资源: this.generateHRSection(data),
       customerMetrics: this.generateCustomerSection(data),
       projects: this.generateProjectSection(data),
       risks: this.generateRiskSection(data),

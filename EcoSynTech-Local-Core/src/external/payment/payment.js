@@ -74,20 +74,20 @@ router.post('/create', auth, async (req, res) => {
     let result;
     
     switch (method) {
-      case 'vnpay':
-        result = await vnPay.createPayment(orderId, plan, userId);
-        break;
+    case 'vnpay':
+      result = await vnPay.createPayment(orderId, plan, userId);
+      break;
         
-      case 'momo':
-        result = await momo.createPayment(orderId, plan);
-        break;
+    case 'momo':
+      result = await momo.createPayment(orderId, plan);
+      break;
         
-      case 'sepay':
-        result = await sepay.createPayment(orderId, plan);
-        break;
+    case 'sepay':
+      result = await sepay.createPayment(orderId, plan);
+      break;
         
-      default:
-        return res.status(400).json({ ok: false, error: 'Unsupported payment method' });
+    default:
+      return res.status(400).json({ ok: false, error: 'Unsupported payment method' });
     }
     
     res.json({
@@ -112,18 +112,18 @@ router.get('/status/:orderId', auth, async (req, res) => {
     let result;
     
     switch (method) {
-      case 'vnpay':
-        result = await vnPay.queryTransaction(orderId);
-        break;
-      case 'sepay':
-        result = await sepay.checkStatus(orderId);
-        break;
-      case 'momo':
-        // MoMo doesn't have direct query API
-        result = { ok: false, error: 'MoMo requires webhook callback' };
-        break;
-      default:
-        result = { ok: false, error: 'Unknown method' };
+    case 'vnpay':
+      result = await vnPay.queryTransaction(orderId);
+      break;
+    case 'sepay':
+      result = await sepay.checkStatus(orderId);
+      break;
+    case 'momo':
+      // MoMo doesn't have direct query API
+      result = { ok: false, error: 'MoMo requires webhook callback' };
+      break;
+    default:
+      result = { ok: false, error: 'Unknown method' };
     }
     
     res.json({ ok: true, data: result });

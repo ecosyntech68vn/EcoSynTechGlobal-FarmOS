@@ -72,16 +72,16 @@ class AIContentGeneratorSkill {
     } = context;
 
     switch (action) {
-      case 'generate':
-        return await this.generateContent(input, platforms, tone, count);
-      case 'repurpose':
-        return await this.repurposeContent(input, platforms);
-      case 'variations':
-        return await this.generateVariations(input, count);
-      case 'ideas':
-        return this.generateIdeas(input);
-      default:
-        return { success: false, error: 'Unknown action' };
+    case 'generate':
+      return await this.generateContent(input, platforms, tone, count);
+    case 'repurpose':
+      return await this.repurposeContent(input, platforms);
+    case 'variations':
+      return await this.generateVariations(input, count);
+    case 'ideas':
+      return this.generateIdeas(input);
+    default:
+      return { success: false, error: 'Unknown action' };
     }
   }
 
@@ -113,20 +113,20 @@ class AIContentGeneratorSkill {
     let content = {};
 
     switch (type) {
-      case 'product':
-        content = this.generateProductContent(input, platform, tone);
-        break;
-      case 'promotion':
-        content = this.generatePromotionContent(input, platform, tone);
-        break;
-      case 'tips':
-        content = this.generateTipsContent(input, platform, tone);
-        break;
-      case 'story':
-        content = this.generateStoryContent(input, platform, tone);
-        break;
-      default:
-        content = this.generateGenericContent(input, platform, tone);
+    case 'product':
+      content = this.generateProductContent(input, platform, tone);
+      break;
+    case 'promotion':
+      content = this.generatePromotionContent(input, platform, tone);
+      break;
+    case 'tips':
+      content = this.generateTipsContent(input, platform, tone);
+      break;
+    case 'story':
+      content = this.generateStoryContent(input, platform, tone);
+      break;
+    default:
+      content = this.generateGenericContent(input, platform, tone);
     }
 
     return {
@@ -162,14 +162,14 @@ class AIContentGeneratorSkill {
     body += toneStyles[tone] || toneStyles.professional;
     
     if (features.length > 0) {
-      body += `\n\n✨ Điểm nổi bật:\n`;
+      body += '\n\n✨ Điểm nổi bật:\n';
       features.forEach((f, i) => {
         body += `${i + 1}. ${f}\n`;
       });
     }
     
     if (benefits.length > 0) {
-      body += `\n💪 Lợi ích:\n`;
+      body += '\n💪 Lợi ích:\n';
       benefits.forEach((b, i) => {
         body += `• ${b}\n`;
       });
@@ -206,9 +206,9 @@ class AIContentGeneratorSkill {
 
     let body = '';
     const toneStyles = {
-      professional: `Khuyến mãi đặc biệt! `,
-      casual: `Ôi trời ơi deal khủng! `,
-      funny: `Sập giá rồi máy ơi! `
+      professional: 'Khuyến mãi đặc biệt! ',
+      casual: 'Ôi trời ơi deal khủng! ',
+      funny: 'Sập giá rồi máy ơi! '
     };
     
     body += toneStyles[tone] || toneStyles.professional;

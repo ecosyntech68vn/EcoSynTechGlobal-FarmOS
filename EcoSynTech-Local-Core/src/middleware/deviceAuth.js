@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 const crypto = require('crypto');
 
 // In-memory store for device secrets and nonce tracking (simple prototype)

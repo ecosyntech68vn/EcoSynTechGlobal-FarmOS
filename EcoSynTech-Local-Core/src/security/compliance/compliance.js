@@ -131,7 +131,7 @@ router.get('/evidence/:controlId', auth, async (req, res) => {
   try {
     const { controlId } = req.params;
     const evidence = getAll(
-      `SELECT * FROM compliance_evidence WHERE control_id = ? ORDER BY submitted_at DESC`,
+      'SELECT * FROM compliance_evidence WHERE control_id = ? ORDER BY submitted_at DESC',
       [controlId]
     );
     

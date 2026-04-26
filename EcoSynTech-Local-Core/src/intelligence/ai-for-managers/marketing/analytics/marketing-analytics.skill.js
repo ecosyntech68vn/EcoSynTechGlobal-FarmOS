@@ -28,16 +28,16 @@ class MarketingAnalyticsSkill {
     } = context;
 
     switch (action) {
-      case 'get_dashboard':
-        return this.getDashboard(platforms, period);
-      case 'compare':
-        return this.comparePlatforms(platforms, period);
-      case 'export':
-        return this.exportReport(context);
-      case 'alerts':
-        return this.checkAlerts(context);
-      default:
-        return { success: false, error: 'Unknown action' };
+    case 'get_dashboard':
+      return this.getDashboard(platforms, period);
+    case 'compare':
+      return this.comparePlatforms(platforms, period);
+    case 'export':
+      return this.exportReport(context);
+    case 'alerts':
+      return this.checkAlerts(context);
+    default:
+      return { success: false, error: 'Unknown action' };
     }
   }
 

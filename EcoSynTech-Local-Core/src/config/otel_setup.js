@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Lightweight, optional OpenTelemetry integration for observability.
 // This module attempts to start OTEL tracing/metrics if dependencies are present
@@ -45,7 +45,7 @@
       traceExporter: new OTLPTraceExporter({ url: otlpUrl }),
       metricExporter: new OTLPMetricExporter({ url: otlpUrl }),
       serviceName: process.env.OTEL_SERVICE_NAME || 'ecosyntech-iot-backend',
-      instrumentations: instrumentations,
+      instrumentations: instrumentations
     });
 
     await sdk.start();

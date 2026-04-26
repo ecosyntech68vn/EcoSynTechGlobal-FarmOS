@@ -32,10 +32,10 @@ class PestDetectorSkill {
   }
 
   async execute(context) {
-    var image = context.image || null;
-    var imageUrl = context.imageUrl || null;
-    var mode = context.mode || 'detect';
-    var includeTreatment = context.includeTreatment !== false;
+    const image = context.image || null;
+    const imageUrl = context.imageUrl || null;
+    const mode = context.mode || 'detect';
+    const includeTreatment = context.includeTreatment !== false;
 
     // Demo mode - simulate if no image provided
     if (!image && !imageUrl) {
@@ -50,13 +50,13 @@ class PestDetectorSkill {
   }
 
   simulatePestDetection(image, includeTreatment) {
-    var self = this;
-    var numPests = Math.floor(Math.random() * 4);
-    var detections = [];
+    const self = this;
+    const numPests = Math.floor(Math.random() * 4);
+    const detections = [];
     
-    for (var i = 0; i < numPests; i++) {
-      var idx = Math.floor(Math.random() * (this.pestClasses.length - 1));
-      var pestType = this.pestClasses[idx];
+    for (let i = 0; i < numPests; i++) {
+      const idx = Math.floor(Math.random() * (this.pestClasses.length - 1));
+      const pestType = this.pestClasses[idx];
       detections.push({
         class: pestType,
         confidence: 0.65 + Math.random() * 0.3,
@@ -70,9 +70,9 @@ class PestDetectorSkill {
       });
     }
 
-    var summary = this.summarizeDetections(detections);
-    var severity = this.calculateSeverity(detections);
-    var treatment = includeTreatment ? this.getTreatments(detections) : undefined;
+    const summary = this.summarizeDetections(detections);
+    const severity = this.calculateSeverity(detections);
+    const treatment = includeTreatment ? this.getTreatments(detections) : undefined;
 
     return {
       success: true,
@@ -93,7 +93,7 @@ class PestDetectorSkill {
   }
 
   summarizeDetections(detections) {
-    var counts = {};
+    const counts = {};
     detections.forEach(function(d) {
       counts[d.class] = (counts[d.class] || 0) + 1;
     });
@@ -105,15 +105,15 @@ class PestDetectorSkill {
       return { level: 'none', score: 0, message: 'Khong phat hien con trung gay hai' };
     }
 
-    var avgConfidence = detections.reduce(function(a, b) { return a + b.confidence; }, 0) / detections.length;
-    var highCount = detections.filter(function(d) { return d.severity === 'high'; }).length;
-    var totalCount = detections.length;
+    const avgConfidence = detections.reduce(function(a, b) { return a + b.confidence; }, 0) / detections.length;
+    const highCount = detections.filter(function(d) { return d.severity === 'high'; }).length;
+    const totalCount = detections.length;
 
-    var score = totalCount * avgConfidence;
+    let score = totalCount * avgConfidence;
     if (highCount > 0) score *= 1.5;
 
-    var level = 'low';
-    var message = 'Muc do nhe';
+    let level = 'low';
+    let message = 'Muc do nhe';
 
     if (score > 3 || highCount > 2) {
       level = 'critical';
@@ -130,7 +130,7 @@ class PestDetectorSkill {
   }
 
   getTreatments(detections) {
-    var treatments = {
+    const treatments = {
       aphid: ['1. Spray with neem oil solution', '2. Introduce ladybugs', '3. Use yellow sticky traps', '4. Apply insecticidal soap'],
       whitefly: ['1. Use yellow sticky traps', '2. Spray with pyrethrin', '3. Introduce Encarsia wasps', '4. Apply horticultural oil'],
       spider_mite: ['1. Increase humidity', '2. Spray with water stream', '3. Apply miticide', '4. Introduce predatory mites'],
@@ -151,7 +151,7 @@ class PestDetectorSkill {
   }
 
   getConfig() {
-    var modelEndpoint = process.env.PEST_DETECTION_API || process.env.TINYML_API;
+    const modelEndpoint = process.env.PEST_DETECTION_API || process.env.TINYML_API;
     
     return {
       modelEndpoint: modelEndpoint || null,
@@ -179,10 +179,10 @@ class PestDetectorSkill {
 module.exports = PestDetectorSkill;
 
 if (require.main === module) {
-  var skill = new PestDetectorSkill();
+  const skill = new PestDetectorSkill();
   
   (async function() {
-    var result = await skill.execute({});
+    const result = await skill.execute({});
     
     console.log('\n' + '='.repeat(50));
     console.log('PEST DETECTOR');

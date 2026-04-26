@@ -191,7 +191,7 @@ class InterviewSchedulerSkill {
 
   generateCalendarLinks(interviews) {
     return {
-      gcalAdd: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Interview`,
+      gcalAdd: 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Interview',
       outlook: 'https://outlook.office.com/calendar/0/deeplink/ compose',
       ics: this.generateICS(interviews)
     };

@@ -112,23 +112,23 @@ router.post('/checkout/create', auth, async (req, res) => {
     let paymentUrl = null;
     
     switch (method) {
-      case 'sepay':
-        const sepayResult = await sepay.createPayment(order.orderId, checkoutData.items[0]?.plan || 'PRO');
-        paymentUrl = sepayResult.paymentUrl || sepayResult.link;
-        break;
+    case 'sepay':
+      const sepayResult = await sepay.createPayment(order.orderId, checkoutData.items[0]?.plan || 'PRO');
+      paymentUrl = sepayResult.paymentUrl || sepayResult.link;
+      break;
         
-      case 'momo':
-        const momoResult = await momo.createPayment(order.orderId, checkoutData.items[0]?.plan || 'PRO');
-        paymentUrl = momoResult.payUrl || momoResult.payURL;
-        break;
+    case 'momo':
+      const momoResult = await momo.createPayment(order.orderId, checkoutData.items[0]?.plan || 'PRO');
+      paymentUrl = momoResult.payUrl || momoResult.payURL;
+      break;
         
-      case 'vnpay':
-        const vnpResult = await vnPay.createPayment(order.orderId, checkoutData.total, `Order ${order.orderId}`);
-        paymentUrl = vnpResult.paymentUrl;
-        break;
+    case 'vnpay':
+      const vnpResult = await vnPay.createPayment(order.orderId, checkoutData.total, `Order ${order.orderId}`);
+      paymentUrl = vnpResult.paymentUrl;
+      break;
         
-      default:
-        return res.status(400).json({ ok: false, error: 'Unsupported payment method' });
+    default:
+      return res.status(400).json({ ok: false, error: 'Unsupported payment method' });
     }
 
     res.json({

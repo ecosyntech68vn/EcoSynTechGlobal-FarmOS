@@ -28,16 +28,16 @@ class CompetitorMonitorSkill {
     } = context;
 
     switch (action) {
-      case 'monitor':
-        return await this.monitorCompetitors(competitors, platforms);
-      case 'analyze':
-        return this.analyzeCompetitors(competitors);
-      case 'alerts':
-        return this.getAlerts();
-      case 'report':
-        return this.generateReport(competitors);
-      default:
-        return { success: false, error: 'Unknown action' };
+    case 'monitor':
+      return await this.monitorCompetitors(competitors, platforms);
+    case 'analyze':
+      return this.analyzeCompetitors(competitors);
+    case 'alerts':
+      return this.getAlerts();
+    case 'report':
+      return this.generateReport(competitors);
+    default:
+      return { success: false, error: 'Unknown action' };
     }
   }
 

@@ -136,7 +136,7 @@ class LeadScoringSkill {
       score: lead.totalScore,
       rating: lead.rating,
       action: lead.rating === 'Hot' ? 'Gọi điện ngay' : 
-            lead.rating === 'Warm' ? 'Gửi email cá nhân' : 'Thêm vào sequence'
+        lead.rating === 'Warm' ? 'Gửi email cá nhân' : 'Thêm vào sequence'
     }));
   }
 }

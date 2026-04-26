@@ -114,8 +114,8 @@ module.exports = {
     
     function buildAlertNumber(alertNumber, emergency, data) {
       const prefix = alertNumber === 1 ? '🆘 CRITICAL: ' : 
-                    alertNumber === 2 ? '🆘 URGENT: ' : 
-                    '🆘 FINAL: ';
+        alertNumber === 2 ? '🆘 URGENT: ' : 
+          '🆘 FINAL: ';
       
       return prefix + emergency.type + '\n\n' +
              'Alert #' + alertNumber + ' of 3\n' +

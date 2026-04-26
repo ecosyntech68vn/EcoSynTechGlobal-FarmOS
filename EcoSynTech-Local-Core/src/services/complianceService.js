@@ -213,7 +213,7 @@ const EVIDENCE_DOCS = {
   },
   'A.18.2': { 
     doc: 'DATA_RETENTION_POLICY.md', 
-path: 'policies/DATA_RETENTION_POLICY.md',
+    path: 'policies/DATA_RETENTION_POLICY.md',
     status: COMPLIANCE_STATUS.COMPLIANT 
   },
   
@@ -622,7 +622,7 @@ class ComplianceService {
     };
   }
 
-// Get compliance score
+  // Get compliance score
   getComplianceScore() {
     const summary = this.getControlsSummary();
     
@@ -635,11 +635,11 @@ class ComplianceService {
       applicable,
       notApplicable: summary.byStatus.notApplicable,
       grade: actualCoverage >= 95 ? 'A' :
-             actualCoverage >= 85 ? 'B' :
-             actualCoverage >= 70 ? 'C' : 'D',
+        actualCoverage >= 85 ? 'B' :
+          actualCoverage >= 70 ? 'C' : 'D',
       status: actualCoverage >= 95 ? 'EXCELLENT' :
-               actualCoverage >= 85 ? 'GOOD' :
-               actualCoverage >= 70 ? 'FAIR' : 'POOR'
+        actualCoverage >= 85 ? 'GOOD' :
+          actualCoverage >= 70 ? 'FAIR' : 'POOR'
     };
   }
 

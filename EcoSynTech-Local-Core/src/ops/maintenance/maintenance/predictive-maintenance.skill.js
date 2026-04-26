@@ -96,7 +96,7 @@ class PredictiveMaintenanceSkill {
     const patternFactor = this.detectAnomalyPattern(device);
     const seasonalFactor = this.getSeasonalFactor();
 
-    let probability = baseProbability * 0.4 + trendFactor * 0.3 + patternFactor * 0.2 + seasonalFactor * 0.1;
+    const probability = baseProbability * 0.4 + trendFactor * 0.3 + patternFactor * 0.2 + seasonalFactor * 0.1;
     
     return Math.min(0.99, Math.max(0, probability));
   }

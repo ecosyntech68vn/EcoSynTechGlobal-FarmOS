@@ -89,16 +89,16 @@ class MultiPlatformPublisherSkill {
 
   async publishToPlatform(platform, content, scheduledTime) {
     switch (platform) {
-      case 'facebook':
-        return await this.publishFacebook(content);
-      case 'instagram':
-        return await this.publishInstagram(content);
-      case 'tiktok':
-        return await this.publishTikTok(content);
-      case 'youtube':
-        return await this.publishYouTube(content);
-      default:
-        return { success: false, error: `Platform ${platform} not supported` };
+    case 'facebook':
+      return await this.publishFacebook(content);
+    case 'instagram':
+      return await this.publishInstagram(content);
+    case 'tiktok':
+      return await this.publishTikTok(content);
+    case 'youtube':
+      return await this.publishYouTube(content);
+    default:
+      return { success: false, error: `Platform ${platform} not supported` };
     }
   }
 

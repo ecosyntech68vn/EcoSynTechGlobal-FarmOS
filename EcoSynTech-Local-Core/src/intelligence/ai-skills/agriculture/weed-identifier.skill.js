@@ -26,11 +26,11 @@ class WeedIdentifierSkill {
   }
 
   async execute(context) {
-    var image = context.image || null;
-    var imageUrl = context.imageUrl || null;
-    var mode = context.mode || 'detect';
-    var returnBoxes = context.returnBoxes !== false;
-    var iouThreshold = context.iouThreshold || 0.45;
+    const image = context.image || null;
+    const imageUrl = context.imageUrl || null;
+    const mode = context.mode || 'detect';
+    const returnBoxes = context.returnBoxes !== false;
+    const iouThreshold = context.iouThreshold || 0.45;
 
     // Demo mode - simulate if no image provided
     if (!image && !imageUrl) {
@@ -164,10 +164,10 @@ class WeedIdentifierSkill {
 module.exports = WeedIdentifierSkill;
 
 if (require.main === module) {
-  var skill = new WeedIdentifierSkill();
+  const skill = new WeedIdentifierSkill();
   
   (async function() {
-    var result = await skill.execute({});
+    const result = await skill.execute({});
     
     console.log('\n' + '='.repeat(50));
     console.log('WEED IDENTIFIER');
